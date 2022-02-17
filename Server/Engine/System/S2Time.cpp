@@ -17,37 +17,40 @@ S2ThreadTimer::~S2ThreadTimer()
 
 bool S2ThreadTimer::Create()
 {
-	return ThreadCreate();
+	auto threadProc = [this]() -> void {
+		this->OnUpdate();
+	};
+	return m_thread.ThreadCreateFunc(threadProc);
 }
 
 void S2ThreadTimer::Destroy()
 {
-	S2Thread::Destroy();
+	m_thread.DestroyThread();
 }
 
-bool S2ThreadTimer::OnThreadUpdate()
+void S2ThreadTimer::OnUpdate()
 {
+	THREAD_UPDATE_START;
+
 	SYSTEMTIME stSystemTime;
 
-	while(IsThreadRunning())
-	{
-		// 썸머타임 영향받는 로컬 년월일시분초 업데이트		
-		//::GetLocalTime(&stSystemTime);
-		//m_dt32Local = stSystemTime;
+	// 썸머타임 영향받는 로컬 년월일시분초 업데이트		
+	//::GetLocalTime(&stSystemTime);
+	//m_dt32Local = stSystemTime;
 
-		// 썸머타임 관계없는 표준 년월일시분초 업데이트
-		//SYSTEMTIME UTCTime;
-		//TIME_ZONE_INFORMATION TZInfo;
-		//::GetSystemTime(&UTCTime);
-		//::GetTimeZoneInformation(&TZInfo);
-		//TZInfo.DaylightBias = 0;			// 타임존 정보에서 썸머타임을 적용하지 않도록 보정값 변경
-		//::SystemTimeToTzSpecificLocalTime(&TZInfo, &UTCTime, &stSystemTime);
-		//m_dt32Stand = stSystemTime;
+	// 썸머타임 관계없는 표준 년월일시분초 업데이트
+	//SYSTEMTIME UTCTime;
+	//TIME_ZONE_INFORMATION TZInfo;
+	//::GetSystemTime(&UTCTime);
+	//::GetTimeZoneInformation(&TZInfo);
+	//TZInfo.DaylightBias = 0;			// 타임존 정보에서 썸머타임을 적용하지 않도록 보정값 변경
+	//::SystemTimeToTzSpecificLocalTime(&TZInfo, &UTCTime, &stSystemTime);
+	//m_dt32Stand = stSystemTime;
 
-		//// 4. 슬립
-		//Waiting(1);
-	}
-	return false;
+	//// 4. 슬립
+	//Waiting(1);
+
+	THREAD_UPDATE_END;
 }
 
 bool S2Time::Init()

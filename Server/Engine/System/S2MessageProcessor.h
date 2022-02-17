@@ -4,7 +4,7 @@ namespace s2 {
 
 template<typename T>
 class S2MessageProcessor
-{	
+{
 	using sender_list_t = std::unordered_map<int32_t, S2RingBuffer<T>>;
 	using group_list_t = std::unordered_map<int32_t, sender_list_t>;
 
@@ -16,8 +16,9 @@ public:
 	{
 	}
 
-	void MessageUpdate()
+	bool MessageUpdate()
 	{
+		bool isWorking = false;
 		for(auto& group : m_groupList)
 		{
 			for(auto& sender : group.second)
@@ -30,8 +31,10 @@ public:
 					continue;
 
 				sender.second.PopCompleted();
+				isWorking = true;
 			}
 		}
+		return isWorking;
 	}
 	
 	void SetReceiver(S2MessageReceiver* receiver)
@@ -39,7 +42,7 @@ public:
 		m_receiver = receiver;
 	}
 
-	bool AddSender(int32_t groupIdx, int32_t processIdx, int32_t bufferCount)
+	bool AddSender(int32_t groupIdx, int32_t processCount, int32_t bufferCount)
 	{
 		auto groupIter = m_groupList.find(groupIdx);
 		if(groupIter == m_groupList.end())
@@ -54,20 +57,17 @@ public:
 
 		auto& sender = groupIter->second;
 
-		auto senderIter = sender.find(processIdx);
-		if(senderIter != sender.end())
+		for(int32_t i = 0 ; i < processCount ; ++i)
 		{
-			return false;
-		}
-
-		auto result = sender.emplace(processIdx, S2RingBuffer<T>());
-		if(false == result.second)
-		{
-			return false;
-		}
-		if(false == result.first->second.Create(bufferCount))
-		{
-			return false;
+			auto result = sender.emplace(i, S2RingBuffer<T>());
+			if(false == result.second)
+			{
+				return false;
+			}
+			if(false == result.first->second.Create(bufferCount))
+			{
+				return false;
+			}
 		}
 
 		return true;

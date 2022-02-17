@@ -10,14 +10,14 @@ DataBaseMgr::~DataBaseMgr()
 {
 }
 
-bool DataBaseMgr::Create(int32_t threadCount, int32_t bufferCount)
+bool DataBaseMgr::Create(int32_t workerCount)
 {	
 	if(false == MESSAGE_PROCESSOR().SetReceiver(MessageProcessor::MESSAGE_TYPE::DATABASE, this))
 	{
 		return false;
 	}
 
-	for(int32_t i = 0 ; i < threadCount ; ++i)
+	for(int32_t i = 0 ; i < workerCount ; ++i)
 	{
 		DataBaseWorker* worker = new DataBaseWorker(i);
 		if(nullptr == worker)
@@ -28,22 +28,33 @@ bool DataBaseMgr::Create(int32_t threadCount, int32_t bufferCount)
 		{
 			return false;
 		}
-		m_threadList.push_back(worker);
+		m_workerList.push_back(worker);
+		m_waitingList.push(worker);
 	}
-	MakeWaitingList();
 	
-	return ThreadCreate();
+	auto threadProc = [this]() -> void {
+		this->OnUpdate();
+	};
+	return m_thread.ThreadCreateFunc(threadProc);
 }
 
 void DataBaseMgr::Destroy()
 {
-	S2Thread::Destroy();
-	S2ThreadPool::Destroy();
+	m_thread.DestroyThread();
+	for(auto& iter : m_workerList)
+	{
+		iter->Destroy();
+		delete iter;
+		iter = nullptr;
+	}
+	m_workerList.clear();
 }
 
-bool DataBaseMgr::OnThreadUpdate()
+void DataBaseMgr::OnUpdate()
 {
-	for(auto& thread : m_threadList)
+	THREAD_UPDATE_START;
+
+	for(auto& thread : m_workerList)
 	{
 		DataBaseWorker* worker = (DataBaseWorker*)thread;
 
@@ -56,18 +67,33 @@ bool DataBaseMgr::OnThreadUpdate()
 
 	MESSAGE_PROCESSOR().OnUpdate(MessageProcessor::MESSAGE_TYPE::DATABASE);
 
-	return true;
+	THREAD_UPDATE_END;
 }
 
 bool DataBaseMgr::OnMessageUpdate(int32_t groupIdx, void* data)
 {
-	char* buffer = (char*)data;
-
 	DataBaseWorker* thread = (DataBaseWorker*)PopWaitingThread();
 	if(nullptr == thread)
 		return false;
 
-	thread->PushQuery(buffer);
+	thread->PushQuery((char*)data);
+
+	return true;
+}
+
+DataBaseWorker* DataBaseMgr::PopWaitingThread()
+{
+	if(m_waitingList.empty())
+		return nullptr;
+
+	auto& thread = m_waitingList.top();
+	m_waitingList.pop();
+	return thread;
+}
+
+bool DataBaseMgr::PushWaitingThread(DataBaseWorker* thread)
+{
+	m_waitingList.push(thread);
 
 	return true;
 }

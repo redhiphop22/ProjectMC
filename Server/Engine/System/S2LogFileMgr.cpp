@@ -14,18 +14,43 @@ S2LogFileMgr::~S2LogFileMgr(void)
 
 bool S2LogFileMgr::Create(const _s2log_char_t* wstrFileName, FILE_SAVE_INTERVAL fileSaveType)
 {
-	if(false == ThreadCreate())
-	{
-		return false;
-	}
-	return true;
+	auto threadProc = [this]() -> void {
+		this->OnUpdate();
+	};
+	return m_thread.ThreadCreateFunc(threadProc);
 }
 
 void S2LogFileMgr::Destroy(void)
 {
-	S2Thread::Destroy();
+	m_thread.DestroyThread();
 
 	::CloseHandle(m_hFile);
+}
+
+void S2LogFileMgr::OnUpdate()
+{	
+	THREAD_UPDATE_START;
+	//Create File 
+	_UpdateTime();
+	switch (m_fileSaveType)
+	{
+	case FILE_SAVE_INTERVAL::DAY:
+		if (m_ui32FileDay != m_iDay)
+		{
+			_CreateFile();
+		}
+		break;
+	case FILE_SAVE_INTERVAL::HOUR:
+	default:
+		if (m_ui32FileHour != m_iHour)
+		{
+			_CreateFile();
+		}
+		break;
+	}
+	isWorking = _Working();
+
+	THREAD_UPDATE_END;
 }
 
 void S2LogFileMgr::WriteLog(S2_LOG_TYPE logType, const _s2log_char_t* funcName, int32_t line, const _s2log_char_t* logString, ...)
@@ -57,30 +82,6 @@ void S2LogFileMgr::SetVersion(uint16_t ui16Ver01, uint16_t ui16Ver02, uint32_t u
 	m_ui16Ver02 = ui16Ver02;
 	m_ui32Ver03 = ui32Ver03;
 	m_ui32Ver04 = ui32Ver04;
-}
-
-bool S2LogFileMgr::OnThreadUpdate()
-{
-	//Create File 
-	_UpdateTime();
-	switch (m_fileSaveType)
-	{
-	case FILE_SAVE_INTERVAL::DAY:
-		if (m_ui32FileDay != m_iDay)
-		{
-			_CreateFile();
-		}
-		break;
-	case FILE_SAVE_INTERVAL::HOUR:
-	default:
-		if (m_ui32FileHour != m_iHour)
-		{
-			_CreateFile();
-		}
-		break;
-	}
-
-	return _Working();
 }
 
 bool S2LogFileMgr::_Create(FILE_SAVE_INTERVAL fileSaveType)
@@ -144,7 +145,7 @@ void S2LogFileMgr::_WriteFile(const _s2log_char_t* strLog, int32_t size)
 
 S2LogFileMgr::ring_buffer_t* S2LogFileMgr::_GetThreadList()
 {
-	s2::S2Thread::thread_id_t threadId = GetCurrentThreadId();
+	std::thread::id threadId = std::this_thread::get_id();
 
 	auto iter = m_threadList.find(threadId);
 	if(iter == m_threadList.end())

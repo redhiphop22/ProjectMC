@@ -13,6 +13,8 @@
 #define IDD_BOT_SETTING                 107
 #define IDD_BOT_RUN                     108
 #define IDD_SELECTOR                    109
+#define IDD_CLIENT_LOBBY1               110
+#define IDD_CLIENT_MAP                  110
 #define IDR_POPUP_EDIT                  119
 #define ID_STATUSBAR_PANE1              120
 #define ID_STATUSBAR_PANE2              121
@@ -116,8 +118,8 @@
 #define IDC_BOT_RUN_VIEW                1062
 #define IDC_SELECTOR_SINGLE             1063
 #define IDC_SELECTOR_MULTI              1064
-#define IDC_EDIT1                       1064
 #define IDC_BOT_RUN_NOTICE              1065
+#define IDC_LOBBY_ENTER                 1066
 
 // Next default values for new objects
 // 
@@ -125,7 +127,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        313
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1066
+#define _APS_NEXT_CONTROL_VALUE         1067
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

@@ -4,6 +4,9 @@ namespace protocol;
 
 enum MESSAGE : uint16
 {
+	//RESULT_C2S			= 2,
+	RESULT_S2C			= 3,
+
 	CONNECT_RESULT_C2S	= 4,
 	CONNECT_RESULT_S2C	= 5,
 
@@ -13,6 +16,12 @@ enum MESSAGE : uint16
 	SERVER_CONNECT_C2S	= 8,	// 서버 이동 및 접속
 	SERVER_CONNECT_S2C	= 9,
 
+	HEART_BEAT_C2S,
+	HEART_BEAT_S2C,
+
+	ENTER_LOBBY_C2S,
+	ENTER_LOBBY_S2C,
+
 	CHARACTER_INFO_C2S,
 	CHARACTER_INFO_S2C,
 
@@ -20,13 +29,28 @@ enum MESSAGE : uint16
 	CHARACTER_NAME_DUPLICATION_S2C,
 
 	CHARACTER_CREATE_C2S,
-	CHARACTER_CREATE_S2C,
-	
-	ENTER_LOBBY_C2S,
-	ENTER_LOBBY_S2C,
+	CHARACTER_CREATE_S2C,	
 
 	ENTER_MAP_C2S,
 	ENTER_MAP_S2C,
+
+	//ENTITY_SPAWN_C2S,
+	ENTITY_SPAWN_S2C,
+
+	//ENTITY_DESTROY_C2S,
+	ENTITY_DESTROY_S2C,
+
+	ENTITY_MOVE_VELOCITY_C2S,
+	ENTITY_MOVE_VELOCITY_S2C,
+
+	ENTITY_MOVE_STOP_C2S,
+	ENTITY_MOVE_STOP_S2C,
+}
+
+table RESULT_S2C
+{
+	protocol: uint16;
+	result: common.RESULT_CODE;
 }
 
 table CONNECT_RESULT_C2S
@@ -65,6 +89,23 @@ table SERVER_CONNECT_S2C
 	block_date: uint64;
 }
 
+table HEART_BEAT_C2S
+{
+}
+
+table HEART_BEAT_S2C
+{
+}
+
+table ENTER_LOBBY_C2S
+{
+}
+
+table ENTER_LOBBY_S2C
+{
+	result: common.RESULT_CODE;
+}
+
 table CHARACTER_INFO_C2S
 {
 }
@@ -78,6 +119,8 @@ table CHARACTER_INFO_S2C
 	belong: uint16;
 	face: common.CHARACTER_FACE;
 	equipment: [common.CHARACTER_EQUIPMENT];
+	last_map_id: uint32;
+	last_map_position: common.VECTOR3;
 }
 
 table CHARACTER_NAME_DUPLICATION_C2S
@@ -110,22 +153,62 @@ table CHARACTER_CREATE_S2C
 	belong: uint16;
 	face: common.CHARACTER_FACE;
 	equipment: [common.CHARACTER_EQUIPMENT];
-}
-
-table ENTER_LOBBY_C2S
-{
-}
-
-table ENTER_LOBBY_S2C
-{
-	result: common.RESULT_CODE;
+	last_map_id: uint32;
+	last_map_position: common.VECTOR3;
 }
 
 table ENTER_MAP_C2S
 {
+	map_id: uint32;
 }
 
 table ENTER_MAP_S2C
 {
 	result: common.RESULT_CODE;
+
+	map_id: uint32;
+}
+
+table ENTITY_SPAWN_S2C
+{
+	entity: [common.ENTITY_SPAWN_INFO];
+}
+
+table ENTITY_DESTROY_S2C
+{
+	uid: uint64;
+}
+
+table ENTITY_MOVE_VELOCITY_C2S
+{
+	excute_time: uint64;
+	position: common.VECTOR3;
+	forward: common.VECTOR3;
+	speed: float;
+}
+
+table ENTITY_MOVE_VELOCITY_S2C
+{
+	result: common.RESULT_CODE;
+
+	uid: uint64;
+	excute_time: uint64;
+	position: common.VECTOR3;
+	forward: common.VECTOR3;
+	speed: float;
+}
+
+table ENTITY_MOVE_STOP_C2S
+{
+	excute_time: uint64;
+	position: common.VECTOR3;
+}
+
+table ENTITY_MOVE_STOP_S2C
+{
+	result: common.RESULT_CODE;
+
+	uid: uint64;
+	excute_time: uint64;
+	position: common.VECTOR3;
 }

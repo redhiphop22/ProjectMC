@@ -11,22 +11,63 @@ S2SocketConnector::~S2SocketConnector()
 {
 }
 
-bool S2SocketConnector::Create(uint32_t ip, uint16_t port)
+void S2SocketConnector::SetAddress(uint32_t ip, uint16_t port)
 {
-	m_ip = ip;
+	m_ip = htonl(ip);
 	m_port = ::htons(port);
+}
 
-	if(false == _Connect())
+bool S2SocketConnector::Connect()
+{
+	// 리시브 이벤트 생성
+	m_recvEvent = ::WSACreateEvent();
+
+	// 소켓 생성
+	m_socket = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	if(INVALID_SOCKET == m_socket)
 	{
+		S2TRACE(_T("[S2SocketConnector::OnConnectTo] Error Socket Is Invalid \n"));
+		DisConnect();
 		return false;
 	}
+
+	// 서버 접속
+	struct sockaddr_in serverAddr;
+	memset(&serverAddr, 0, sizeof(serverAddr));
+	serverAddr.sin_family		= AF_INET;
+	serverAddr.sin_addr.s_addr	= m_ip;
+	serverAddr.sin_port			= m_port;
+
+	int32_t result = ::connect(m_socket, (sockaddr*)&serverAddr, sizeof(serverAddr));
+	if(SOCKET_ERROR == result)
+	{
+		DWORD error = ::GetLastError();
+		DisConnect();
+		return false;
+	}
+
+	// 리시브 관련 멤버 초기화
+	m_recvPackSize = 0;
 
 	return true;
 }
 
-void S2SocketConnector::Destroy()
+void S2SocketConnector::DisConnect()
 {
-	DisConnect();
+	if (INVALID_HANDLE_VALUE != m_recvEvent)
+	{
+		::WSACloseEvent(m_recvEvent);
+		m_recvEvent = INVALID_HANDLE_VALUE;
+	}
+
+	if (INVALID_SOCKET != m_socket)
+	{
+		::shutdown(m_socket, SD_BOTH);
+		::closesocket(m_socket);
+		m_socket = INVALID_SOCKET;
+	}
+
+	m_recvPackSize = 0;
 }
 
 int32_t S2SocketConnector::_OnReceive()
@@ -89,24 +130,6 @@ int32_t S2SocketConnector::_OnReceive()
 	m_recvPackSize = recvTotalSize;
 
 	return recvdByte;
-}
-
-void S2SocketConnector::DisConnect()
-{
-	if (INVALID_HANDLE_VALUE != m_recvEvent)
-	{
-		::WSACloseEvent(m_recvEvent);
-		m_recvEvent = INVALID_HANDLE_VALUE;
-	}
-
-	if (INVALID_SOCKET != m_socket)
-	{
-		::shutdown(m_socket, SD_BOTH);
-		::closesocket(m_socket);
-		m_socket = INVALID_SOCKET;
-	}
-
-	m_recvPackSize = 0;
 }
 
 int32_t S2SocketConnector::PacketParsing(char* buffer, int32_t size)
@@ -195,52 +218,5 @@ bool S2SocketConnector::IsConnected() const
 	return true;
 }
 
-void S2SocketConnector::SetSocket(SOCKET socket)
-{
-	// 리시브 이벤트 생성
-	m_recvEvent = ::WSACreateEvent();
-
-	// 소켓 생성
-	m_socket = socket;
-
-	// 리시브 관련 멤버 초기화
-	m_recvPackSize = 0;
-}
-
-bool S2SocketConnector::_Connect()
-{
-	// 리시브 이벤트 생성
-	m_recvEvent = ::WSACreateEvent();
-
-	// 서버 접속
-	struct sockaddr_in serverAddr;
-	memset(&serverAddr, 0, sizeof(serverAddr));
-	serverAddr.sin_family = AF_INET;
-	serverAddr.sin_addr.s_addr = m_ip;
-	serverAddr.sin_port = m_port;
-
-	// 소켓 생성
-	m_socket = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-
-	if(INVALID_SOCKET == m_socket)
-	{
-		S2TRACE(_T("[S2SocketConnector::OnConnectTo] Error Socket Is Invalid \n"));
-		DisConnect();
-		return false;
-	}
-
-	int32_t result = ::connect(m_socket, (sockaddr*)&serverAddr, sizeof(serverAddr));
-
-	if(SOCKET_ERROR == result)
-	{
-		DisConnect();
-		return false;
-	}
-
-	// 리시브 관련 멤버 초기화
-	m_recvPackSize = 0;
-
-	return true;
-}
 
 }

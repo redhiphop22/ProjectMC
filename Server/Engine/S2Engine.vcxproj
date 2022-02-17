@@ -45,9 +45,7 @@
     <ClCompile Include="System\S2SocketConnector.cpp" />
     <ClCompile Include="System\S2SpinLock.cpp" />
     <ClCompile Include="System\S2String.cpp" />
-    <ClCompile Include="System\S2Thread.cpp" />
     <ClCompile Include="System\S2ThreadMgr.cpp" />
-    <ClCompile Include="System\S2ThreadPool.cpp" />
     <ClCompile Include="System\S2Time.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -80,7 +78,6 @@
     <ClInclude Include="System\S2String.h" />
     <ClInclude Include="System\S2Thread.h" />
     <ClInclude Include="System\S2ThreadMgr.h" />
-    <ClInclude Include="System\S2ThreadPool.h" />
     <ClInclude Include="System\S2Time.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

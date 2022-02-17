@@ -75,7 +75,7 @@ void User::MakeCHARACTER_CREATE_C2S(flatbuffers::FlatBufferBuilder& fbb)
 		static_cast<uint8_t>(rand()),
 		static_cast<uint16_t>(rand()),		// ют╪З
 		static_cast<uint8_t>(rand())
-		);
+	);
 	std::vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>> equipmentList;
 	for(int32_t i = 0 ; i < common::CHARACTER_EQUIPMENT_TYPE_MAX+1 ; ++i)
 	{

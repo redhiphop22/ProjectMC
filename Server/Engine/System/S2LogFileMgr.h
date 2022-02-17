@@ -18,7 +18,7 @@
 
 namespace s2 {
 
-class S2LogFileMgr : public S2Thread
+class S2LogFileMgr
 {
 public:
 	enum class FILE_SAVE_INTERVAL
@@ -57,12 +57,12 @@ public:
 
 	virtual bool			Create(const _s2log_char_t* wstrFileName, FILE_SAVE_INTERVAL fileSaveType = FILE_SAVE_INTERVAL::HOUR);
 	virtual void			Destroy();	
+	void					OnUpdate();
+
 	virtual void			WriteLog(S2_LOG_TYPE logType, const _s2log_char_t* funcName, int32_t line, const _s2log_char_t* logString, ...);
 
 	bool					PushThread(const S2Thread::thread_id_t& id);
 	void					SetVersion(uint16_t ui16Ver01, uint16_t ui16Ver02, uint32_t ui32Ver03, uint32_t ui32Ver04);
-
-	virtual bool			OnThreadUpdate() override;
 
 protected:
 
@@ -88,6 +88,7 @@ protected:
 	ring_buffer_t*			_GetThreadList();
 
 protected:
+	S2Thread				m_thread;
 
 	HANDLE m_hFile = NULL;
 

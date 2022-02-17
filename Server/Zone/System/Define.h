@@ -1,6 +1,7 @@
 #pragma once
 
 typedef uint64_t uid_t;
+typedef uint32_t map_t;
 typedef uint32_t itemID_t;
 
 #define RING_BUFFER_ELEMENT_SIZE 4096

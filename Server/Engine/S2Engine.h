@@ -45,7 +45,6 @@ typedef unsigned __int64		uint64_t;
 #include ".\System\S2String.h"
 #include ".\System\S2Thread.h"
 #include ".\System\S2ThreadMgr.h"
-#include ".\System\S2ThreadPool.h"
 #include ".\System\S2Time.h"
 #include ".\System\S2MiniDump.h"
 #include ".\System\S2RingBuffer.h"

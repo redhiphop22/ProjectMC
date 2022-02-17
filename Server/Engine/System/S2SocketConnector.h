@@ -3,8 +3,6 @@
 #define TCP_DISCONNECT_TYPE_OTHER			0X80000001
 #define TCP_DISCONNECT_TYPE_READ_ERROR		0X80000002
 
-typedef	int32_t(*CallbackRoutine)(void* pAgent, char* pPacket, int32_t i32Size);
-
 namespace s2 {
 
 class S2SocketConnector
@@ -13,20 +11,20 @@ public:
 	S2SocketConnector();
 	virtual ~S2SocketConnector();
 
-	virtual bool			Create(uint32_t ip, uint16_t port);
-	void					Destroy();
+	void					SetAddress(uint32_t ip, uint16_t port);
 	
-	void					SetSocket(SOCKET socket);
-	
+	bool					Connect();
+	void					DisConnect();
+
 	virtual int32_t			PacketParsing(char* buffer, int32_t size);
 	virtual int32_t			SendPacketMessage(const char* buffer, int32_t size);
 
 	int32_t					SelectEvent();
 	bool					IsConnected() const;
-	virtual void			DisConnect();
+
+	
 
 protected:
-	bool					_Connect();
 	virtual int32_t			_OnReceive();
 
 protected:
@@ -41,6 +39,9 @@ protected:
 
 	int32_t					m_recvPackSize = 0;
 	char					m_recvBuffer[RECV_BUFFER_MAX];
+
+	int32_t					m_sendPackSize = 0;
+	char					m_sendBuffer[RECV_BUFFER_MAX];
 
 	//time_t					m_dt32LastSendTime;
 	//time_t					m_dt32LastRecvTime;

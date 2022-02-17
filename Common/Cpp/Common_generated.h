@@ -10,6 +10,8 @@
 
 namespace common {
 
+struct VECTOR3;
+
 struct CHARACTER_INFO;
 struct CHARACTER_INFOBuilder;
 
@@ -18,6 +20,12 @@ struct CHARACTER_FACEBuilder;
 
 struct CHARACTER_EQUIPMENT;
 struct CHARACTER_EQUIPMENTBuilder;
+
+struct ENTITY_INFO;
+struct ENTITY_INFOBuilder;
+
+struct ENTITY_SPAWN_INFO;
+struct ENTITY_SPAWN_INFOBuilder;
 
 enum ACCOUNT_AUTHORITY : uint8_t {
   ACCOUNT_AUTHORITY_GUEST = 0,
@@ -179,6 +187,35 @@ inline const char *EnumNameCHARACTER_EQUIPMENT_TYPE(CHARACTER_EQUIPMENT_TYPE e) 
   const size_t index = static_cast<size_t>(e);
   return EnumNamesCHARACTER_EQUIPMENT_TYPE()[index];
 }
+
+FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(4) VECTOR3 FLATBUFFERS_FINAL_CLASS {
+ private:
+  float x_;
+  float y_;
+  float z_;
+
+ public:
+  VECTOR3()
+      : x_(0),
+        y_(0),
+        z_(0) {
+  }
+  VECTOR3(float _x, float _y, float _z)
+      : x_(flatbuffers::EndianScalar(_x)),
+        y_(flatbuffers::EndianScalar(_y)),
+        z_(flatbuffers::EndianScalar(_z)) {
+  }
+  float x() const {
+    return flatbuffers::EndianScalar(x_);
+  }
+  float y() const {
+    return flatbuffers::EndianScalar(y_);
+  }
+  float z() const {
+    return flatbuffers::EndianScalar(z_);
+  }
+};
+FLATBUFFERS_STRUCT_END(VECTOR3, 12);
 
 struct CHARACTER_INFO FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   typedef CHARACTER_INFOBuilder Builder;
@@ -479,6 +516,200 @@ inline flatbuffers::Offset<CHARACTER_EQUIPMENT> CreateCHARACTER_EQUIPMENT(
   builder_.add_id(id);
   builder_.add_type(type);
   return builder_.Finish();
+}
+
+struct ENTITY_INFO FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef ENTITY_INFOBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_UID = 4,
+    VT_NICK_NAME = 6,
+    VT_FACE = 8,
+    VT_EQUIPMENT = 10
+  };
+  uint64_t uid() const {
+    return GetField<uint64_t>(VT_UID, 0);
+  }
+  const flatbuffers::String *nick_name() const {
+    return GetPointer<const flatbuffers::String *>(VT_NICK_NAME);
+  }
+  const common::CHARACTER_FACE *face() const {
+    return GetPointer<const common::CHARACTER_FACE *>(VT_FACE);
+  }
+  const flatbuffers::Vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>> *equipment() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>> *>(VT_EQUIPMENT);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint64_t>(verifier, VT_UID) &&
+           VerifyOffset(verifier, VT_NICK_NAME) &&
+           verifier.VerifyString(nick_name()) &&
+           VerifyOffset(verifier, VT_FACE) &&
+           verifier.VerifyTable(face()) &&
+           VerifyOffset(verifier, VT_EQUIPMENT) &&
+           verifier.VerifyVector(equipment()) &&
+           verifier.VerifyVectorOfTables(equipment()) &&
+           verifier.EndTable();
+  }
+};
+
+struct ENTITY_INFOBuilder {
+  typedef ENTITY_INFO Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_uid(uint64_t uid) {
+    fbb_.AddElement<uint64_t>(ENTITY_INFO::VT_UID, uid, 0);
+  }
+  void add_nick_name(flatbuffers::Offset<flatbuffers::String> nick_name) {
+    fbb_.AddOffset(ENTITY_INFO::VT_NICK_NAME, nick_name);
+  }
+  void add_face(flatbuffers::Offset<common::CHARACTER_FACE> face) {
+    fbb_.AddOffset(ENTITY_INFO::VT_FACE, face);
+  }
+  void add_equipment(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>>> equipment) {
+    fbb_.AddOffset(ENTITY_INFO::VT_EQUIPMENT, equipment);
+  }
+  explicit ENTITY_INFOBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  flatbuffers::Offset<ENTITY_INFO> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<ENTITY_INFO>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<ENTITY_INFO> CreateENTITY_INFO(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    uint64_t uid = 0,
+    flatbuffers::Offset<flatbuffers::String> nick_name = 0,
+    flatbuffers::Offset<common::CHARACTER_FACE> face = 0,
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>>> equipment = 0) {
+  ENTITY_INFOBuilder builder_(_fbb);
+  builder_.add_uid(uid);
+  builder_.add_equipment(equipment);
+  builder_.add_face(face);
+  builder_.add_nick_name(nick_name);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<ENTITY_INFO> CreateENTITY_INFODirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    uint64_t uid = 0,
+    const char *nick_name = nullptr,
+    flatbuffers::Offset<common::CHARACTER_FACE> face = 0,
+    const std::vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>> *equipment = nullptr) {
+  auto nick_name__ = nick_name ? _fbb.CreateString(nick_name) : 0;
+  auto equipment__ = equipment ? _fbb.CreateVector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>>(*equipment) : 0;
+  return common::CreateENTITY_INFO(
+      _fbb,
+      uid,
+      nick_name__,
+      face,
+      equipment__);
+}
+
+struct ENTITY_SPAWN_INFO FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef ENTITY_SPAWN_INFOBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_UID = 4,
+    VT_NICK_NAME = 6,
+    VT_FACE = 8,
+    VT_EQUIPMENT = 10,
+    VT_POSITION = 12
+  };
+  uint64_t uid() const {
+    return GetField<uint64_t>(VT_UID, 0);
+  }
+  const flatbuffers::String *nick_name() const {
+    return GetPointer<const flatbuffers::String *>(VT_NICK_NAME);
+  }
+  const common::CHARACTER_FACE *face() const {
+    return GetPointer<const common::CHARACTER_FACE *>(VT_FACE);
+  }
+  const flatbuffers::Vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>> *equipment() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>> *>(VT_EQUIPMENT);
+  }
+  const common::VECTOR3 *position() const {
+    return GetStruct<const common::VECTOR3 *>(VT_POSITION);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint64_t>(verifier, VT_UID) &&
+           VerifyOffset(verifier, VT_NICK_NAME) &&
+           verifier.VerifyString(nick_name()) &&
+           VerifyOffset(verifier, VT_FACE) &&
+           verifier.VerifyTable(face()) &&
+           VerifyOffset(verifier, VT_EQUIPMENT) &&
+           verifier.VerifyVector(equipment()) &&
+           verifier.VerifyVectorOfTables(equipment()) &&
+           VerifyField<common::VECTOR3>(verifier, VT_POSITION) &&
+           verifier.EndTable();
+  }
+};
+
+struct ENTITY_SPAWN_INFOBuilder {
+  typedef ENTITY_SPAWN_INFO Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_uid(uint64_t uid) {
+    fbb_.AddElement<uint64_t>(ENTITY_SPAWN_INFO::VT_UID, uid, 0);
+  }
+  void add_nick_name(flatbuffers::Offset<flatbuffers::String> nick_name) {
+    fbb_.AddOffset(ENTITY_SPAWN_INFO::VT_NICK_NAME, nick_name);
+  }
+  void add_face(flatbuffers::Offset<common::CHARACTER_FACE> face) {
+    fbb_.AddOffset(ENTITY_SPAWN_INFO::VT_FACE, face);
+  }
+  void add_equipment(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>>> equipment) {
+    fbb_.AddOffset(ENTITY_SPAWN_INFO::VT_EQUIPMENT, equipment);
+  }
+  void add_position(const common::VECTOR3 *position) {
+    fbb_.AddStruct(ENTITY_SPAWN_INFO::VT_POSITION, position);
+  }
+  explicit ENTITY_SPAWN_INFOBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  flatbuffers::Offset<ENTITY_SPAWN_INFO> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<ENTITY_SPAWN_INFO>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<ENTITY_SPAWN_INFO> CreateENTITY_SPAWN_INFO(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    uint64_t uid = 0,
+    flatbuffers::Offset<flatbuffers::String> nick_name = 0,
+    flatbuffers::Offset<common::CHARACTER_FACE> face = 0,
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>>> equipment = 0,
+    const common::VECTOR3 *position = 0) {
+  ENTITY_SPAWN_INFOBuilder builder_(_fbb);
+  builder_.add_uid(uid);
+  builder_.add_position(position);
+  builder_.add_equipment(equipment);
+  builder_.add_face(face);
+  builder_.add_nick_name(nick_name);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<ENTITY_SPAWN_INFO> CreateENTITY_SPAWN_INFODirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    uint64_t uid = 0,
+    const char *nick_name = nullptr,
+    flatbuffers::Offset<common::CHARACTER_FACE> face = 0,
+    const std::vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>> *equipment = nullptr,
+    const common::VECTOR3 *position = 0) {
+  auto nick_name__ = nick_name ? _fbb.CreateString(nick_name) : 0;
+  auto equipment__ = equipment ? _fbb.CreateVector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>>(*equipment) : 0;
+  return common::CreateENTITY_SPAWN_INFO(
+      _fbb,
+      uid,
+      nick_name__,
+      face,
+      equipment__,
+      position);
 }
 
 }  // namespace common

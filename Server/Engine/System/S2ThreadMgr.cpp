@@ -11,7 +11,7 @@ S2ThreadMgr::~S2ThreadMgr()
 {
 }
 
-bool S2ThreadMgr::PushThread(const S2Thread::thread_id_t& id, const S2Thread* thread)
+bool S2ThreadMgr::PushThread(const std::thread::id& id, S2Thread* thread)
 {
 	// Push 가 잠겨 더이상 추가 불가능
 	if(m_registLock)
@@ -24,7 +24,7 @@ bool S2ThreadMgr::PushThread(const S2Thread::thread_id_t& id, const S2Thread* th
 	return result.second;
 }
 
-bool S2ThreadMgr::PopThread(const S2Thread::thread_id_t& id)
+bool S2ThreadMgr::PopThread(const std::thread::id& id)
 {
 	// Push 가 잠겨 더이상 제거 불가능
 	if (m_registLock)

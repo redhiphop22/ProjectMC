@@ -6,10 +6,13 @@
 
 #include "flatbuffers/flatbuffers.h"
 
-#include "Common_generated.h"
 #include "Result_generated.h"
+#include "Common_generated.h"
 
 namespace protocol {
+
+struct RESULT_S2C;
+struct RESULT_S2CBuilder;
 
 struct CONNECT_RESULT_C2S;
 struct CONNECT_RESULT_C2SBuilder;
@@ -29,6 +32,18 @@ struct SERVER_CONNECT_C2SBuilder;
 struct SERVER_CONNECT_S2C;
 struct SERVER_CONNECT_S2CBuilder;
 
+struct HEART_BEAT_C2S;
+struct HEART_BEAT_C2SBuilder;
+
+struct HEART_BEAT_S2C;
+struct HEART_BEAT_S2CBuilder;
+
+struct ENTER_LOBBY_C2S;
+struct ENTER_LOBBY_C2SBuilder;
+
+struct ENTER_LOBBY_S2C;
+struct ENTER_LOBBY_S2CBuilder;
+
 struct CHARACTER_INFO_C2S;
 struct CHARACTER_INFO_C2SBuilder;
 
@@ -47,88 +62,178 @@ struct CHARACTER_CREATE_C2SBuilder;
 struct CHARACTER_CREATE_S2C;
 struct CHARACTER_CREATE_S2CBuilder;
 
-struct ENTER_LOBBY_C2S;
-struct ENTER_LOBBY_C2SBuilder;
-
-struct ENTER_LOBBY_S2C;
-struct ENTER_LOBBY_S2CBuilder;
-
 struct ENTER_MAP_C2S;
 struct ENTER_MAP_C2SBuilder;
 
 struct ENTER_MAP_S2C;
 struct ENTER_MAP_S2CBuilder;
 
+struct ENTITY_SPAWN_S2C;
+struct ENTITY_SPAWN_S2CBuilder;
+
+struct ENTITY_DESTROY_S2C;
+struct ENTITY_DESTROY_S2CBuilder;
+
+struct ENTITY_MOVE_VELOCITY_C2S;
+struct ENTITY_MOVE_VELOCITY_C2SBuilder;
+
+struct ENTITY_MOVE_VELOCITY_S2C;
+struct ENTITY_MOVE_VELOCITY_S2CBuilder;
+
+struct ENTITY_MOVE_STOP_C2S;
+struct ENTITY_MOVE_STOP_C2SBuilder;
+
+struct ENTITY_MOVE_STOP_S2C;
+struct ENTITY_MOVE_STOP_S2CBuilder;
+
 enum MESSAGE : uint16_t {
+  MESSAGE_RESULT_S2C = 3,
   MESSAGE_CONNECT_RESULT_C2S = 4,
   MESSAGE_CONNECT_RESULT_S2C = 5,
   MESSAGE_LOGIN_C2S = 6,
   MESSAGE_LOGIN_S2C = 7,
   MESSAGE_SERVER_CONNECT_C2S = 8,
   MESSAGE_SERVER_CONNECT_S2C = 9,
-  MESSAGE_CHARACTER_INFO_C2S = 10,
-  MESSAGE_CHARACTER_INFO_S2C = 11,
-  MESSAGE_CHARACTER_NAME_DUPLICATION_C2S = 12,
-  MESSAGE_CHARACTER_NAME_DUPLICATION_S2C = 13,
-  MESSAGE_CHARACTER_CREATE_C2S = 14,
-  MESSAGE_CHARACTER_CREATE_S2C = 15,
-  MESSAGE_ENTER_LOBBY_C2S = 16,
-  MESSAGE_ENTER_LOBBY_S2C = 17,
-  MESSAGE_ENTER_MAP_C2S = 18,
-  MESSAGE_ENTER_MAP_S2C = 19,
-  MESSAGE_MIN = MESSAGE_CONNECT_RESULT_C2S,
-  MESSAGE_MAX = MESSAGE_ENTER_MAP_S2C
+  MESSAGE_HEART_BEAT_C2S = 10,
+  MESSAGE_HEART_BEAT_S2C = 11,
+  MESSAGE_ENTER_LOBBY_C2S = 12,
+  MESSAGE_ENTER_LOBBY_S2C = 13,
+  MESSAGE_CHARACTER_INFO_C2S = 14,
+  MESSAGE_CHARACTER_INFO_S2C = 15,
+  MESSAGE_CHARACTER_NAME_DUPLICATION_C2S = 16,
+  MESSAGE_CHARACTER_NAME_DUPLICATION_S2C = 17,
+  MESSAGE_CHARACTER_CREATE_C2S = 18,
+  MESSAGE_CHARACTER_CREATE_S2C = 19,
+  MESSAGE_ENTER_MAP_C2S = 20,
+  MESSAGE_ENTER_MAP_S2C = 21,
+  MESSAGE_ENTITY_SPAWN_S2C = 22,
+  MESSAGE_ENTITY_DESTROY_S2C = 23,
+  MESSAGE_ENTITY_MOVE_VELOCITY_C2S = 24,
+  MESSAGE_ENTITY_MOVE_VELOCITY_S2C = 25,
+  MESSAGE_ENTITY_MOVE_STOP_C2S = 26,
+  MESSAGE_ENTITY_MOVE_STOP_S2C = 27,
+  MESSAGE_MIN = MESSAGE_RESULT_S2C,
+  MESSAGE_MAX = MESSAGE_ENTITY_MOVE_STOP_S2C
 };
 
-inline const MESSAGE (&EnumValuesMESSAGE())[16] {
+inline const MESSAGE (&EnumValuesMESSAGE())[25] {
   static const MESSAGE values[] = {
+    MESSAGE_RESULT_S2C,
     MESSAGE_CONNECT_RESULT_C2S,
     MESSAGE_CONNECT_RESULT_S2C,
     MESSAGE_LOGIN_C2S,
     MESSAGE_LOGIN_S2C,
     MESSAGE_SERVER_CONNECT_C2S,
     MESSAGE_SERVER_CONNECT_S2C,
+    MESSAGE_HEART_BEAT_C2S,
+    MESSAGE_HEART_BEAT_S2C,
+    MESSAGE_ENTER_LOBBY_C2S,
+    MESSAGE_ENTER_LOBBY_S2C,
     MESSAGE_CHARACTER_INFO_C2S,
     MESSAGE_CHARACTER_INFO_S2C,
     MESSAGE_CHARACTER_NAME_DUPLICATION_C2S,
     MESSAGE_CHARACTER_NAME_DUPLICATION_S2C,
     MESSAGE_CHARACTER_CREATE_C2S,
     MESSAGE_CHARACTER_CREATE_S2C,
-    MESSAGE_ENTER_LOBBY_C2S,
-    MESSAGE_ENTER_LOBBY_S2C,
     MESSAGE_ENTER_MAP_C2S,
-    MESSAGE_ENTER_MAP_S2C
+    MESSAGE_ENTER_MAP_S2C,
+    MESSAGE_ENTITY_SPAWN_S2C,
+    MESSAGE_ENTITY_DESTROY_S2C,
+    MESSAGE_ENTITY_MOVE_VELOCITY_C2S,
+    MESSAGE_ENTITY_MOVE_VELOCITY_S2C,
+    MESSAGE_ENTITY_MOVE_STOP_C2S,
+    MESSAGE_ENTITY_MOVE_STOP_S2C
   };
   return values;
 }
 
 inline const char * const *EnumNamesMESSAGE() {
-  static const char * const names[17] = {
+  static const char * const names[26] = {
+    "RESULT_S2C",
     "CONNECT_RESULT_C2S",
     "CONNECT_RESULT_S2C",
     "LOGIN_C2S",
     "LOGIN_S2C",
     "SERVER_CONNECT_C2S",
     "SERVER_CONNECT_S2C",
+    "HEART_BEAT_C2S",
+    "HEART_BEAT_S2C",
+    "ENTER_LOBBY_C2S",
+    "ENTER_LOBBY_S2C",
     "CHARACTER_INFO_C2S",
     "CHARACTER_INFO_S2C",
     "CHARACTER_NAME_DUPLICATION_C2S",
     "CHARACTER_NAME_DUPLICATION_S2C",
     "CHARACTER_CREATE_C2S",
     "CHARACTER_CREATE_S2C",
-    "ENTER_LOBBY_C2S",
-    "ENTER_LOBBY_S2C",
     "ENTER_MAP_C2S",
     "ENTER_MAP_S2C",
+    "ENTITY_SPAWN_S2C",
+    "ENTITY_DESTROY_S2C",
+    "ENTITY_MOVE_VELOCITY_C2S",
+    "ENTITY_MOVE_VELOCITY_S2C",
+    "ENTITY_MOVE_STOP_C2S",
+    "ENTITY_MOVE_STOP_S2C",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameMESSAGE(MESSAGE e) {
-  if (flatbuffers::IsOutRange(e, MESSAGE_CONNECT_RESULT_C2S, MESSAGE_ENTER_MAP_S2C)) return "";
-  const size_t index = static_cast<size_t>(e) - static_cast<size_t>(MESSAGE_CONNECT_RESULT_C2S);
+  if (flatbuffers::IsOutRange(e, MESSAGE_RESULT_S2C, MESSAGE_ENTITY_MOVE_STOP_S2C)) return "";
+  const size_t index = static_cast<size_t>(e) - static_cast<size_t>(MESSAGE_RESULT_S2C);
   return EnumNamesMESSAGE()[index];
+}
+
+struct RESULT_S2C FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef RESULT_S2CBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_PROTOCOL = 4,
+    VT_RESULT = 6
+  };
+  uint16_t protocol() const {
+    return GetField<uint16_t>(VT_PROTOCOL, 0);
+  }
+  common::RESULT_CODE result() const {
+    return static_cast<common::RESULT_CODE>(GetField<uint32_t>(VT_RESULT, 0));
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint16_t>(verifier, VT_PROTOCOL) &&
+           VerifyField<uint32_t>(verifier, VT_RESULT) &&
+           verifier.EndTable();
+  }
+};
+
+struct RESULT_S2CBuilder {
+  typedef RESULT_S2C Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_protocol(uint16_t protocol) {
+    fbb_.AddElement<uint16_t>(RESULT_S2C::VT_PROTOCOL, protocol, 0);
+  }
+  void add_result(common::RESULT_CODE result) {
+    fbb_.AddElement<uint32_t>(RESULT_S2C::VT_RESULT, static_cast<uint32_t>(result), 0);
+  }
+  explicit RESULT_S2CBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  flatbuffers::Offset<RESULT_S2C> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<RESULT_S2C>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<RESULT_S2C> CreateRESULT_S2C(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    uint16_t protocol = 0,
+    common::RESULT_CODE result = common::RESULT_CODE_ERROR_FAIL) {
+  RESULT_S2CBuilder builder_(_fbb);
+  builder_.add_result(result);
+  builder_.add_protocol(protocol);
+  return builder_.Finish();
 }
 
 struct CONNECT_RESULT_C2S FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
@@ -461,6 +566,134 @@ inline flatbuffers::Offset<SERVER_CONNECT_S2C> CreateSERVER_CONNECT_S2C(
   return builder_.Finish();
 }
 
+struct HEART_BEAT_C2S FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef HEART_BEAT_C2SBuilder Builder;
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           verifier.EndTable();
+  }
+};
+
+struct HEART_BEAT_C2SBuilder {
+  typedef HEART_BEAT_C2S Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  explicit HEART_BEAT_C2SBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  flatbuffers::Offset<HEART_BEAT_C2S> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<HEART_BEAT_C2S>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<HEART_BEAT_C2S> CreateHEART_BEAT_C2S(
+    flatbuffers::FlatBufferBuilder &_fbb) {
+  HEART_BEAT_C2SBuilder builder_(_fbb);
+  return builder_.Finish();
+}
+
+struct HEART_BEAT_S2C FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef HEART_BEAT_S2CBuilder Builder;
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           verifier.EndTable();
+  }
+};
+
+struct HEART_BEAT_S2CBuilder {
+  typedef HEART_BEAT_S2C Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  explicit HEART_BEAT_S2CBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  flatbuffers::Offset<HEART_BEAT_S2C> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<HEART_BEAT_S2C>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<HEART_BEAT_S2C> CreateHEART_BEAT_S2C(
+    flatbuffers::FlatBufferBuilder &_fbb) {
+  HEART_BEAT_S2CBuilder builder_(_fbb);
+  return builder_.Finish();
+}
+
+struct ENTER_LOBBY_C2S FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef ENTER_LOBBY_C2SBuilder Builder;
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           verifier.EndTable();
+  }
+};
+
+struct ENTER_LOBBY_C2SBuilder {
+  typedef ENTER_LOBBY_C2S Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  explicit ENTER_LOBBY_C2SBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  flatbuffers::Offset<ENTER_LOBBY_C2S> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<ENTER_LOBBY_C2S>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<ENTER_LOBBY_C2S> CreateENTER_LOBBY_C2S(
+    flatbuffers::FlatBufferBuilder &_fbb) {
+  ENTER_LOBBY_C2SBuilder builder_(_fbb);
+  return builder_.Finish();
+}
+
+struct ENTER_LOBBY_S2C FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef ENTER_LOBBY_S2CBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_RESULT = 4
+  };
+  common::RESULT_CODE result() const {
+    return static_cast<common::RESULT_CODE>(GetField<uint32_t>(VT_RESULT, 0));
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint32_t>(verifier, VT_RESULT) &&
+           verifier.EndTable();
+  }
+};
+
+struct ENTER_LOBBY_S2CBuilder {
+  typedef ENTER_LOBBY_S2C Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_result(common::RESULT_CODE result) {
+    fbb_.AddElement<uint32_t>(ENTER_LOBBY_S2C::VT_RESULT, static_cast<uint32_t>(result), 0);
+  }
+  explicit ENTER_LOBBY_S2CBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  flatbuffers::Offset<ENTER_LOBBY_S2C> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<ENTER_LOBBY_S2C>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<ENTER_LOBBY_S2C> CreateENTER_LOBBY_S2C(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    common::RESULT_CODE result = common::RESULT_CODE_ERROR_FAIL) {
+  ENTER_LOBBY_S2CBuilder builder_(_fbb);
+  builder_.add_result(result);
+  return builder_.Finish();
+}
+
 struct CHARACTER_INFO_C2S FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   typedef CHARACTER_INFO_C2SBuilder Builder;
   bool Verify(flatbuffers::Verifier &verifier) const {
@@ -498,7 +731,9 @@ struct CHARACTER_INFO_S2C FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     VT_TYPE = 8,
     VT_BELONG = 10,
     VT_FACE = 12,
-    VT_EQUIPMENT = 14
+    VT_EQUIPMENT = 14,
+    VT_LAST_MAP_ID = 16,
+    VT_LAST_MAP_POSITION = 18
   };
   common::RESULT_CODE result() const {
     return static_cast<common::RESULT_CODE>(GetField<uint32_t>(VT_RESULT, 0));
@@ -518,6 +753,12 @@ struct CHARACTER_INFO_S2C FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   const flatbuffers::Vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>> *equipment() const {
     return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>> *>(VT_EQUIPMENT);
   }
+  uint32_t last_map_id() const {
+    return GetField<uint32_t>(VT_LAST_MAP_ID, 0);
+  }
+  const common::VECTOR3 *last_map_position() const {
+    return GetStruct<const common::VECTOR3 *>(VT_LAST_MAP_POSITION);
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint32_t>(verifier, VT_RESULT) &&
@@ -530,6 +771,8 @@ struct CHARACTER_INFO_S2C FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            VerifyOffset(verifier, VT_EQUIPMENT) &&
            verifier.VerifyVector(equipment()) &&
            verifier.VerifyVectorOfTables(equipment()) &&
+           VerifyField<uint32_t>(verifier, VT_LAST_MAP_ID) &&
+           VerifyField<common::VECTOR3>(verifier, VT_LAST_MAP_POSITION) &&
            verifier.EndTable();
   }
 };
@@ -556,6 +799,12 @@ struct CHARACTER_INFO_S2CBuilder {
   void add_equipment(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>>> equipment) {
     fbb_.AddOffset(CHARACTER_INFO_S2C::VT_EQUIPMENT, equipment);
   }
+  void add_last_map_id(uint32_t last_map_id) {
+    fbb_.AddElement<uint32_t>(CHARACTER_INFO_S2C::VT_LAST_MAP_ID, last_map_id, 0);
+  }
+  void add_last_map_position(const common::VECTOR3 *last_map_position) {
+    fbb_.AddStruct(CHARACTER_INFO_S2C::VT_LAST_MAP_POSITION, last_map_position);
+  }
   explicit CHARACTER_INFO_S2CBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -574,8 +823,12 @@ inline flatbuffers::Offset<CHARACTER_INFO_S2C> CreateCHARACTER_INFO_S2C(
     common::CHARACTER_TYPE type = common::CHARACTER_TYPE_NONE,
     uint16_t belong = 0,
     flatbuffers::Offset<common::CHARACTER_FACE> face = 0,
-    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>>> equipment = 0) {
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>>> equipment = 0,
+    uint32_t last_map_id = 0,
+    const common::VECTOR3 *last_map_position = 0) {
   CHARACTER_INFO_S2CBuilder builder_(_fbb);
+  builder_.add_last_map_position(last_map_position);
+  builder_.add_last_map_id(last_map_id);
   builder_.add_equipment(equipment);
   builder_.add_face(face);
   builder_.add_nick_name(nick_name);
@@ -592,7 +845,9 @@ inline flatbuffers::Offset<CHARACTER_INFO_S2C> CreateCHARACTER_INFO_S2CDirect(
     common::CHARACTER_TYPE type = common::CHARACTER_TYPE_NONE,
     uint16_t belong = 0,
     flatbuffers::Offset<common::CHARACTER_FACE> face = 0,
-    const std::vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>> *equipment = nullptr) {
+    const std::vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>> *equipment = nullptr,
+    uint32_t last_map_id = 0,
+    const common::VECTOR3 *last_map_position = 0) {
   auto nick_name__ = nick_name ? _fbb.CreateString(nick_name) : 0;
   auto equipment__ = equipment ? _fbb.CreateVector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>>(*equipment) : 0;
   return protocol::CreateCHARACTER_INFO_S2C(
@@ -602,7 +857,9 @@ inline flatbuffers::Offset<CHARACTER_INFO_S2C> CreateCHARACTER_INFO_S2CDirect(
       type,
       belong,
       face,
-      equipment__);
+      equipment__,
+      last_map_id,
+      last_map_position);
 }
 
 struct CHARACTER_NAME_DUPLICATION_C2S FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
@@ -830,7 +1087,9 @@ struct CHARACTER_CREATE_S2C FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table
     VT_TYPE = 8,
     VT_BELONG = 10,
     VT_FACE = 12,
-    VT_EQUIPMENT = 14
+    VT_EQUIPMENT = 14,
+    VT_LAST_MAP_ID = 16,
+    VT_LAST_MAP_POSITION = 18
   };
   common::RESULT_CODE result() const {
     return static_cast<common::RESULT_CODE>(GetField<uint32_t>(VT_RESULT, 0));
@@ -850,6 +1109,12 @@ struct CHARACTER_CREATE_S2C FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table
   const flatbuffers::Vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>> *equipment() const {
     return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>> *>(VT_EQUIPMENT);
   }
+  uint32_t last_map_id() const {
+    return GetField<uint32_t>(VT_LAST_MAP_ID, 0);
+  }
+  const common::VECTOR3 *last_map_position() const {
+    return GetStruct<const common::VECTOR3 *>(VT_LAST_MAP_POSITION);
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint32_t>(verifier, VT_RESULT) &&
@@ -862,6 +1127,8 @@ struct CHARACTER_CREATE_S2C FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table
            VerifyOffset(verifier, VT_EQUIPMENT) &&
            verifier.VerifyVector(equipment()) &&
            verifier.VerifyVectorOfTables(equipment()) &&
+           VerifyField<uint32_t>(verifier, VT_LAST_MAP_ID) &&
+           VerifyField<common::VECTOR3>(verifier, VT_LAST_MAP_POSITION) &&
            verifier.EndTable();
   }
 };
@@ -888,6 +1155,12 @@ struct CHARACTER_CREATE_S2CBuilder {
   void add_equipment(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>>> equipment) {
     fbb_.AddOffset(CHARACTER_CREATE_S2C::VT_EQUIPMENT, equipment);
   }
+  void add_last_map_id(uint32_t last_map_id) {
+    fbb_.AddElement<uint32_t>(CHARACTER_CREATE_S2C::VT_LAST_MAP_ID, last_map_id, 0);
+  }
+  void add_last_map_position(const common::VECTOR3 *last_map_position) {
+    fbb_.AddStruct(CHARACTER_CREATE_S2C::VT_LAST_MAP_POSITION, last_map_position);
+  }
   explicit CHARACTER_CREATE_S2CBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -906,8 +1179,12 @@ inline flatbuffers::Offset<CHARACTER_CREATE_S2C> CreateCHARACTER_CREATE_S2C(
     common::CHARACTER_TYPE type = common::CHARACTER_TYPE_NONE,
     uint16_t belong = 0,
     flatbuffers::Offset<common::CHARACTER_FACE> face = 0,
-    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>>> equipment = 0) {
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>>> equipment = 0,
+    uint32_t last_map_id = 0,
+    const common::VECTOR3 *last_map_position = 0) {
   CHARACTER_CREATE_S2CBuilder builder_(_fbb);
+  builder_.add_last_map_position(last_map_position);
+  builder_.add_last_map_id(last_map_id);
   builder_.add_equipment(equipment);
   builder_.add_face(face);
   builder_.add_nick_name(nick_name);
@@ -924,7 +1201,9 @@ inline flatbuffers::Offset<CHARACTER_CREATE_S2C> CreateCHARACTER_CREATE_S2CDirec
     common::CHARACTER_TYPE type = common::CHARACTER_TYPE_NONE,
     uint16_t belong = 0,
     flatbuffers::Offset<common::CHARACTER_FACE> face = 0,
-    const std::vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>> *equipment = nullptr) {
+    const std::vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>> *equipment = nullptr,
+    uint32_t last_map_id = 0,
+    const common::VECTOR3 *last_map_position = 0) {
   auto nick_name__ = nick_name ? _fbb.CreateString(nick_name) : 0;
   auto equipment__ = equipment ? _fbb.CreateVector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>>(*equipment) : 0;
   return protocol::CreateCHARACTER_CREATE_S2C(
@@ -934,83 +1213,22 @@ inline flatbuffers::Offset<CHARACTER_CREATE_S2C> CreateCHARACTER_CREATE_S2CDirec
       type,
       belong,
       face,
-      equipment__);
-}
-
-struct ENTER_LOBBY_C2S FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
-  typedef ENTER_LOBBY_C2SBuilder Builder;
-  bool Verify(flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           verifier.EndTable();
-  }
-};
-
-struct ENTER_LOBBY_C2SBuilder {
-  typedef ENTER_LOBBY_C2S Table;
-  flatbuffers::FlatBufferBuilder &fbb_;
-  flatbuffers::uoffset_t start_;
-  explicit ENTER_LOBBY_C2SBuilder(flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  flatbuffers::Offset<ENTER_LOBBY_C2S> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = flatbuffers::Offset<ENTER_LOBBY_C2S>(end);
-    return o;
-  }
-};
-
-inline flatbuffers::Offset<ENTER_LOBBY_C2S> CreateENTER_LOBBY_C2S(
-    flatbuffers::FlatBufferBuilder &_fbb) {
-  ENTER_LOBBY_C2SBuilder builder_(_fbb);
-  return builder_.Finish();
-}
-
-struct ENTER_LOBBY_S2C FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
-  typedef ENTER_LOBBY_S2CBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_RESULT = 4
-  };
-  common::RESULT_CODE result() const {
-    return static_cast<common::RESULT_CODE>(GetField<uint32_t>(VT_RESULT, 0));
-  }
-  bool Verify(flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyField<uint32_t>(verifier, VT_RESULT) &&
-           verifier.EndTable();
-  }
-};
-
-struct ENTER_LOBBY_S2CBuilder {
-  typedef ENTER_LOBBY_S2C Table;
-  flatbuffers::FlatBufferBuilder &fbb_;
-  flatbuffers::uoffset_t start_;
-  void add_result(common::RESULT_CODE result) {
-    fbb_.AddElement<uint32_t>(ENTER_LOBBY_S2C::VT_RESULT, static_cast<uint32_t>(result), 0);
-  }
-  explicit ENTER_LOBBY_S2CBuilder(flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  flatbuffers::Offset<ENTER_LOBBY_S2C> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = flatbuffers::Offset<ENTER_LOBBY_S2C>(end);
-    return o;
-  }
-};
-
-inline flatbuffers::Offset<ENTER_LOBBY_S2C> CreateENTER_LOBBY_S2C(
-    flatbuffers::FlatBufferBuilder &_fbb,
-    common::RESULT_CODE result = common::RESULT_CODE_ERROR_FAIL) {
-  ENTER_LOBBY_S2CBuilder builder_(_fbb);
-  builder_.add_result(result);
-  return builder_.Finish();
+      equipment__,
+      last_map_id,
+      last_map_position);
 }
 
 struct ENTER_MAP_C2S FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   typedef ENTER_MAP_C2SBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_MAP_ID = 4
+  };
+  uint32_t map_id() const {
+    return GetField<uint32_t>(VT_MAP_ID, 0);
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
+           VerifyField<uint32_t>(verifier, VT_MAP_ID) &&
            verifier.EndTable();
   }
 };
@@ -1019,6 +1237,9 @@ struct ENTER_MAP_C2SBuilder {
   typedef ENTER_MAP_C2S Table;
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
+  void add_map_id(uint32_t map_id) {
+    fbb_.AddElement<uint32_t>(ENTER_MAP_C2S::VT_MAP_ID, map_id, 0);
+  }
   explicit ENTER_MAP_C2SBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1031,22 +1252,29 @@ struct ENTER_MAP_C2SBuilder {
 };
 
 inline flatbuffers::Offset<ENTER_MAP_C2S> CreateENTER_MAP_C2S(
-    flatbuffers::FlatBufferBuilder &_fbb) {
+    flatbuffers::FlatBufferBuilder &_fbb,
+    uint32_t map_id = 0) {
   ENTER_MAP_C2SBuilder builder_(_fbb);
+  builder_.add_map_id(map_id);
   return builder_.Finish();
 }
 
 struct ENTER_MAP_S2C FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   typedef ENTER_MAP_S2CBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_RESULT = 4
+    VT_RESULT = 4,
+    VT_MAP_ID = 6
   };
   common::RESULT_CODE result() const {
     return static_cast<common::RESULT_CODE>(GetField<uint32_t>(VT_RESULT, 0));
   }
+  uint32_t map_id() const {
+    return GetField<uint32_t>(VT_MAP_ID, 0);
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint32_t>(verifier, VT_RESULT) &&
+           VerifyField<uint32_t>(verifier, VT_MAP_ID) &&
            verifier.EndTable();
   }
 };
@@ -1057,6 +1285,9 @@ struct ENTER_MAP_S2CBuilder {
   flatbuffers::uoffset_t start_;
   void add_result(common::RESULT_CODE result) {
     fbb_.AddElement<uint32_t>(ENTER_MAP_S2C::VT_RESULT, static_cast<uint32_t>(result), 0);
+  }
+  void add_map_id(uint32_t map_id) {
+    fbb_.AddElement<uint32_t>(ENTER_MAP_S2C::VT_MAP_ID, map_id, 0);
   }
   explicit ENTER_MAP_S2CBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -1071,8 +1302,387 @@ struct ENTER_MAP_S2CBuilder {
 
 inline flatbuffers::Offset<ENTER_MAP_S2C> CreateENTER_MAP_S2C(
     flatbuffers::FlatBufferBuilder &_fbb,
-    common::RESULT_CODE result = common::RESULT_CODE_ERROR_FAIL) {
+    common::RESULT_CODE result = common::RESULT_CODE_ERROR_FAIL,
+    uint32_t map_id = 0) {
   ENTER_MAP_S2CBuilder builder_(_fbb);
+  builder_.add_map_id(map_id);
+  builder_.add_result(result);
+  return builder_.Finish();
+}
+
+struct ENTITY_SPAWN_S2C FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef ENTITY_SPAWN_S2CBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_ENTITY = 4
+  };
+  const flatbuffers::Vector<flatbuffers::Offset<common::ENTITY_SPAWN_INFO>> *entity() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<common::ENTITY_SPAWN_INFO>> *>(VT_ENTITY);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_ENTITY) &&
+           verifier.VerifyVector(entity()) &&
+           verifier.VerifyVectorOfTables(entity()) &&
+           verifier.EndTable();
+  }
+};
+
+struct ENTITY_SPAWN_S2CBuilder {
+  typedef ENTITY_SPAWN_S2C Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_entity(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<common::ENTITY_SPAWN_INFO>>> entity) {
+    fbb_.AddOffset(ENTITY_SPAWN_S2C::VT_ENTITY, entity);
+  }
+  explicit ENTITY_SPAWN_S2CBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  flatbuffers::Offset<ENTITY_SPAWN_S2C> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<ENTITY_SPAWN_S2C>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<ENTITY_SPAWN_S2C> CreateENTITY_SPAWN_S2C(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<common::ENTITY_SPAWN_INFO>>> entity = 0) {
+  ENTITY_SPAWN_S2CBuilder builder_(_fbb);
+  builder_.add_entity(entity);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<ENTITY_SPAWN_S2C> CreateENTITY_SPAWN_S2CDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const std::vector<flatbuffers::Offset<common::ENTITY_SPAWN_INFO>> *entity = nullptr) {
+  auto entity__ = entity ? _fbb.CreateVector<flatbuffers::Offset<common::ENTITY_SPAWN_INFO>>(*entity) : 0;
+  return protocol::CreateENTITY_SPAWN_S2C(
+      _fbb,
+      entity__);
+}
+
+struct ENTITY_DESTROY_S2C FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef ENTITY_DESTROY_S2CBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_UID = 4
+  };
+  uint64_t uid() const {
+    return GetField<uint64_t>(VT_UID, 0);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint64_t>(verifier, VT_UID) &&
+           verifier.EndTable();
+  }
+};
+
+struct ENTITY_DESTROY_S2CBuilder {
+  typedef ENTITY_DESTROY_S2C Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_uid(uint64_t uid) {
+    fbb_.AddElement<uint64_t>(ENTITY_DESTROY_S2C::VT_UID, uid, 0);
+  }
+  explicit ENTITY_DESTROY_S2CBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  flatbuffers::Offset<ENTITY_DESTROY_S2C> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<ENTITY_DESTROY_S2C>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<ENTITY_DESTROY_S2C> CreateENTITY_DESTROY_S2C(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    uint64_t uid = 0) {
+  ENTITY_DESTROY_S2CBuilder builder_(_fbb);
+  builder_.add_uid(uid);
+  return builder_.Finish();
+}
+
+struct ENTITY_MOVE_VELOCITY_C2S FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef ENTITY_MOVE_VELOCITY_C2SBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_EXCUTE_TIME = 4,
+    VT_POSITION = 6,
+    VT_FORWARD = 8,
+    VT_SPEED = 10
+  };
+  uint64_t excute_time() const {
+    return GetField<uint64_t>(VT_EXCUTE_TIME, 0);
+  }
+  const common::VECTOR3 *position() const {
+    return GetStruct<const common::VECTOR3 *>(VT_POSITION);
+  }
+  const common::VECTOR3 *forward() const {
+    return GetStruct<const common::VECTOR3 *>(VT_FORWARD);
+  }
+  float speed() const {
+    return GetField<float>(VT_SPEED, 0.0f);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint64_t>(verifier, VT_EXCUTE_TIME) &&
+           VerifyField<common::VECTOR3>(verifier, VT_POSITION) &&
+           VerifyField<common::VECTOR3>(verifier, VT_FORWARD) &&
+           VerifyField<float>(verifier, VT_SPEED) &&
+           verifier.EndTable();
+  }
+};
+
+struct ENTITY_MOVE_VELOCITY_C2SBuilder {
+  typedef ENTITY_MOVE_VELOCITY_C2S Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_excute_time(uint64_t excute_time) {
+    fbb_.AddElement<uint64_t>(ENTITY_MOVE_VELOCITY_C2S::VT_EXCUTE_TIME, excute_time, 0);
+  }
+  void add_position(const common::VECTOR3 *position) {
+    fbb_.AddStruct(ENTITY_MOVE_VELOCITY_C2S::VT_POSITION, position);
+  }
+  void add_forward(const common::VECTOR3 *forward) {
+    fbb_.AddStruct(ENTITY_MOVE_VELOCITY_C2S::VT_FORWARD, forward);
+  }
+  void add_speed(float speed) {
+    fbb_.AddElement<float>(ENTITY_MOVE_VELOCITY_C2S::VT_SPEED, speed, 0.0f);
+  }
+  explicit ENTITY_MOVE_VELOCITY_C2SBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  flatbuffers::Offset<ENTITY_MOVE_VELOCITY_C2S> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<ENTITY_MOVE_VELOCITY_C2S>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<ENTITY_MOVE_VELOCITY_C2S> CreateENTITY_MOVE_VELOCITY_C2S(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    uint64_t excute_time = 0,
+    const common::VECTOR3 *position = 0,
+    const common::VECTOR3 *forward = 0,
+    float speed = 0.0f) {
+  ENTITY_MOVE_VELOCITY_C2SBuilder builder_(_fbb);
+  builder_.add_excute_time(excute_time);
+  builder_.add_speed(speed);
+  builder_.add_forward(forward);
+  builder_.add_position(position);
+  return builder_.Finish();
+}
+
+struct ENTITY_MOVE_VELOCITY_S2C FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef ENTITY_MOVE_VELOCITY_S2CBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_RESULT = 4,
+    VT_UID = 6,
+    VT_EXCUTE_TIME = 8,
+    VT_POSITION = 10,
+    VT_FORWARD = 12,
+    VT_SPEED = 14
+  };
+  common::RESULT_CODE result() const {
+    return static_cast<common::RESULT_CODE>(GetField<uint32_t>(VT_RESULT, 0));
+  }
+  uint64_t uid() const {
+    return GetField<uint64_t>(VT_UID, 0);
+  }
+  uint64_t excute_time() const {
+    return GetField<uint64_t>(VT_EXCUTE_TIME, 0);
+  }
+  const common::VECTOR3 *position() const {
+    return GetStruct<const common::VECTOR3 *>(VT_POSITION);
+  }
+  const common::VECTOR3 *forward() const {
+    return GetStruct<const common::VECTOR3 *>(VT_FORWARD);
+  }
+  float speed() const {
+    return GetField<float>(VT_SPEED, 0.0f);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint32_t>(verifier, VT_RESULT) &&
+           VerifyField<uint64_t>(verifier, VT_UID) &&
+           VerifyField<uint64_t>(verifier, VT_EXCUTE_TIME) &&
+           VerifyField<common::VECTOR3>(verifier, VT_POSITION) &&
+           VerifyField<common::VECTOR3>(verifier, VT_FORWARD) &&
+           VerifyField<float>(verifier, VT_SPEED) &&
+           verifier.EndTable();
+  }
+};
+
+struct ENTITY_MOVE_VELOCITY_S2CBuilder {
+  typedef ENTITY_MOVE_VELOCITY_S2C Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_result(common::RESULT_CODE result) {
+    fbb_.AddElement<uint32_t>(ENTITY_MOVE_VELOCITY_S2C::VT_RESULT, static_cast<uint32_t>(result), 0);
+  }
+  void add_uid(uint64_t uid) {
+    fbb_.AddElement<uint64_t>(ENTITY_MOVE_VELOCITY_S2C::VT_UID, uid, 0);
+  }
+  void add_excute_time(uint64_t excute_time) {
+    fbb_.AddElement<uint64_t>(ENTITY_MOVE_VELOCITY_S2C::VT_EXCUTE_TIME, excute_time, 0);
+  }
+  void add_position(const common::VECTOR3 *position) {
+    fbb_.AddStruct(ENTITY_MOVE_VELOCITY_S2C::VT_POSITION, position);
+  }
+  void add_forward(const common::VECTOR3 *forward) {
+    fbb_.AddStruct(ENTITY_MOVE_VELOCITY_S2C::VT_FORWARD, forward);
+  }
+  void add_speed(float speed) {
+    fbb_.AddElement<float>(ENTITY_MOVE_VELOCITY_S2C::VT_SPEED, speed, 0.0f);
+  }
+  explicit ENTITY_MOVE_VELOCITY_S2CBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  flatbuffers::Offset<ENTITY_MOVE_VELOCITY_S2C> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<ENTITY_MOVE_VELOCITY_S2C>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<ENTITY_MOVE_VELOCITY_S2C> CreateENTITY_MOVE_VELOCITY_S2C(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    common::RESULT_CODE result = common::RESULT_CODE_ERROR_FAIL,
+    uint64_t uid = 0,
+    uint64_t excute_time = 0,
+    const common::VECTOR3 *position = 0,
+    const common::VECTOR3 *forward = 0,
+    float speed = 0.0f) {
+  ENTITY_MOVE_VELOCITY_S2CBuilder builder_(_fbb);
+  builder_.add_excute_time(excute_time);
+  builder_.add_uid(uid);
+  builder_.add_speed(speed);
+  builder_.add_forward(forward);
+  builder_.add_position(position);
+  builder_.add_result(result);
+  return builder_.Finish();
+}
+
+struct ENTITY_MOVE_STOP_C2S FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef ENTITY_MOVE_STOP_C2SBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_EXCUTE_TIME = 4,
+    VT_POSITION = 6
+  };
+  uint64_t excute_time() const {
+    return GetField<uint64_t>(VT_EXCUTE_TIME, 0);
+  }
+  const common::VECTOR3 *position() const {
+    return GetStruct<const common::VECTOR3 *>(VT_POSITION);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint64_t>(verifier, VT_EXCUTE_TIME) &&
+           VerifyField<common::VECTOR3>(verifier, VT_POSITION) &&
+           verifier.EndTable();
+  }
+};
+
+struct ENTITY_MOVE_STOP_C2SBuilder {
+  typedef ENTITY_MOVE_STOP_C2S Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_excute_time(uint64_t excute_time) {
+    fbb_.AddElement<uint64_t>(ENTITY_MOVE_STOP_C2S::VT_EXCUTE_TIME, excute_time, 0);
+  }
+  void add_position(const common::VECTOR3 *position) {
+    fbb_.AddStruct(ENTITY_MOVE_STOP_C2S::VT_POSITION, position);
+  }
+  explicit ENTITY_MOVE_STOP_C2SBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  flatbuffers::Offset<ENTITY_MOVE_STOP_C2S> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<ENTITY_MOVE_STOP_C2S>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<ENTITY_MOVE_STOP_C2S> CreateENTITY_MOVE_STOP_C2S(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    uint64_t excute_time = 0,
+    const common::VECTOR3 *position = 0) {
+  ENTITY_MOVE_STOP_C2SBuilder builder_(_fbb);
+  builder_.add_excute_time(excute_time);
+  builder_.add_position(position);
+  return builder_.Finish();
+}
+
+struct ENTITY_MOVE_STOP_S2C FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef ENTITY_MOVE_STOP_S2CBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_RESULT = 4,
+    VT_UID = 6,
+    VT_EXCUTE_TIME = 8,
+    VT_POSITION = 10
+  };
+  common::RESULT_CODE result() const {
+    return static_cast<common::RESULT_CODE>(GetField<uint32_t>(VT_RESULT, 0));
+  }
+  uint64_t uid() const {
+    return GetField<uint64_t>(VT_UID, 0);
+  }
+  uint64_t excute_time() const {
+    return GetField<uint64_t>(VT_EXCUTE_TIME, 0);
+  }
+  const common::VECTOR3 *position() const {
+    return GetStruct<const common::VECTOR3 *>(VT_POSITION);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint32_t>(verifier, VT_RESULT) &&
+           VerifyField<uint64_t>(verifier, VT_UID) &&
+           VerifyField<uint64_t>(verifier, VT_EXCUTE_TIME) &&
+           VerifyField<common::VECTOR3>(verifier, VT_POSITION) &&
+           verifier.EndTable();
+  }
+};
+
+struct ENTITY_MOVE_STOP_S2CBuilder {
+  typedef ENTITY_MOVE_STOP_S2C Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_result(common::RESULT_CODE result) {
+    fbb_.AddElement<uint32_t>(ENTITY_MOVE_STOP_S2C::VT_RESULT, static_cast<uint32_t>(result), 0);
+  }
+  void add_uid(uint64_t uid) {
+    fbb_.AddElement<uint64_t>(ENTITY_MOVE_STOP_S2C::VT_UID, uid, 0);
+  }
+  void add_excute_time(uint64_t excute_time) {
+    fbb_.AddElement<uint64_t>(ENTITY_MOVE_STOP_S2C::VT_EXCUTE_TIME, excute_time, 0);
+  }
+  void add_position(const common::VECTOR3 *position) {
+    fbb_.AddStruct(ENTITY_MOVE_STOP_S2C::VT_POSITION, position);
+  }
+  explicit ENTITY_MOVE_STOP_S2CBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  flatbuffers::Offset<ENTITY_MOVE_STOP_S2C> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<ENTITY_MOVE_STOP_S2C>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<ENTITY_MOVE_STOP_S2C> CreateENTITY_MOVE_STOP_S2C(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    common::RESULT_CODE result = common::RESULT_CODE_ERROR_FAIL,
+    uint64_t uid = 0,
+    uint64_t excute_time = 0,
+    const common::VECTOR3 *position = 0) {
+  ENTITY_MOVE_STOP_S2CBuilder builder_(_fbb);
+  builder_.add_excute_time(excute_time);
+  builder_.add_uid(uid);
+  builder_.add_position(position);
   builder_.add_result(result);
   return builder_.Finish();
 }

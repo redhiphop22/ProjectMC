@@ -1,64 +1,77 @@
 #pragma once
 
+#include "S2ThreadMgr.h"
+
 namespace s2 {
 
 class S2Thread
 {
 public:
-	using thread_id_t = DWORD;
+	using thread_id_t = std::thread::id;
 
-public:
-	S2Thread();
-	virtual ~S2Thread();
+	S2Thread() = default;
+	virtual ~S2Thread() = default;
 	
-	virtual void			Destroy();
-
 	// 가급적 ThreadCreate() 함수를 사용바랍니다.
-	virtual bool			CreateThread(int32_t threadPriority, const char* file);
-	virtual void			DestroyThread();	
-	void					OnThreadRunning();
-
-	void					SuspendThread()
+	template<typename Func>
+	bool CreateThread(Func func, int32_t priority, const char* file)
 	{
-		::SuspendThread(m_thread);
-	}
-	void					ResumeThread()
-	{
-		::ResumeThread(m_thread);
-	}
+	#ifdef _DEBUG
+		m_callFunc = file;
+	#endif
+		m_thread = std::thread(func);
+	
+		//if(false == S2LOG_INSTANCE().PushThread(m_threadID))
+		//{
+		//	S2LOG("Log Mgr Error");
+		//	return false;
+		//}
 
-	void					Waiting(uint32_t ui32Millseconds)
-	{
-		::WaitForSingleObject(m_thread, ui32Millseconds);
-	}
+		if(false == S2THREAD_INSTANCE().PushThread(GetThreadId(), this))
+		{
+			// 에러 로그만
+			//S2LOG("Thread Mgr Error");
+		}
 
-	bool					IsThreadRunning()
-	{ 
-		return m_isRunning; 
-	}
-
-	thread_id_t				GetThreadId()
+		return true;
+	};
+	void DestroyThread()
 	{
-		return m_threadID;
+		if(m_isRunning)
+		{
+			m_isRunning = false;
+			m_thread.join();
+		}
+	}
+	template<typename Func>
+	void UpdateThread(Func func)
+	{
+		m_isRunning = true;
+		while(m_isRunning)
+		{
+			if(false == func())
+			{
+				std::this_thread::sleep_for(std::chrono::milliseconds(1));
+			}
+		}
+	}
+	thread_id_t	GetThreadId()
+	{
+		return m_thread.get_id();
 	}
 
 protected:	
-	virtual bool			OnThreadUpdate()
-	{
-		return false;
-	}
-
-protected:	
-	HANDLE					m_thread = INVALID_HANDLE_VALUE;
-	thread_id_t				m_threadID = 0;
+	std::thread				m_thread;
 	bool					m_isRunning = false;
-
 #ifdef _DEBUG
 public:
 	std::string				m_callFunc;
 #endif
 };
 
-#define ThreadCreate()		S2Thread::CreateThread(THREAD_PRIORITY_NORMAL, __FILE__)
-
 }
+
+#define THREAD_UPDATE_START		auto thread_update = [this]() -> bool {	bool isWorking = false;
+#define THREAD_UPDATE_END		return isWorking;};	m_thread.UpdateThread(thread_update);
+
+#define ThreadCreateFunc(f)		CreateThread(f, THREAD_PRIORITY_NORMAL, __FILE__)

@@ -9,7 +9,7 @@ bool UserProcessor::SERVER_CONNECT_DB_ACK(const char* buffer, int32_t size)
 
 	uid_t UID = msg->uid();
 
-	if(common::RESULT_CODE::RESULT_CODE_SUCESS != msg->result())
+	if(common::RESULT_CODE::RESULT_CODE_SUCCESS != msg->result())
 	{
 		m_userMgr->DeleteWaittingUser(UID);
 

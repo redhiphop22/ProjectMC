@@ -21,18 +21,30 @@
   <ItemGroup>
     <ClInclude Include="System\Define.h" />
     <ClInclude Include="System\DllMain.h" />
+    <ClInclude Include="System\Entity.h" />
     <ClInclude Include="System\IocpSession.h" />
     <ClInclude Include="System\IocpSessionMgr.h" />
     <ClInclude Include="System\MainFrm.h" />
     <ClInclude Include="System\MessageProcessor.h" />
+    <ClInclude Include="System\UserProcessor.h" />
+    <ClInclude Include="System\ZoneInfo.h" />
+    <ClInclude Include="System\ZoneMgr.h" />
     <ClInclude Include="Zone.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="System\DllMain.cpp" />
+    <ClCompile Include="System\Entity.cpp" />
     <ClCompile Include="System\IocpSession.cpp" />
     <ClCompile Include="System\IocpSessionMgr.cpp" />
     <ClCompile Include="System\MainFrm.cpp" />
     <ClCompile Include="System\MessageProcessor.cpp" />
+    <ClCompile Include="System\UserProcessor.cpp" />
+    <ClCompile Include="System\UserProcessor_Packet.cpp" />
+    <ClCompile Include="System\ZoneInfo.cpp" />
+    <ClCompile Include="System\ZoneMgr.cpp" />
+    <ClCompile Include="Zone.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+    </ClCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -141,9 +153,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;DLL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>
-      </PrecompiledHeaderFile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Zone.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>..\..\3thParty\flatbuffers\include;..\..\Common\Cpp;..\Common;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>

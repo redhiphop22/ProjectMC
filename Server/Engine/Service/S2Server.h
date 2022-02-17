@@ -15,7 +15,7 @@ enum S2_RESULT_CODE
 
 namespace s2 {
 
-class S2Server : public S2Thread
+class S2Server
 {
 	enum class S2_SERVER_STATE : int32_t
 	{
@@ -34,17 +34,19 @@ public:
 	void					SetInit();
 	void					StopServer();
 
-protected:
+	void					OnThreadUpdate();
+
+protected:	
+
 	virtual S2_RESULT_CODE	OnInit();
 	virtual void			OnUpdate();
 	virtual void			OnDestroy();
-
-	virtual bool			OnThreadUpdate() override;
 
 protected:
 	//S2Config* m_pConfig;
 
 private:
+	S2Thread				m_thread;
 	S2_SERVER_STATE			m_eServerState;
 	date32_t				m_dt32DelayTime;
 };

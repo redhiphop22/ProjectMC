@@ -4,8 +4,14 @@ namespace protocol_svr;
 
 enum MESSAGE : ushort
 {
+	//CONNECT_RESULT_REQ,
+	CONNECT_RESULT_ACK,
+
 	LOGIN_DB_REQ,
 	LOGIN_DB_ACK,
+
+	LOGOUT_REQ,
+	LOGOUT_ACK,
 
 	SERVER_CONNECT_DB_REQ,
 	SERVER_CONNECT_DB_ACK,
@@ -18,6 +24,26 @@ enum MESSAGE : ushort
 
 	CHARACTER_CREATE_DB_REQ,
 	CHARACTER_CREATE_DB_ACK,
+
+	ENTER_MAP_REQ,
+	ENTER_MAP_ACK,
+
+	//ENTITY_SPAWN_REQ,
+	ENTITY_SPAWN_ACK,
+
+	//ENTITY_DESTROY_REQ,
+	ENTITY_DESTROY_ACK,
+
+	ENTITY_MOVE_VELOCITY_REQ,
+	ENTITY_MOVE_VELOCITY_ACK,
+
+	ENTITY_MOVE_STOP_REQ,
+	ENTITY_MOVE_STOP_ACK,
+}
+
+table CONNECT_RESULT_ACK
+{
+	result: common.RESULT_CODE;
 }
 
 table LOGIN_DB_REQ
@@ -29,6 +55,16 @@ table LOGIN_DB_REQ
 table LOGIN_DB_ACK
 {
 	result: common.RESULT_CODE;
+}
+
+table LOGOUT_REQ
+{
+	uid: uint64;
+	map_id: uint32;
+}
+
+table LOGOUT_ACK
+{
 }
 
 table SERVER_CONNECT_DB_REQ
@@ -62,6 +98,8 @@ table CHARACTER_INFO_DB_ACK
 	belong: uint16;
 	face: common.CHARACTER_FACE;
 	equipment: [common.CHARACTER_EQUIPMENT];
+	last_map_id: uint32;
+	last_map_position: common.VECTOR3;
 }
 
 table CHARACTER_NAME_DUPLICATION_DB_REQ
@@ -98,4 +136,70 @@ table CHARACTER_CREATE_DB_ACK
 	belong: uint16;
 	face: common.CHARACTER_FACE;
 	equipment: [common.CHARACTER_EQUIPMENT];
+	last_map_id: uint32;
+	last_map_position: common.VECTOR3;
+}
+
+table ENTER_MAP_REQ
+{
+	uid: uint64;
+	map_id: uint32;
+
+	entity_info: common.ENTITY_INFO;
+}
+
+table ENTER_MAP_ACK
+{
+	uid: uint64;
+	result: common.RESULT_CODE;
+
+	map_id: uint32;
+}
+
+table ENTITY_SPAWN_ACK
+{
+	uid_list: [uint64];
+	spawn_list: [common.ENTITY_SPAWN_INFO];
+}
+
+table ENTITY_DESTROY_ACK
+{
+	uid_list: [uint64];
+	uid: uint64;
+}
+
+table ENTITY_MOVE_VELOCITY_REQ
+{
+	uid: uint64;
+	excute_time: uint64;
+	position: common.VECTOR3;
+	forward: common.VECTOR3;
+	speed: float;
+}
+
+table ENTITY_MOVE_VELOCITY_ACK
+{
+	result: common.RESULT_CODE;
+
+	uid: uint64;
+	excute_time: uint64;
+	position: common.VECTOR3;
+	forward: common.VECTOR3;
+	speed: float;
+}
+
+table ENTITY_MOVE_STOP_REQ
+{
+	uid: uint64;
+	excute_time: uint64;
+	position: common.VECTOR3;
+}
+
+table ENTITY_MOVE_STOP_ACK
+{
+	result: common.RESULT_CODE;
+
+	uid: uint64;	
+	excute_time: uint64;
+	position: common.VECTOR3;
 }

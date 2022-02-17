@@ -11,11 +11,11 @@ bool Start()
 
 	if(false == mainFrm->OnInit())
 	{
-		printf("[Eror] Front Init\n");
+		printf("[Eror] World Init\n");
 		return false;
 	}
 
-	printf("[Succ] Front Init\n");
+	printf("[Succ] World Init\n");
 	mainFrm->OnUpdate();
 
 	return true;

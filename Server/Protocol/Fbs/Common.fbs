@@ -43,6 +43,12 @@ enum CHARACTER_EQUIPMENT_TYPE : uint8
 	SMARTPHONE			= 15,	// 스마트폰
 }
 
+struct VECTOR3
+{
+	x: float;
+	y: float;
+	z: float;
+}
 table CHARACTER_INFO
 {
 	name: string;
@@ -73,4 +79,21 @@ table CHARACTER_EQUIPMENT
 {
 	type: CHARACTER_EQUIPMENT_TYPE;
 	id: uint32;
+}
+
+table ENTITY_INFO
+{
+	uid: uint64;
+	nick_name: string;
+	face: common.CHARACTER_FACE;
+	equipment: [common.CHARACTER_EQUIPMENT];
+}
+
+table ENTITY_SPAWN_INFO
+{
+	uid: uint64;
+	nick_name: string;
+	face: common.CHARACTER_FACE;
+	equipment: [common.CHARACTER_EQUIPMENT];
+	position: common.VECTOR3;
 }

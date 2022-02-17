@@ -261,7 +261,8 @@ ClientBase* CClientApp::GetPage(VIEW_PAGE viewPage)
 	case VIEW_PAGE::SERVERMOVE:			return (ClientBase*)(new ClientServerMove);		
 	case VIEW_PAGE::LOBBY:				return (ClientBase*)(new ClientLobby);
 	case VIEW_PAGE::CREATE_CHARACTER:	return (ClientBase*)(new ClientCreateCharacter);
-
+	case VIEW_PAGE::MAP:				return (ClientBase*)(new ClientMap);
+		
 	case VIEW_PAGE::BOT_SETTING:		return (ClientBase*)(new ClientBotSetting);
 	case VIEW_PAGE::BOT_RUN:			return (ClientBase*)(new ClientBotRun);
 		
@@ -323,6 +324,9 @@ BOOL CClientApp::OnIdle(LONG lCount)
 	}
 	if(m_messageProcessor)
 		m_messageProcessor->OnUpdate();
+
+	if(m_ActivePage)
+		m_ActivePage->OnUpdate();
 
 	return 1;//CWinAppEx::OnIdle(lCount);
 }

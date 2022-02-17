@@ -15,22 +15,17 @@ bool MainFrm::OnInit()
 		return false;
 	}
 
-	int32_t workerCount = 6;
-	int32_t sessionCount = 100;
+	int32_t icopWorkerCount = 6;
+	int32_t icopSessionCount = 100;
 	int32_t dbCount = 6;
 
-	if(false == m_workerMgr.Create(workerCount))
+	if(false == m_workerMgr.Create(icopWorkerCount))
 	{
 		printf("[Eror] Worker\n");
 		return false;
 	}
-	//auto& workerList = m_workerMgr.GetWorkerList();
-	//for(auto worker : workerList)
-	//{
-	//	MESSAGE_PROCESSOR().AddSender(MessageProcessor::MESSAGE_TYPE::USER, static_cast<int32_t>(UserProcessor::MESSAGE_GROUP::DATABASE), worker->GetIdx(), 100);
-	//}
 
-	if(false == m_sessionMgr.Create(sessionCount))
+	if(false == m_sessionMgr.Create(icopSessionCount))
 	{
 		printf("[Eror] Session\n");
 		return false;
@@ -42,11 +37,11 @@ bool MainFrm::OnInit()
 	//	return false;
 	//}
 
-	//if(false == m_userProssor.Create(workerCount, dbCount, 500))
-	//{
-	//	printf("[Eror] Processor\n");
-	//	return false;
-	//}
+	if(false == m_userProssor.Create())
+	{
+		printf("[Eror] Processor\n");
+		return false;
+	}
 		
 	uint32_t ip = s2::S2Net::GetIPToLong("127.0.0.1");
 	//uint32_t ip = s2::S2Net::GetIPToLong("192.168.0.199");
@@ -57,6 +52,8 @@ bool MainFrm::OnInit()
 		return false;
 	}
 	
+	MESSAGE_PROCESSOR().AddSender(MessageProcessor::MESSAGE_TYPE::USER, static_cast<int32_t>(MessageProcessor::MESSAGE_GROUP_USER::IOCP), icopWorkerCount, 100);
+
 	return true;
 }
 

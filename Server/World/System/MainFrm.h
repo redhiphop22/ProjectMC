@@ -19,6 +19,7 @@ private:
 
 	UserProcessor			m_userProssor;
 	DataBaseMgr				m_dataBaseMgr;
+	ZoneConnector			m_zoneConnector;
 };
 
 extern MainFrm* mainFrm;

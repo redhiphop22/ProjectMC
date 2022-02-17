@@ -20,7 +20,7 @@ void IocpSession::CompletionLogin(uid_t UID)
 bool IocpSession::OnAccept()
 {
 	flatbuffers::FlatBufferBuilder fbb(FBB_BASIC_SIZE);
-	auto body = protocol::CreateCONNECT_RESULT_S2C(fbb, common::RESULT_CODE_SUCESS);
+	auto body = protocol::CreateCONNECT_RESULT_S2C(fbb, common::RESULT_CODE_SUCCESS);
 	fbb.Finish(body);
 	SendPacket(protocol::MESSAGE_CONNECT_RESULT_S2C, fbb);
 
@@ -36,7 +36,7 @@ bool IocpSession::OnClose()
 
 bool IocpSession::OnRecvPacket(int32_t idx, const char* packet, int32_t size)
 {
-	return MESSAGE_PROCESSOR().SnedPacket_User(static_cast<int32_t>(MessageProcessor::MESSAGE_GROUP_USER::NETWORK), idx, this, packet, size);
+	return MESSAGE_PROCESSOR().SnedPacket_User(static_cast<int32_t>(MessageProcessor::MESSAGE_GROUP_USER::IOCP), idx, this, packet, size);
 }
 
 bool IocpSession::SendPacket(protocol::MESSAGE messageID, flatbuffers::FlatBufferBuilder& fbb)

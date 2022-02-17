@@ -186,7 +186,7 @@ bool S2IocpSession::OnSendPacket(const char* packet, int32_t size)
 		case ERROR_SUCCESS:
 			break;
 		default:
-			S2TRACE(  _T("[S2NetSession::SendPacketMessage] Packet Send Error : %d\n"), lastError);	
+			S2TRACE("[S2NetSession::SendPacketMessage] Packet Send Error : %d\n", lastError);	
 			return false;
 		}
 	}

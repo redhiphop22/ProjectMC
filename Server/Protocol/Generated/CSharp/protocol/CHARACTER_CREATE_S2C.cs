@@ -32,25 +32,10 @@ public struct CHARACTER_CREATE_S2C : IFlatbufferObject
   public common.CHARACTER_FACE? Face { get { int o = __p.__offset(12); return o != 0 ? (common.CHARACTER_FACE?)(new common.CHARACTER_FACE()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   public common.CHARACTER_EQUIPMENT? Equipment(int j) { int o = __p.__offset(14); return o != 0 ? (common.CHARACTER_EQUIPMENT?)(new common.CHARACTER_EQUIPMENT()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int EquipmentLength { get { int o = __p.__offset(14); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public uint LastMapId { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  public common.VECTOR3? LastMapPosition { get { int o = __p.__offset(18); return o != 0 ? (common.VECTOR3?)(new common.VECTOR3()).__assign(o + __p.bb_pos, __p.bb) : null; } }
 
-  public static Offset<protocol.CHARACTER_CREATE_S2C> CreateCHARACTER_CREATE_S2C(FlatBufferBuilder builder,
-      common.RESULT_CODE result = common.RESULT_CODE.ERROR_FAIL,
-      StringOffset nick_nameOffset = default(StringOffset),
-      common.CHARACTER_TYPE type = common.CHARACTER_TYPE.NONE,
-      ushort belong = 0,
-      Offset<common.CHARACTER_FACE> faceOffset = default(Offset<common.CHARACTER_FACE>),
-      VectorOffset equipmentOffset = default(VectorOffset)) {
-    builder.StartTable(6);
-    CHARACTER_CREATE_S2C.AddEquipment(builder, equipmentOffset);
-    CHARACTER_CREATE_S2C.AddFace(builder, faceOffset);
-    CHARACTER_CREATE_S2C.AddNickName(builder, nick_nameOffset);
-    CHARACTER_CREATE_S2C.AddResult(builder, result);
-    CHARACTER_CREATE_S2C.AddBelong(builder, belong);
-    CHARACTER_CREATE_S2C.AddType(builder, type);
-    return CHARACTER_CREATE_S2C.EndCHARACTER_CREATE_S2C(builder);
-  }
-
-  public static void StartCHARACTER_CREATE_S2C(FlatBufferBuilder builder) { builder.StartTable(6); }
+  public static void StartCHARACTER_CREATE_S2C(FlatBufferBuilder builder) { builder.StartTable(8); }
   public static void AddResult(FlatBufferBuilder builder, common.RESULT_CODE result) { builder.AddUint(0, (uint)result, 0); }
   public static void AddNickName(FlatBufferBuilder builder, StringOffset nickNameOffset) { builder.AddOffset(1, nickNameOffset.Value, 0); }
   public static void AddType(FlatBufferBuilder builder, common.CHARACTER_TYPE type) { builder.AddByte(2, (byte)type, 0); }
@@ -60,6 +45,8 @@ public struct CHARACTER_CREATE_S2C : IFlatbufferObject
   public static VectorOffset CreateEquipmentVector(FlatBufferBuilder builder, Offset<common.CHARACTER_EQUIPMENT>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateEquipmentVectorBlock(FlatBufferBuilder builder, Offset<common.CHARACTER_EQUIPMENT>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static void StartEquipmentVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddLastMapId(FlatBufferBuilder builder, uint lastMapId) { builder.AddUint(6, lastMapId, 0); }
+  public static void AddLastMapPosition(FlatBufferBuilder builder, Offset<common.VECTOR3> lastMapPositionOffset) { builder.AddStruct(7, lastMapPositionOffset.Value, 0); }
   public static Offset<protocol.CHARACTER_CREATE_S2C> EndCHARACTER_CREATE_S2C(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<protocol.CHARACTER_CREATE_S2C>(o);

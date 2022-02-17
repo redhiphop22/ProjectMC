@@ -4,13 +4,15 @@ class UserProcessor;
 class DataBaseMgr;
 class IocpSession;
 
+#define MESSAGE_BUFFER_SIZE	2048
+
 class MessageProcessor : public s2::S2Singleton<MessageProcessor>
 {	
 public:
-	struct MessageInfo_User
+	struct MessageUser
 	{
 		IocpSession* m_session;
-		char m_data[4096];
+		char m_data[MESSAGE_BUFFER_SIZE];
 
 		void SetData(IocpSession* session, const char* data, int32_t size)
 		{
@@ -18,25 +20,31 @@ public:
 			memcpy(m_data, data, size);
 		}
 	};
-
-	struct MessageInfo_DB
+	struct MessageBase
 	{
-		char m_data[4096];
+		char m_data[MESSAGE_BUFFER_SIZE];
+	};
+	union MessageInfo
+	{
+		MessageBase		m_base;
+		MessageUser		m_user;
 	};
 public:
 	enum class MESSAGE_TYPE
 	{
 		USER,
 		DATABASE,
+		ZONE,
 	};
 	enum class MESSAGE_GROUP_USER
 	{
-		NETWORK,
+		IOCP,
 		DATABASE,
+		ZONE,
 	};
+	using message_processor_t = s2::S2MessageProcessor<MessageInfo>;
+	using message_processor_list_t = std::unordered_map<MESSAGE_TYPE, message_processor_t>;
 
-	using message_processor_user_t = s2::S2MessageProcessor<MessageInfo_User>;
-	using message_processor_db_t = s2::S2MessageProcessor<MessageInfo_DB>;
 
 public:
 	MessageProcessor();
@@ -45,20 +53,19 @@ public:
 	bool					Create();
 	void					Destroy();
 
-	void					OnUpdate(MESSAGE_TYPE type);
+	bool					OnUpdate(MESSAGE_TYPE type);
 
 	bool					SetReceiver(MESSAGE_TYPE type, s2::S2MessageReceiver* receiver);
-	bool					AddSender(MESSAGE_TYPE type, int32_t groupIdx, int32_t processIdx, int32_t bufferCount);
+	bool					AddSender(MESSAGE_TYPE type, int32_t groupIdx, int32_t processCount, int32_t bufferCount);
 
 	bool					SnedPacket_User(int32_t groupIdx, int32_t senderIdx, IocpSession* session, const char* packet, int32_t size);
-	bool					SnedPacket_User(int32_t groupIdx, int32_t senderIdx, protocol_svr::MESSAGE message, flatbuffers::FlatBufferBuilder& fbb);
+	bool					SnedPacket_User(int32_t groupIdx, int32_t senderIdx, protocol_svr::MESSAGE protocol, flatbuffers::FlatBufferBuilder& fbb);
 
-	bool					SnedPacket_DB(int32_t groupIdx, int32_t senderIdx, protocol_svr::MESSAGE message, flatbuffers::FlatBufferBuilder& fbb);
+	bool					SnedPacket_DB(int32_t groupIdx, int32_t senderIdx, protocol_svr::MESSAGE protocol, flatbuffers::FlatBufferBuilder& fbb);
 
 public:
 
-	message_processor_user_t	m_messageUser;
-	message_processor_db_t		m_messageDB;
+	message_processor_list_t	m_messageList;
 };
 
 #define MESSAGE_PROCESSOR()		MessageProcessor::GetInstance()

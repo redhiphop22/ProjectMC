@@ -39,7 +39,10 @@ S2_RESULT_CODE S2Server::StartServer(const char* dumpFile, INT32 i32InitDelayTim
 	//m_dt32DelayTime = 0;//S2Time::StandTime();
 	m_dt32DelayTime.AddTime(S2_DATE_ADD_TYPE::SECOND, i32InitDelayTimeSec);
 
-	if(false == ThreadCreate())
+	auto threadProc = [this]() -> void {
+		this->OnThreadUpdate();
+	};
+	if(false == m_thread.ThreadCreateFunc(threadProc))
 		return S2_RESULT_ERROR_ST_THREAD;
 
 	return S2_RESULT_SUCCESS;
@@ -50,8 +53,10 @@ void S2Server::SetInit()
 	m_eServerState = S2_SERVER_STATE::INIT;
 }
 
-bool S2Server::OnThreadUpdate()
+void S2Server::OnThreadUpdate()
 {
+	THREAD_UPDATE_START;
+
 	switch (m_eServerState)
 	{
 	case S2_SERVER_STATE::LOADING:
@@ -79,13 +84,12 @@ bool S2Server::OnThreadUpdate()
 		break;
 	case S2_SERVER_STATE::END:
 		{
-			S2Thread::Destroy();
 			OnDestroy();
 		}
 		break;
 	}
 
-	return false;
+	THREAD_UPDATE_END;
 }
 
 S2_RESULT_CODE S2Server::OnInit()
@@ -103,7 +107,7 @@ void S2Server::OnUpdate()
 
 void S2Server::OnDestroy()
 {
-	S2Thread::Destroy();
+	m_thread.DestroyThread();
 
 	exit(0);
 }

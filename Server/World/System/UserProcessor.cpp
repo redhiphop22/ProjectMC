@@ -14,10 +14,8 @@ UserProcessor::~UserProcessor()
 
 bool UserProcessor::RegisterPacket()
 {
-	REGIST_PACKET(m_packetFunc.emplace(std::make_pair(protocol::MESSAGE_SERVER_CONNECT_C2S, &UserProcessor::SERVER_CONNECT_C2S)));
-	REGIST_PACKET(m_packetFunc.emplace(std::make_pair(protocol::MESSAGE_CHARACTER_INFO_C2S, &UserProcessor::CHARACTER_INFO_C2S)));
-	REGIST_PACKET(m_packetFunc.emplace(std::make_pair(protocol::MESSAGE_CHARACTER_NAME_DUPLICATION_C2S, &UserProcessor::CHARACTER_NAME_DUPLICATION_C2S)));
-	REGIST_PACKET(m_packetFunc.emplace(std::make_pair(protocol::MESSAGE_CHARACTER_CREATE_C2S, &UserProcessor::CHARACTER_CREATE_C2S)));
+	RegisterPacket_Packet();
+	RegisterPacket_Zone();
 
 	REGIST_PACKET(m_dbFunc.emplace(std::make_pair(protocol_svr::MESSAGE_SERVER_CONNECT_DB_ACK, &UserProcessor::SERVER_CONNECT_DB_ACK)));
 	REGIST_PACKET(m_dbFunc.emplace(std::make_pair(protocol_svr::MESSAGE_CHARACTER_INFO_DB_ACK, &UserProcessor::CHARACTER_INFO_DB_ACK)));
@@ -27,14 +25,11 @@ bool UserProcessor::RegisterPacket()
 	return true;
 }
 
-bool UserProcessor::Create(int32_t workerCount, int32_t dbCount, int32_t bufferCount)
+bool UserProcessor::Create()
 {
-	if(false == MESSAGE_PROCESSOR().SetReceiver(MessageProcessor::MESSAGE_TYPE::USER, this))
-	{
-		return false;
-	}
+	RegisterPacket();
 
-	if(false == MESSAGE_PROCESSOR().AddSender(MessageProcessor::MESSAGE_TYPE::DATABASE, 0, 0, 1000))
+	if(false == MESSAGE_PROCESSOR().SetReceiver(MessageProcessor::MESSAGE_TYPE::USER, this))
 	{
 		return false;
 	}
@@ -44,27 +39,35 @@ bool UserProcessor::Create(int32_t workerCount, int32_t dbCount, int32_t bufferC
 		false == m_userMgr->Create())
 	{
 		return false;
-	}
-	
-	RegisterPacket();
+	}	
 
-	return ThreadCreate();
+	auto threadProc = [this]() -> void {
+		this->OnUpdate();
+	};
+	return m_thread.ThreadCreateFunc(threadProc);
 }
 
 void UserProcessor::Destroy()
 {
-	s2::S2Thread::Destroy();
+	m_thread.DestroyThread();
 
-	m_userMgr->Destroy();
+	if(m_userMgr)
+	{
+		m_userMgr->Destroy();
+		delete m_userMgr;
+		m_userMgr = nullptr;
+	}
 }
 
-bool UserProcessor::OnThreadUpdate()
+void UserProcessor::OnUpdate()
 {
+	THREAD_UPDATE_START;
+
 	MESSAGE_PROCESSOR().OnUpdate(MessageProcessor::MESSAGE_TYPE::USER);
 	
 	m_userMgr->OnUpdate();
 
-	return true;
+	THREAD_UPDATE_END;
 }
 
 bool UserProcessor::OnMessageUpdate(int32_t groupIdx, void* data)
@@ -76,46 +79,96 @@ bool UserProcessor::OnMessageUpdate(int32_t groupIdx, void* data)
 
 void UserProcessor::PacketParsing(int32_t groupIdx, char* buffer)
 {
-	MessageProcessor::MessageInfo_User* user = (MessageProcessor::MessageInfo_User*)buffer;
+	switch(static_cast<MessageProcessor::MESSAGE_GROUP_USER>(groupIdx))
+	{
+	case MessageProcessor::MESSAGE_GROUP_USER::IOCP:
+		{
+			PacketParsing_IOCP(buffer);
+		}
+		break;
+	case MessageProcessor::MESSAGE_GROUP_USER::DATABASE:
+		{
+			PacketParsing_Database(buffer);
+		}
+		break;
+	case MessageProcessor::MESSAGE_GROUP_USER::ZONE:
+		{
+			PacketParsing_Zone(buffer);
+		}
+		break;
+	}
+}
+
+void UserProcessor::PacketParsing_IOCP(char* buffer)
+{
+	MessageProcessor::MessageUser* user = (MessageProcessor::MessageUser*)buffer;
+	
+	char* packetBuffer = user->m_data;
+	s2::packet_size_t packetSize = *(s2::packet_size_t*)(&packetBuffer[0]);
+	s2::packet_protocol_t packetProtocol = *(s2::packet_protocol_t*)(&packetBuffer[2]);
+
+	const char* body = &packetBuffer[6];
+	auto iter = m_packetFunc.find(static_cast<protocol::MESSAGE>(packetProtocol));
+	if(iter == m_packetFunc.end())
+	{
+		flatbuffers::FlatBufferBuilder fbb(FBB_BASIC_SIZE);
+		auto body = protocol::CreateRESULT_S2C(fbb, packetProtocol, common::RESULT_CODE_ERROR_PACKET_PROTOCOL);
+		fbb.Finish(body);
+		user->m_session->SendPacket(protocol::MESSAGE_RESULT_S2C, fbb);
+		return;
+	}
+	if(false == (this->*(iter->second))(user->m_session, body, packetSize - PACKET_HEAD_SIZE))
+	{
+		return;
+	}
+}
+
+void UserProcessor::PacketParsing_Database(char* buffer)
+{
+	MessageProcessor::MessageBase* user = (MessageProcessor::MessageBase*)buffer;
 	
 	char* packetBuffer = user->m_data;
 	s2::packet_size_t packetSize = *(s2::packet_size_t*)(&packetBuffer[0]); \
 	s2::packet_protocol_t packetProtocol = *(s2::packet_protocol_t*)(&packetBuffer[2]); \
 
-	switch(static_cast<MessageProcessor::MESSAGE_GROUP_USER>(groupIdx))
+	const char* body = &packetBuffer[4];
+	auto iter = m_dbFunc.find(static_cast<protocol_svr::MESSAGE>(packetProtocol));
+	if (iter == m_dbFunc.end())
 	{
-	case MessageProcessor::MESSAGE_GROUP_USER::NETWORK:
-		{
-			const char* body = &packetBuffer[6];
-			auto iter = m_packetFunc.find(static_cast<protocol::MESSAGE>(packetProtocol));
-			if (iter == m_packetFunc.end())
-			{
-				return;
-			}
-			if (false == (this->*(iter->second))(user->m_session, body, packetSize - PACKET_HEAD_SIZE))
-			{
-				return;
-			}
-		}
-		break;
-	case MessageProcessor::MESSAGE_GROUP_USER::DATABASE:
-		{
-			const char* body = &packetBuffer[4];
-			auto iter = m_dbFunc.find(static_cast<protocol_svr::MESSAGE>(packetProtocol));
-			if (iter == m_dbFunc.end())
-			{
-				return;
-			}
-			if (false == (this->*(iter->second))(body, packetSize - 4))
-			{
-				return;
-			}
-		}
-		break;
+		return;
+	}
+	if (false == (this->*(iter->second))(body, packetSize - 4))
+	{
+		return;
+	}
+}
+
+void UserProcessor::PacketParsing_Zone(char* buffer)
+{
+	MessageProcessor::MessageBase* user = (MessageProcessor::MessageBase*)buffer;
+	
+	char* packetBuffer = user->m_data;
+	s2::packet_size_t packetSize = *(s2::packet_size_t*)(&packetBuffer[0]); \
+	s2::packet_protocol_t packetProtocol = *(s2::packet_protocol_t*)(&packetBuffer[2]); \
+
+	const char* body = &packetBuffer[4];
+	auto iter = m_zoneFunc.find(static_cast<protocol_svr::MESSAGE>(packetProtocol));
+	if (iter == m_zoneFunc.end())
+	{
+		return;
+	}
+	if (false == (this->*(iter->second))(body, packetSize - 4))
+	{
+		return;
 	}
 }
 
 bool UserProcessor::SendPacket_DB(protocol_svr::MESSAGE message, flatbuffers::FlatBufferBuilder& fbb)
 {
 	return MESSAGE_PROCESSOR().SnedPacket_DB(0, 0, message, fbb);
+}
+
+bool UserProcessor::SendPacket_Zone(protocol_svr::MESSAGE message, flatbuffers::FlatBufferBuilder& fbb)
+{
+	return MESSAGE_PROCESSOR().SnedPacket_Zone(0, 0, message, fbb);
 }

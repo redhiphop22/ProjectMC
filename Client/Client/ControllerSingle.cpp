@@ -20,7 +20,7 @@ void ControllerSingle::CONNECT_RESULT_S2C(User* user, const char* buffer, int32_
 {
 	PACKET_CONVERT(CONNECT_RESULT_S2C, buffer, size);
 
-	if(common::RESULT_CODE_SUCESS == msg->result())
+	if(common::RESULT_CODE_SUCCESS == msg->result())
 	{
 		m_app->SwitchView(VIEW_PAGE::SERVERMOVE);
 	}
@@ -30,22 +30,29 @@ void ControllerSingle::SERVER_CONNECT_S2C(User* user, const char* buffer, int32_
 {
 	PACKET_CONVERT(SERVER_CONNECT_S2C, buffer, size);
 
-	if(common::RESULT_CODE_SUCESS == msg->result())
+	if(common::RESULT_CODE_SUCCESS == msg->result())
 	{
 		m_app->SwitchView(VIEW_PAGE::LOBBY);
 	}
+}
+
+void ControllerSingle::ENTER_LOBBY_S2C(User* user, const char* buffer, int32_t size)
+{
+	PACKET_CONVERT(ENTER_LOBBY_S2C, buffer, size);
+
+	((ClientLobby*)m_app->GetActivePage())->ENTER_LOBBY_S2C(msg);
 }
 
 void ControllerSingle::CHARACTER_INFO_S2C(User* user, const char* buffer, int32_t size)
 {
 	PACKET_CONVERT(CHARACTER_INFO_S2C, buffer, size);
 
-	if(common::RESULT_CODE_SUCESS == msg->result())
+	if(common::RESULT_CODE_SUCCESS == msg->result())
 	{
-		((ClientLobby*)m_app->GetActivePage())->SetCharacterInfo(msg);
+		((ClientLobby*)m_app->GetActivePage())->CHARACTER_INFO_S2C(msg);
 		//m_app->SwitchView(VIEW_PAGE::LOBBY);
 	}
-	else if(common::RESULT_CODE_SUCESS_CHARACTER_NONE == msg->result())
+	else if(common::RESULT_CODE_SUCCESS_CHARACTER_NONE == msg->result())
 	{
 		// 캐릭터 생성
 		m_app->SwitchView(VIEW_PAGE::CREATE_CHARACTER);
@@ -63,8 +70,32 @@ void ControllerSingle::CHARACTER_CREATE_S2C(User* user, const char* buffer, int3
 {
 	PACKET_CONVERT(CHARACTER_CREATE_S2C, buffer, size);
 
-	if(common::RESULT_CODE_SUCESS == msg->result())
+	if(common::RESULT_CODE_SUCCESS == msg->result())
 	{
 		m_app->SwitchView(VIEW_PAGE::LOBBY);
 	}
+}
+
+void ControllerSingle::ENTER_MAP_S2C(User* user, const char* buffer, int32_t size)
+{
+	PACKET_CONVERT(ENTER_MAP_S2C, buffer, size);
+
+	if(common::RESULT_CODE_SUCCESS == msg->result())
+	{
+		m_app->SwitchView(VIEW_PAGE::MAP);
+	}
+}
+
+void ControllerSingle::ENTITY_SPAWN_S2C(User* user, const char* buffer, int32_t size)
+{
+	PACKET_CONVERT(ENTITY_SPAWN_S2C, buffer, size);
+
+	((ClientMap*)m_app->GetActivePage())->ENTITY_SPAWN_S2C(msg);
+}
+
+void ControllerSingle::ENTITY_DESTROY_S2C(User* user, const char* buffer, int32_t size)
+{
+	PACKET_CONVERT(ENTITY_DESTROY_S2C, buffer, size);
+
+	((ClientMap*)m_app->GetActivePage())->ENTITY_DESTROY_S2C(msg);
 }

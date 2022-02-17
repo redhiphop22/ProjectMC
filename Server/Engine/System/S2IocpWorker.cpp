@@ -13,17 +13,20 @@ S2IocpWorker::~S2IocpWorker()
 
 bool S2IocpWorker::Create()
 {
-	return ThreadCreate();
+	auto threadProc = [this]() -> void {
+		this->OnUpdate();
+	};
+	return m_thread.ThreadCreateFunc(threadProc);
 }
 
 void S2IocpWorker::Destroy()
 {
-	S2Thread::Destroy();
+	m_thread.DestroyThread();
 }
 
-bool S2IocpWorker::OnThreadUpdate()
+void S2IocpWorker::OnUpdate()
 {
-	bool working = false;
+	THREAD_UPDATE_START;
 
 	DWORD			transferSize = 0;
 	ULONG_PTR		completionKey = NULL;
@@ -37,7 +40,7 @@ bool S2IocpWorker::OnThreadUpdate()
 		if(NULL != completionKey)
 		{
 			//이녀석은 삭제처리 합니다. 
-			working = true;
+			isWorking = true;
 
 			S2IocpSession* session = reinterpret_cast<S2IocpSession*>(completionKey);
 			if(nullptr != session && session->IsActive())
@@ -80,7 +83,7 @@ bool S2IocpWorker::OnThreadUpdate()
 		}
 	}
 
-	return working;
+	THREAD_UPDATE_END;
 }
 
 }

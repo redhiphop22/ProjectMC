@@ -198,6 +198,7 @@
     <ClInclude Include="ClientInclude.h" />
     <ClInclude Include="ClientLobby.h" />
     <ClInclude Include="ClientLogin.h" />
+    <ClInclude Include="ClientMap.h" />
     <ClInclude Include="ClientSelector.h" />
     <ClInclude Include="ClientServerMove.h" />
     <ClInclude Include="ClientView.h" />
@@ -229,6 +230,7 @@
     <ClCompile Include="ClientDoc.cpp" />
     <ClCompile Include="ClientLobby.cpp" />
     <ClCompile Include="ClientLogin.cpp" />
+    <ClCompile Include="ClientMap.cpp" />
     <ClCompile Include="ClientSelector.cpp" />
     <ClCompile Include="ClientServerMove.cpp" />
     <ClCompile Include="ClientView.cpp" />

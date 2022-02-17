@@ -1,22 +1,26 @@
 #pragma once
 
-class S2ThreadTimer : public s2::S2Thread
+#include "S2Thread.h"
+
+class S2ThreadTimer
 {
 	date32_t m_dt32Local;			// 썸머타임 적용되는 로컬시(변환후)
 	date32_t m_dt32Stand;			// 썸머타임 무시하는 표준시(변환후)
+	s2::S2Thread				m_thread;
 
 public:
 	S2ThreadTimer();
 	~S2ThreadTimer();
 
-	virtual bool Create();
-	virtual void Destroy();
+	virtual bool			Create();
+	virtual void			Destroy();
+	void					OnUpdate();
 
 	date32_t GetLocalTime() { return m_dt32Local; }
 	date32_t GetStandTime() { return m_dt32Stand; }
 
 protected:
-	virtual bool OnThreadUpdate() override;
+	
 };
 
 extern S2ThreadTimer* s_pTimer;

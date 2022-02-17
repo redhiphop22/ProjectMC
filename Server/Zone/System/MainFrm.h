@@ -17,7 +17,7 @@ private:
 	IocpSessionMgr			m_sessionMgr;
 	s2::S2Iocp				m_IOCP;
 
-	//UserProcessor			m_userProssor;
+	UserProcessor			m_userProssor;
 	//DataBaseMgr				m_dataBaseMgr;
 };
 

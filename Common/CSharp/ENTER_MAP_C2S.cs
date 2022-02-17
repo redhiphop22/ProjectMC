@@ -19,8 +19,17 @@ public struct ENTER_MAP_C2S : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public ENTER_MAP_C2S __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  public uint MapId { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
 
-  public static void StartENTER_MAP_C2S(FlatBufferBuilder builder) { builder.StartTable(0); }
+  public static Offset<protocol.ENTER_MAP_C2S> CreateENTER_MAP_C2S(FlatBufferBuilder builder,
+      uint map_id = 0) {
+    builder.StartTable(1);
+    ENTER_MAP_C2S.AddMapId(builder, map_id);
+    return ENTER_MAP_C2S.EndENTER_MAP_C2S(builder);
+  }
+
+  public static void StartENTER_MAP_C2S(FlatBufferBuilder builder) { builder.StartTable(1); }
+  public static void AddMapId(FlatBufferBuilder builder, uint mapId) { builder.AddUint(0, mapId, 0); }
   public static Offset<protocol.ENTER_MAP_C2S> EndENTER_MAP_C2S(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<protocol.ENTER_MAP_C2S>(o);

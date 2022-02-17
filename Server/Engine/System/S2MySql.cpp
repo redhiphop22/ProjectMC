@@ -18,6 +18,8 @@ S2MySql::~S2MySql()
 
 bool S2MySql::Create(const char* host, const uint16_t port, const char* user, const char* pass, const char* database)
 {
+	m_connectInfo.SetInfo(host, port, user, pass, database);
+
 	m_mysql = new MYSQL();
 	if(nullptr == m_mysql)
 	{
@@ -25,18 +27,14 @@ bool S2MySql::Create(const char* host, const uint16_t port, const char* user, co
 	}
 	mysql_init(m_mysql);
 
-	m_connection = mysql_real_connect(m_mysql, host, user, pass, database, port, nullptr, 0);
-	if(nullptr == m_connection)
-	{
-		return false;
-	}
+	Connection();
 
 	return true;
 }
 
 void S2MySql::Destroy()
 {
-   if(nullptr != m_result)
+	if(nullptr != m_result)
 	{
 		mysql_free_result(m_result);
 		m_result = nullptr;
@@ -54,11 +52,33 @@ void S2MySql::Destroy()
 	}
 }
 
+bool S2MySql::Connection()
+{
+	if(nullptr != m_result)
+	{
+		mysql_free_result(m_result);
+		m_result = nullptr;
+	}
+	if(nullptr != m_connection)
+	{
+		mysql_close(m_connection);
+		m_connection = nullptr;
+	}
+
+	m_connection = mysql_real_connect(m_mysql, m_connectInfo.m_host.c_str(), m_connectInfo.m_user.c_str(), m_connectInfo.m_pass.c_str(), m_connectInfo.m_database.c_str(), m_connectInfo.m_port, nullptr, 0);
+	if(nullptr == m_connection)
+	{
+		return false;
+	}
+	return true;
+}
+
 bool S2MySql::Execute(const char* query)
 {
     int32_t queryStat = mysql_query(m_connection, query);
 	if(0 != queryStat)
 	{
+		Connection();
 		return false;
 	}
 
@@ -70,6 +90,7 @@ bool S2MySql::ExecuteSelect(const char* query)
     int queryStat = mysql_query(m_connection, query);
 	if(0 != queryStat)
 	{
+		Connection();
 		return false;
 	}
 	if(nullptr != m_result)

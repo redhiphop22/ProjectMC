@@ -13,6 +13,8 @@ public:
 	float X() { return m_pos[0]; }
 	float Y() { return m_pos[1]; }
 	float Z() { return m_pos[2]; }
+	void Reset();
+	void Set(float x, float y, float z);
 
 	friend inline bool operator==(const S2Vector3& v1, const S2Vector3& v2)
 	{

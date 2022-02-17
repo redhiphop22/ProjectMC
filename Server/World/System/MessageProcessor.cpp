@@ -18,40 +18,55 @@ void MessageProcessor::Destroy()
 {
 }
 
-void MessageProcessor::OnUpdate(MESSAGE_TYPE type)
+bool MessageProcessor::OnUpdate(MESSAGE_TYPE type)
 {
-	switch(type)
+	auto message = m_messageList.find(type);
+	if(message == m_messageList.end())
 	{
-	case MESSAGE_TYPE::USER:		m_messageUser.MessageUpdate();		break;
-	case MESSAGE_TYPE::DATABASE:	m_messageDB.MessageUpdate();		break;
+		return false;
 	}
+	return message->second.MessageUpdate();
 }
 
 bool MessageProcessor::SetReceiver(MESSAGE_TYPE type, s2::S2MessageReceiver* receiver)
 {
-	switch(type)
+	auto message = m_messageList.find(type);
+	if(message == m_messageList.end())
 	{
-	case MESSAGE_TYPE::USER:		m_messageUser.SetReceiver(receiver);	break;
-	case MESSAGE_TYPE::DATABASE:	m_messageDB.SetReceiver(receiver);		break;
-	default:
-		return false;
+		auto result = m_messageList.emplace(std::make_pair(type, message_processor_t()));
+		if(false == result.second)
+		{
+			return false;
+		}
+		message = result.first;
 	}
+	message->second.SetReceiver(receiver);
 	return true;
 }
 
-bool MessageProcessor::AddSender(MESSAGE_TYPE type, int32_t groupIdx, int32_t processIdx, int32_t bufferCount)
+bool MessageProcessor::AddSender(MESSAGE_TYPE type, int32_t groupIdx, int32_t processCount, int32_t bufferCount)
 {
-	switch(type)
+	auto message = m_messageList.find(type);
+	if(message == m_messageList.end())
 	{
-	case MESSAGE_TYPE::USER:		return m_messageUser.AddSender(groupIdx, processIdx, bufferCount);
-	case MESSAGE_TYPE::DATABASE:	return m_messageDB.AddSender(groupIdx, processIdx, bufferCount);
-	}
-	return false;
+		auto result = m_messageList.emplace(std::make_pair(type, message_processor_t()));
+		if(false == result.second)
+		{
+			return false;
+		}
+		message = result.first;
+	}	
+	return message->second.AddSender(groupIdx, processCount, bufferCount);
 }
 
 bool MessageProcessor::SnedPacket_User(int32_t groupIdx, int32_t senderIdx, IocpSession* session, const char* packet, int32_t size)
 {
-	auto ringBuffer = m_messageUser.GetRingBuffer(groupIdx, senderIdx);
+	auto message = m_messageList.find(MESSAGE_TYPE::USER);
+	if(message == m_messageList.end())
+	{
+		return false;
+	}
+	auto ringBuffer = message->second.GetRingBuffer(groupIdx, senderIdx);
 	if(nullptr == ringBuffer)
 	{
 		return false;
@@ -61,16 +76,21 @@ bool MessageProcessor::SnedPacket_User(int32_t groupIdx, int32_t senderIdx, Iocp
 	{
 		return false;
 	}
-	pushData->SetData(session, packet, size);
-
+	MessageUser* date = &pushData->m_user;
+	date->SetData(session, packet, size);
 	ringBuffer->PushCompleted();
 
 	return true;
 }
 
-bool MessageProcessor::SnedPacket_User(int32_t groupIdx, int32_t senderIdx, protocol_svr::MESSAGE message, flatbuffers::FlatBufferBuilder& fbb)
+bool MessageProcessor::SnedPacket_User(int32_t groupIdx, int32_t senderIdx, protocol_svr::MESSAGE protocol, flatbuffers::FlatBufferBuilder& fbb)
 {
-	auto ringBuffer = m_messageUser.GetRingBuffer(groupIdx, senderIdx);
+	auto message = m_messageList.find(MESSAGE_TYPE::USER);
+	if(message == m_messageList.end())
+	{
+		return false;
+	}
+	auto ringBuffer = message->second.GetRingBuffer(groupIdx, senderIdx);
 	if(nullptr == ringBuffer)
 	{
 		return false;
@@ -80,21 +100,25 @@ bool MessageProcessor::SnedPacket_User(int32_t groupIdx, int32_t senderIdx, prot
 	{
 		return false;
 	}
-	auto* date = pushData->m_data;
-
+	MessageBase* date = &pushData->m_base;	
 	uint16_t packetSize = fbb.GetSize() + 4;
-	memcpy(date,		&packetSize,			sizeof(uint16_t));
-	memcpy(&date[2],	&message,				sizeof(protocol_svr::MESSAGE));
-	memcpy(&date[4],	fbb.GetBufferPointer(),	fbb.GetSize());
+	memcpy(date->m_data,		&packetSize,			sizeof(uint16_t));
+	memcpy(&date->m_data[2],	&protocol,				sizeof(protocol_svr::MESSAGE));
+	memcpy(&date->m_data[4],	fbb.GetBufferPointer(),	fbb.GetSize());
 
 	ringBuffer->PushCompleted();
 
 	return true;
 }
 
-bool MessageProcessor::SnedPacket_DB(int32_t groupIdx, int32_t senderIdx, protocol_svr::MESSAGE message, flatbuffers::FlatBufferBuilder& fbb)
+bool MessageProcessor::SnedPacket_User(int32_t groupIdx, int32_t senderIdx, char* buffer, int32_t size)
 {
-	auto ringBuffer = m_messageDB.GetRingBuffer(groupIdx, senderIdx);
+	auto message = m_messageList.find(MESSAGE_TYPE::USER);
+	if(message == m_messageList.end())
+	{
+		return false;
+	}
+	auto ringBuffer = message->second.GetRingBuffer(groupIdx, senderIdx);
 	if(nullptr == ringBuffer)
 	{
 		return false;
@@ -104,16 +128,66 @@ bool MessageProcessor::SnedPacket_DB(int32_t groupIdx, int32_t senderIdx, protoc
 	{
 		return false;
 	}
-	auto* date = pushData->m_data;
+	MessageBase* date = &pushData->m_base;	
+	memcpy(date->m_data, buffer, size);
+	ringBuffer->PushCompleted();
 
+	return true;
+}
+
+bool MessageProcessor::SnedPacket_DB(int32_t groupIdx, int32_t senderIdx, protocol_svr::MESSAGE protocol, flatbuffers::FlatBufferBuilder& fbb)
+{
+	auto message = m_messageList.find(MESSAGE_TYPE::DATABASE);
+	if(message == m_messageList.end())
+	{
+		return false;
+	}
+	auto ringBuffer = message->second.GetRingBuffer(groupIdx, senderIdx);
+	if(nullptr == ringBuffer)
+	{
+		return false;
+	}
+	auto pushData = ringBuffer->GetPushData();
+	if(nullptr == pushData)
+	{
+		return false;
+	}
+	MessageBase* date = &pushData->m_base;	
 	uint16_t packetSize = fbb.GetSize() + 4;
-	memcpy(date,		&packetSize,			sizeof(uint16_t));
-	memcpy(&date[2],	&message,				sizeof(protocol_svr::MESSAGE));
-	memcpy(&date[4],	fbb.GetBufferPointer(),	fbb.GetSize());
+	memcpy(date->m_data,		&packetSize,			sizeof(uint16_t));
+	memcpy(&date->m_data[2],	&protocol,				sizeof(protocol_svr::MESSAGE));
+	memcpy(&date->m_data[4],	fbb.GetBufferPointer(),	fbb.GetSize());
 
 	ringBuffer->PushCompleted();
 
 	return true;
 }
 
+bool MessageProcessor::SnedPacket_Zone(int32_t groupIdx, int32_t senderIdx, protocol_svr::MESSAGE protocol, flatbuffers::FlatBufferBuilder& fbb)
+{
+	auto message = m_messageList.find(MESSAGE_TYPE::ZONE);
+	if(message == m_messageList.end())
+	{
+		return false;
+	}
+	auto ringBuffer = message->second.GetRingBuffer(groupIdx, senderIdx);
+	if(nullptr == ringBuffer)
+	{
+		return false;
+	}
+	auto pushData = ringBuffer->GetPushData();
+	if(nullptr == pushData)
+	{
+		return false;
+	}
+	MessageBase* date = &pushData->m_base;	
+	uint16_t packetSize = fbb.GetSize() + 4;
+	memcpy(date->m_data,		&packetSize,			sizeof(uint16_t));
+	memcpy(&date->m_data[2],	&protocol,				sizeof(protocol_svr::MESSAGE));
+	memcpy(&date->m_data[4],	fbb.GetBufferPointer(),	fbb.GetSize());
+
+	ringBuffer->PushCompleted();
+
+	return true;
+}
 

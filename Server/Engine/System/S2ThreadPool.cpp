@@ -30,7 +30,7 @@ void S2ThreadPool::Destroy()
 {
 	for(auto& iter : m_threadList)
 	{
-		iter->Destroy();
+		iter->DestroyThread();
 		delete iter;
 	}
 }

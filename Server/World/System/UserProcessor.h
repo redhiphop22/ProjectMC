@@ -3,36 +3,47 @@
 class IocpSession;
 class UserMgr;
 
-class UserProcessor : public s2::S2Thread, s2::S2MessageReceiver
+class UserProcessor : public s2::S2MessageReceiver
 {
 	using sesion_func_t = bool(UserProcessor::*)(IocpSession* session, const char* buffer, int32_t size);
+	using sesion_list_t = std::unordered_map<protocol::MESSAGE, sesion_func_t>;
+
 	using packet_func_t = bool(UserProcessor::*)(const char* buffer, int32_t size);
+	using packet_list_t = std::unordered_map<protocol_svr::MESSAGE, packet_func_t>;
 
 public:
 	UserProcessor();
 	~UserProcessor();
 
-	bool					Create(int32_t workerCount, int32_t dbCount, int32_t bufferCount);
+	bool					Create();
 	void					Destroy();
 	void					OnUpdate();
 
-	virtual bool			OnThreadUpdate() override;
 	virtual bool			OnMessageUpdate(int32_t groupIdx, void* data) override;
 
 protected:
-	bool					SendPacket_DB(protocol_svr::MESSAGE message, flatbuffers::FlatBufferBuilder& fbb);
+	bool					SendPacket_DB(protocol_svr::MESSAGE protocol, flatbuffers::FlatBufferBuilder& fbb);
+	bool					SendPacket_Zone(protocol_svr::MESSAGE message, flatbuffers::FlatBufferBuilder& fbb);
 
 	void					PacketParsing(int32_t groupIdx, char* buffer);
+	void					PacketParsing_IOCP(char* buffer);
+	void					PacketParsing_Database(char* buffer);
+	void					PacketParsing_Zone(char* buffer);
 
 protected:
 	bool					RegisterPacket();
+	bool					RegisterPacket_Packet();
+	bool					RegisterPacket_Zone();
 
 protected:
 	bool					SERVER_CONNECT_C2S(IocpSession* session, const char* buffer, int32_t size);
+	bool					ENTER_LOBBY_C2S(IocpSession* session, const char* buffer, int32_t size);
 	bool					CHARACTER_INFO_C2S(IocpSession* session, const char* buffer, int32_t size);
 	bool					CHARACTER_NAME_DUPLICATION_C2S(IocpSession* session, const char* buffer, int32_t size);
 	bool					CHARACTER_CREATE_C2S(IocpSession* session, const char* buffer, int32_t size);
-	bool					MAP_ENTER_C2S(IocpSession* session, const char* buffer, int32_t size);
+	bool					ENTER_MAP_C2S(IocpSession* session, const char* buffer, int32_t size);
+	bool					ENTITY_MOVE_VELOCITY_C2S(IocpSession* session, const char* buffer, int32_t size);
+	bool					ENTITY_MOVE_STOP_C2S(IocpSession* session, const char* buffer, int32_t size);
 
 protected:
 	bool					SERVER_CONNECT_DB_ACK(const char* buffer, int32_t size);
@@ -40,8 +51,16 @@ protected:
 	bool					CHARACTER_NAME_DUPLICATION_DB_ACK(const char* buffer, int32_t size);
 	bool					CHARACTER_CREATE_DB_ACK(const char* buffer, int32_t size);
 
-public:
+protected:
+	bool					ENTER_MAP_ACK(const char* buffer, int32_t size);
+	bool					ENTITY_SPAWN_ACK(const char* buffer, int32_t size);
+	bool					ENTITY_DESTROY_ACK(const char* buffer, int32_t size);
+
+private:
+	s2::S2Thread			m_thread;
+
 	UserMgr*				m_userMgr;
-	std::unordered_map<protocol::MESSAGE, sesion_func_t> m_packetFunc;
-	std::unordered_map<protocol_svr::MESSAGE, packet_func_t> m_dbFunc;
+	sesion_list_t			m_packetFunc;
+	packet_list_t			m_dbFunc;
+	packet_list_t			m_zoneFunc;
 };

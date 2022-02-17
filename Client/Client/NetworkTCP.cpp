@@ -13,7 +13,7 @@ NetworkTCP::~NetworkTCP()
 	DisConnect();
 }
 
-bool NetworkTCP::Connect(uint32_t ui32IP, uint16_t ui16Port)
+bool NetworkTCP::Connect(uint32_t ip, uint16_t port)
 {
 	// 리시브 이벤트 생성
 	m_recvEvent = ::WSACreateEvent();
@@ -30,8 +30,8 @@ bool NetworkTCP::Connect(uint32_t ui32IP, uint16_t ui16Port)
 	struct sockaddr_in serverAddr;
 	memset(&serverAddr, 0, sizeof(serverAddr));
 	serverAddr.sin_family		= AF_INET;
-	serverAddr.sin_addr.s_addr	= ui32IP;
-	serverAddr.sin_port			= ::htons(ui16Port);
+	serverAddr.sin_addr.s_addr	= ip;
+	serverAddr.sin_port			= ::htons(port);
 
 	int32_t result = ::connect(m_socket, (sockaddr*)&serverAddr, sizeof(serverAddr));
 	if(SOCKET_ERROR == result)

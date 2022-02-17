@@ -29,9 +29,9 @@ bool S2Iocp::Create(uint32_t ip, uint16_t port, S2IocpWorkerMgr* workerMgr, S2Io
 	// 서버정보 객체설정
 	sockaddr_in serverAddr;
 	memset(&serverAddr, 0, sizeof(sockaddr_in));
-	serverAddr.sin_family = PF_INET;
-	serverAddr.sin_port = htons(port);
+	serverAddr.sin_family			= PF_INET;
 	serverAddr.sin_addr.S_un.S_addr = htonl(ip);
+	serverAddr.sin_port				= htons(port);
 
 	// 2. 소켓설정
 	if(SOCKET_ERROR == bind(m_listenSocket, (struct sockaddr*)&serverAddr, sizeof(sockaddr_in)))

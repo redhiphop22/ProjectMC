@@ -8,6 +8,24 @@ namespace s2 {
 
 class S2MySql
 {
+	struct ConnectInfo
+	{
+		std::string			m_host;
+		std::string			m_user;
+		std::string			m_pass;
+		std::string			m_database;
+		uint16_t			m_port;
+
+		void SetInfo(const char* host, const uint16_t port, const char* user, const char* pass, const char* database)
+		{
+			m_host = host;
+			m_user = user;
+			m_pass = pass;
+			m_database = database;
+			m_port = port;
+		}
+	};
+
 public:
 	S2MySql();
 	~S2MySql();
@@ -15,6 +33,7 @@ public:
 	bool					Create(const char* host, const uint16_t port, const char* user, const char* pass, const char* database);
 	void					Destroy();
 	
+	bool					Connection();
 	bool					Execute(const char* query);
 	bool					ExecuteSelect(const char* query);
 
@@ -38,6 +57,8 @@ public:
 	uint64_t				GetColumn_uint64(int32_t idx);
 	
 private:
+	ConnectInfo				m_connectInfo;
+
 	MYSQL*					m_mysql = nullptr;
 	MYSQL*					m_connection = nullptr;
 	MYSQL_RES*				m_result = nullptr;

@@ -8,6 +8,7 @@
 #include "ClientServerMove.h"
 #include "ClientLobby.h"
 #include "ClientCreateCharacter.h"
+#include "ClientMap.h"
 
 #include "ClientBotSetting.h"
 #include "ClientBotRun.h"

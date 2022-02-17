@@ -36,43 +36,43 @@ bool DataBaseWorker::RegistPacket()
 
 bool DataBaseWorker::Create(const char* host, const uint16_t port, const char* user, const char* pass, const char* database)
 {
-	MESSAGE_PROCESSOR().AddSender(MessageProcessor::MESSAGE_TYPE::USER, static_cast<int32_t>(MessageProcessor::MESSAGE_GROUP_USER::NETWORK), m_idx, 100);
+	RegistPacket();
 
 	if(false == m_db.Create(host, port, user, pass, database))
 	{
 		return false;
 	}
 
-	RegistPacket();
-
-	if(false == ThreadCreate())
-	{
-		return false;
-	}
-
-	return true;
+	auto threadProc = [this]() -> void {
+		this->OnUpdate();
+	};
+	return m_thread.ThreadCreateFunc(threadProc);
 }
 
 void DataBaseWorker::Destroy()
 {
-	S2Thread::Destroy();
+	m_thread.DestroyThread();
 	m_db.Destroy();
 }
 
 bool DataBaseWorker::PushQuery(const char* query)
-{
+{	
+	memcpy(m_pushData, query, MESSAGE_BUFFER_SIZE);
 	m_state = WORKER_STATE::RUN;
-	memcpy(m_pushData, query, RING_BUFFER_ELEMENT_SIZE);
 
 	return true;
 }
 
-bool DataBaseWorker::OnThreadUpdate()
+void DataBaseWorker::OnUpdate()
 {
+	THREAD_UPDATE_START;
+
 	if(WORKER_STATE::RUN != m_state)
 		return false;	
 
-	MAKE_PACKET_HEADER_S2S(m_pushData);
+	MessageProcessor::MessageBase* data = (MessageProcessor::MessageBase*)m_pushData;
+
+	MAKE_PACKET_HEADER_S2S(data->m_data);
 
 	auto iter = m_dbFunc.find(static_cast<protocol_svr::MESSAGE>(packetProtocol));
 	if(iter == m_dbFunc.end())
@@ -83,7 +83,7 @@ bool DataBaseWorker::OnThreadUpdate()
 
 	m_state = WORKER_STATE::FINISH;
 
-	return true;
+	THREAD_UPDATE_END;
 }
 
 bool DataBaseWorker::SendPacket(protocol_svr::MESSAGE message, flatbuffers::FlatBufferBuilder& fbb)
@@ -131,7 +131,7 @@ bool DataBaseWorker::SERVER_CONNECT_DB_REQ(const char* buffer, int32_t size)
 	flatbuffers::FlatBufferBuilder fbb(FBB_BASIC_SIZE);
 	auto bodyFbb = protocol_svr::CreateSERVER_CONNECT_DB_ACK(fbb, 
 		uid,
-		common::RESULT_CODE_SUCESS,
+		common::RESULT_CODE_SUCCESS,
 		authority,
 		block_type,
 		block_date
@@ -154,7 +154,7 @@ bool DataBaseWorker::CHARACTER_INFO_DB_REQ(const char* buffer, int32_t size)
 		"`eyebrow_idx`,`eyebrow_color`,`nose_idx`,`nose_color`,`mouth_idx`,`mouth_color` "
 		"FROM `character` WHERE (`uid`=%llu)", uid);
 
-	common::RESULT_CODE result = common::RESULT_CODE_SUCESS;
+	common::RESULT_CODE result = common::RESULT_CODE_SUCCESS;
 	if(false == m_db.ExecuteSelect(query))
 	{
 		SQL_ERROR_SEND(CHARACTER_INFO_DB_ACK, common::RESULT_CODE_ERROR_DB_FAIL);
@@ -162,7 +162,7 @@ bool DataBaseWorker::CHARACTER_INFO_DB_REQ(const char* buffer, int32_t size)
 	}
 	if(0 == m_db.GetRowCount())
 	{
-		SQL_SUCCESS_SEND(CHARACTER_INFO_DB_ACK, common::RESULT_CODE_SUCESS_CHARACTER_NONE);
+		SQL_SUCCESS_SEND(CHARACTER_INFO_DB_ACK, common::RESULT_CODE_SUCCESS_CHARACTER_NONE);
 		return true;
 	}
 
@@ -193,7 +193,7 @@ bool DataBaseWorker::CHARACTER_INFO_DB_REQ(const char* buffer, int32_t size)
 
 	if(false == m_db.ExecuteSelect(query) || 0 == m_db.GetRowCount())
 	{
-		SQL_ERROR_SEND(CHARACTER_INFO_DB_ACK, common::RESULT_CODE_SUCESS_CHARACTER_NONE);
+		SQL_ERROR_SEND(CHARACTER_INFO_DB_ACK, common::RESULT_CODE_SUCCESS_CHARACTER_NONE);
 		return true;
 	}
 	std::vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>> equipmentList;
@@ -209,6 +209,7 @@ bool DataBaseWorker::CHARACTER_INFO_DB_REQ(const char* buffer, int32_t size)
 		);
 	}
 
+	common::VECTOR3 position(0.f, 0.f, 0.f);
 	auto bodyFbb = protocol_svr::CreateCHARACTER_INFO_DB_ACK(fbb,
 		uid,
 		result,
@@ -216,7 +217,9 @@ bool DataBaseWorker::CHARACTER_INFO_DB_REQ(const char* buffer, int32_t size)
 		type,
 		belong,
 		face,
-		fbb.CreateVector(equipmentList)
+		fbb.CreateVector(equipmentList),
+		1,
+		&position
 	);
 	fbb.Finish(bodyFbb);
 	SendPacket(protocol_svr::MESSAGE_CHARACTER_INFO_DB_ACK, fbb);
@@ -248,7 +251,7 @@ bool DataBaseWorker::CHARACTER_NAME_DUPLICATION_DB_REQ(const char* buffer, int32
 	}
 	else
 	{
-		result = common::RESULT_CODE_SUCESS;
+		result = common::RESULT_CODE_SUCCESS;
 	}
 
 	flatbuffers::FlatBufferBuilder fbb(FBB_BASIC_SIZE);
@@ -334,14 +337,17 @@ bool DataBaseWorker::CHARACTER_CREATE_DB_REQ(const char* buffer, int32_t size)
 			)
 		);
 	}
+	common::VECTOR3 position(0.f, 0.f, 0.f);
 	auto bodyFbb = protocol_svr::CreateCHARACTER_CREATE_DB_ACK(fbb,
 		uid,
-		common::RESULT_CODE_SUCESS,
+		common::RESULT_CODE_SUCCESS,
 		fbb.CreateString(msg->nick_name()->data()),
 		msg->type(),
 		msg->belong(),
 		faceFbb,
-		fbb.CreateVector(equipmentFbb)
+		fbb.CreateVector(equipmentFbb),
+		1,
+		&position
 	);
 	fbb.Finish(bodyFbb);
 	SendPacket(protocol_svr::MESSAGE_CHARACTER_CREATE_DB_ACK, fbb);

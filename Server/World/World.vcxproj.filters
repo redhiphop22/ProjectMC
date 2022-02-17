@@ -35,6 +35,24 @@
     <ClInclude Include="System\IocpSessionMgr.h">
       <Filter>System\Network</Filter>
     </ClInclude>
+    <ClInclude Include="System\ZoneConnector.h">
+      <Filter>System\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ProtocolSVR_generated.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Cpp\Common_generated.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Cpp\Protocol_generated.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Cpp\Result_generated.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\Common_Define.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">
@@ -92,6 +110,13 @@
     </ClCompile>
     <ClCompile Include="System\IocpSessionMgr.cpp">
       <Filter>System\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="System\ZoneConnector.cpp">
+      <Filter>System\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp" />
+    <ClCompile Include="System\UserProcessor_Zone.cpp">
+      <Filter>System\MessageProcessor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

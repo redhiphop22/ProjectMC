@@ -4,8 +4,9 @@
 StarterServer* starterServer = nullptr;
 
 StarterServer::StarterServer()
-{
+{	
 	//m_moduleName.push_back(".\\Login.dll");
+	m_moduleName.push_back(".\\Zone.dll");
 	m_moduleName.push_back(".\\World.dll");
 }
 

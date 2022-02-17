@@ -1,17 +1,25 @@
 #pragma once
 
-class DataBaseMgr : public s2::S2Thread, s2::S2ThreadPool, s2::S2MessageReceiver
+class DataBaseWorker;
+
+class DataBaseMgr : public s2::S2MessageReceiver
 {
 public:
 	DataBaseMgr();
 	~DataBaseMgr();
 
-	bool					Create(int32_t threadCount, int32_t bufferCount);
+	bool					Create(int32_t workerCount);
 	void					Destroy();
 
-	bool					SendPacket(protocol_svr::MESSAGE message, flatbuffers::FlatBufferBuilder& fbb);
-
-	virtual bool			OnThreadUpdate() override;
+	void					OnUpdate();
 	virtual bool			OnMessageUpdate(int32_t groupIdx, void* data) override;
-protected:
+
+	DataBaseWorker*			PopWaitingThread();
+	bool					PushWaitingThread(DataBaseWorker* thread);
+
+private:
+	s2::S2Thread			m_thread;
+
+	std::vector<DataBaseWorker*> m_workerList;
+	std::stack<DataBaseWorker*> m_waitingList;
 };

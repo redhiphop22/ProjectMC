@@ -9,7 +9,7 @@ public:
 	void					CompletionLogin(uid_t UID);
 	uid_t					GetUID()			{	return m_UID;	}
 
-	bool					SendPacket(protocol::MESSAGE messageID, flatbuffers::FlatBufferBuilder& fbb);
+	bool					SendPacket(protocol_svr::MESSAGE messageID, flatbuffers::FlatBufferBuilder& fbb);
 
 	virtual bool			OnAccept() override;
 	virtual bool			OnClose() override;

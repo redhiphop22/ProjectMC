@@ -68,13 +68,7 @@
     <ClCompile Include="System\S2IocpWorkerMgr.cpp">
       <Filter>System\Network</Filter>
     </ClCompile>
-    <ClCompile Include="System\S2Thread.cpp">
-      <Filter>System\Thread</Filter>
-    </ClCompile>
     <ClCompile Include="System\S2ThreadMgr.cpp">
-      <Filter>System\Thread</Filter>
-    </ClCompile>
-    <ClCompile Include="System\S2ThreadPool.cpp">
       <Filter>System\Thread</Filter>
     </ClCompile>
     <ClCompile Include="System\S2SocketConnector.cpp">
@@ -165,9 +159,6 @@
       <Filter>System\Thread</Filter>
     </ClInclude>
     <ClInclude Include="System\S2ThreadMgr.h">
-      <Filter>System\Thread</Filter>
-    </ClInclude>
-    <ClInclude Include="System\S2ThreadPool.h">
       <Filter>System\Thread</Filter>
     </ClInclude>
     <ClInclude Include="System\S2SocketConnector.h">

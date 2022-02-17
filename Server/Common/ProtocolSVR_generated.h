@@ -6,16 +6,25 @@
 
 #include "flatbuffers/flatbuffers.h"
 
-#include "Common_generated.h"
 #include "Result_generated.h"
+#include "Common_generated.h"
 
 namespace protocol_svr {
+
+struct CONNECT_RESULT_ACK;
+struct CONNECT_RESULT_ACKBuilder;
 
 struct LOGIN_DB_REQ;
 struct LOGIN_DB_REQBuilder;
 
 struct LOGIN_DB_ACK;
 struct LOGIN_DB_ACKBuilder;
+
+struct LOGOUT_REQ;
+struct LOGOUT_REQBuilder;
+
+struct LOGOUT_ACK;
+struct LOGOUT_ACKBuilder;
 
 struct SERVER_CONNECT_DB_REQ;
 struct SERVER_CONNECT_DB_REQBuilder;
@@ -41,25 +50,63 @@ struct CHARACTER_CREATE_DB_REQBuilder;
 struct CHARACTER_CREATE_DB_ACK;
 struct CHARACTER_CREATE_DB_ACKBuilder;
 
+struct ENTER_MAP_REQ;
+struct ENTER_MAP_REQBuilder;
+
+struct ENTER_MAP_ACK;
+struct ENTER_MAP_ACKBuilder;
+
+struct ENTITY_SPAWN_ACK;
+struct ENTITY_SPAWN_ACKBuilder;
+
+struct ENTITY_DESTROY_ACK;
+struct ENTITY_DESTROY_ACKBuilder;
+
+struct ENTITY_MOVE_VELOCITY_REQ;
+struct ENTITY_MOVE_VELOCITY_REQBuilder;
+
+struct ENTITY_MOVE_VELOCITY_ACK;
+struct ENTITY_MOVE_VELOCITY_ACKBuilder;
+
+struct ENTITY_MOVE_STOP_REQ;
+struct ENTITY_MOVE_STOP_REQBuilder;
+
+struct ENTITY_MOVE_STOP_ACK;
+struct ENTITY_MOVE_STOP_ACKBuilder;
+
 enum MESSAGE : uint16_t {
-  MESSAGE_LOGIN_DB_REQ = 0,
-  MESSAGE_LOGIN_DB_ACK = 1,
-  MESSAGE_SERVER_CONNECT_DB_REQ = 2,
-  MESSAGE_SERVER_CONNECT_DB_ACK = 3,
-  MESSAGE_CHARACTER_INFO_DB_REQ = 4,
-  MESSAGE_CHARACTER_INFO_DB_ACK = 5,
-  MESSAGE_CHARACTER_NAME_DUPLICATION_DB_REQ = 6,
-  MESSAGE_CHARACTER_NAME_DUPLICATION_DB_ACK = 7,
-  MESSAGE_CHARACTER_CREATE_DB_REQ = 8,
-  MESSAGE_CHARACTER_CREATE_DB_ACK = 9,
-  MESSAGE_MIN = MESSAGE_LOGIN_DB_REQ,
-  MESSAGE_MAX = MESSAGE_CHARACTER_CREATE_DB_ACK
+  MESSAGE_CONNECT_RESULT_ACK = 0,
+  MESSAGE_LOGIN_DB_REQ = 1,
+  MESSAGE_LOGIN_DB_ACK = 2,
+  MESSAGE_LOGOUT_REQ = 3,
+  MESSAGE_LOGOUT_ACK = 4,
+  MESSAGE_SERVER_CONNECT_DB_REQ = 5,
+  MESSAGE_SERVER_CONNECT_DB_ACK = 6,
+  MESSAGE_CHARACTER_INFO_DB_REQ = 7,
+  MESSAGE_CHARACTER_INFO_DB_ACK = 8,
+  MESSAGE_CHARACTER_NAME_DUPLICATION_DB_REQ = 9,
+  MESSAGE_CHARACTER_NAME_DUPLICATION_DB_ACK = 10,
+  MESSAGE_CHARACTER_CREATE_DB_REQ = 11,
+  MESSAGE_CHARACTER_CREATE_DB_ACK = 12,
+  MESSAGE_ENTER_MAP_REQ = 13,
+  MESSAGE_ENTER_MAP_ACK = 14,
+  MESSAGE_ENTITY_SPAWN_ACK = 15,
+  MESSAGE_ENTITY_DESTROY_ACK = 16,
+  MESSAGE_ENTITY_MOVE_VELOCITY_REQ = 17,
+  MESSAGE_ENTITY_MOVE_VELOCITY_ACK = 18,
+  MESSAGE_ENTITY_MOVE_STOP_REQ = 19,
+  MESSAGE_ENTITY_MOVE_STOP_ACK = 20,
+  MESSAGE_MIN = MESSAGE_CONNECT_RESULT_ACK,
+  MESSAGE_MAX = MESSAGE_ENTITY_MOVE_STOP_ACK
 };
 
-inline const MESSAGE (&EnumValuesMESSAGE())[10] {
+inline const MESSAGE (&EnumValuesMESSAGE())[21] {
   static const MESSAGE values[] = {
+    MESSAGE_CONNECT_RESULT_ACK,
     MESSAGE_LOGIN_DB_REQ,
     MESSAGE_LOGIN_DB_ACK,
+    MESSAGE_LOGOUT_REQ,
+    MESSAGE_LOGOUT_ACK,
     MESSAGE_SERVER_CONNECT_DB_REQ,
     MESSAGE_SERVER_CONNECT_DB_ACK,
     MESSAGE_CHARACTER_INFO_DB_REQ,
@@ -67,15 +114,26 @@ inline const MESSAGE (&EnumValuesMESSAGE())[10] {
     MESSAGE_CHARACTER_NAME_DUPLICATION_DB_REQ,
     MESSAGE_CHARACTER_NAME_DUPLICATION_DB_ACK,
     MESSAGE_CHARACTER_CREATE_DB_REQ,
-    MESSAGE_CHARACTER_CREATE_DB_ACK
+    MESSAGE_CHARACTER_CREATE_DB_ACK,
+    MESSAGE_ENTER_MAP_REQ,
+    MESSAGE_ENTER_MAP_ACK,
+    MESSAGE_ENTITY_SPAWN_ACK,
+    MESSAGE_ENTITY_DESTROY_ACK,
+    MESSAGE_ENTITY_MOVE_VELOCITY_REQ,
+    MESSAGE_ENTITY_MOVE_VELOCITY_ACK,
+    MESSAGE_ENTITY_MOVE_STOP_REQ,
+    MESSAGE_ENTITY_MOVE_STOP_ACK
   };
   return values;
 }
 
 inline const char * const *EnumNamesMESSAGE() {
-  static const char * const names[11] = {
+  static const char * const names[22] = {
+    "CONNECT_RESULT_ACK",
     "LOGIN_DB_REQ",
     "LOGIN_DB_ACK",
+    "LOGOUT_REQ",
+    "LOGOUT_ACK",
     "SERVER_CONNECT_DB_REQ",
     "SERVER_CONNECT_DB_ACK",
     "CHARACTER_INFO_DB_REQ",
@@ -84,15 +142,64 @@ inline const char * const *EnumNamesMESSAGE() {
     "CHARACTER_NAME_DUPLICATION_DB_ACK",
     "CHARACTER_CREATE_DB_REQ",
     "CHARACTER_CREATE_DB_ACK",
+    "ENTER_MAP_REQ",
+    "ENTER_MAP_ACK",
+    "ENTITY_SPAWN_ACK",
+    "ENTITY_DESTROY_ACK",
+    "ENTITY_MOVE_VELOCITY_REQ",
+    "ENTITY_MOVE_VELOCITY_ACK",
+    "ENTITY_MOVE_STOP_REQ",
+    "ENTITY_MOVE_STOP_ACK",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameMESSAGE(MESSAGE e) {
-  if (flatbuffers::IsOutRange(e, MESSAGE_LOGIN_DB_REQ, MESSAGE_CHARACTER_CREATE_DB_ACK)) return "";
+  if (flatbuffers::IsOutRange(e, MESSAGE_CONNECT_RESULT_ACK, MESSAGE_ENTITY_MOVE_STOP_ACK)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesMESSAGE()[index];
+}
+
+struct CONNECT_RESULT_ACK FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef CONNECT_RESULT_ACKBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_RESULT = 4
+  };
+  common::RESULT_CODE result() const {
+    return static_cast<common::RESULT_CODE>(GetField<uint32_t>(VT_RESULT, 0));
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint32_t>(verifier, VT_RESULT) &&
+           verifier.EndTable();
+  }
+};
+
+struct CONNECT_RESULT_ACKBuilder {
+  typedef CONNECT_RESULT_ACK Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_result(common::RESULT_CODE result) {
+    fbb_.AddElement<uint32_t>(CONNECT_RESULT_ACK::VT_RESULT, static_cast<uint32_t>(result), 0);
+  }
+  explicit CONNECT_RESULT_ACKBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  flatbuffers::Offset<CONNECT_RESULT_ACK> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<CONNECT_RESULT_ACK>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<CONNECT_RESULT_ACK> CreateCONNECT_RESULT_ACK(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    common::RESULT_CODE result = common::RESULT_CODE_ERROR_FAIL) {
+  CONNECT_RESULT_ACKBuilder builder_(_fbb);
+  builder_.add_result(result);
+  return builder_.Finish();
 }
 
 struct LOGIN_DB_REQ FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
@@ -198,6 +305,86 @@ inline flatbuffers::Offset<LOGIN_DB_ACK> CreateLOGIN_DB_ACK(
     common::RESULT_CODE result = common::RESULT_CODE_ERROR_FAIL) {
   LOGIN_DB_ACKBuilder builder_(_fbb);
   builder_.add_result(result);
+  return builder_.Finish();
+}
+
+struct LOGOUT_REQ FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef LOGOUT_REQBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_UID = 4,
+    VT_MAP_ID = 6
+  };
+  uint64_t uid() const {
+    return GetField<uint64_t>(VT_UID, 0);
+  }
+  uint32_t map_id() const {
+    return GetField<uint32_t>(VT_MAP_ID, 0);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint64_t>(verifier, VT_UID) &&
+           VerifyField<uint32_t>(verifier, VT_MAP_ID) &&
+           verifier.EndTable();
+  }
+};
+
+struct LOGOUT_REQBuilder {
+  typedef LOGOUT_REQ Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_uid(uint64_t uid) {
+    fbb_.AddElement<uint64_t>(LOGOUT_REQ::VT_UID, uid, 0);
+  }
+  void add_map_id(uint32_t map_id) {
+    fbb_.AddElement<uint32_t>(LOGOUT_REQ::VT_MAP_ID, map_id, 0);
+  }
+  explicit LOGOUT_REQBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  flatbuffers::Offset<LOGOUT_REQ> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<LOGOUT_REQ>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<LOGOUT_REQ> CreateLOGOUT_REQ(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    uint64_t uid = 0,
+    uint32_t map_id = 0) {
+  LOGOUT_REQBuilder builder_(_fbb);
+  builder_.add_uid(uid);
+  builder_.add_map_id(map_id);
+  return builder_.Finish();
+}
+
+struct LOGOUT_ACK FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef LOGOUT_ACKBuilder Builder;
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           verifier.EndTable();
+  }
+};
+
+struct LOGOUT_ACKBuilder {
+  typedef LOGOUT_ACK Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  explicit LOGOUT_ACKBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  flatbuffers::Offset<LOGOUT_ACK> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<LOGOUT_ACK>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<LOGOUT_ACK> CreateLOGOUT_ACK(
+    flatbuffers::FlatBufferBuilder &_fbb) {
+  LOGOUT_ACKBuilder builder_(_fbb);
   return builder_.Finish();
 }
 
@@ -395,7 +582,9 @@ struct CHARACTER_INFO_DB_ACK FLATBUFFERS_FINAL_CLASS : private flatbuffers::Tabl
     VT_TYPE = 10,
     VT_BELONG = 12,
     VT_FACE = 14,
-    VT_EQUIPMENT = 16
+    VT_EQUIPMENT = 16,
+    VT_LAST_MAP_ID = 18,
+    VT_LAST_MAP_POSITION = 20
   };
   uint64_t uid() const {
     return GetField<uint64_t>(VT_UID, 0);
@@ -418,6 +607,12 @@ struct CHARACTER_INFO_DB_ACK FLATBUFFERS_FINAL_CLASS : private flatbuffers::Tabl
   const flatbuffers::Vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>> *equipment() const {
     return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>> *>(VT_EQUIPMENT);
   }
+  uint32_t last_map_id() const {
+    return GetField<uint32_t>(VT_LAST_MAP_ID, 0);
+  }
+  const common::VECTOR3 *last_map_position() const {
+    return GetStruct<const common::VECTOR3 *>(VT_LAST_MAP_POSITION);
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint64_t>(verifier, VT_UID) &&
@@ -431,6 +626,8 @@ struct CHARACTER_INFO_DB_ACK FLATBUFFERS_FINAL_CLASS : private flatbuffers::Tabl
            VerifyOffset(verifier, VT_EQUIPMENT) &&
            verifier.VerifyVector(equipment()) &&
            verifier.VerifyVectorOfTables(equipment()) &&
+           VerifyField<uint32_t>(verifier, VT_LAST_MAP_ID) &&
+           VerifyField<common::VECTOR3>(verifier, VT_LAST_MAP_POSITION) &&
            verifier.EndTable();
   }
 };
@@ -460,6 +657,12 @@ struct CHARACTER_INFO_DB_ACKBuilder {
   void add_equipment(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>>> equipment) {
     fbb_.AddOffset(CHARACTER_INFO_DB_ACK::VT_EQUIPMENT, equipment);
   }
+  void add_last_map_id(uint32_t last_map_id) {
+    fbb_.AddElement<uint32_t>(CHARACTER_INFO_DB_ACK::VT_LAST_MAP_ID, last_map_id, 0);
+  }
+  void add_last_map_position(const common::VECTOR3 *last_map_position) {
+    fbb_.AddStruct(CHARACTER_INFO_DB_ACK::VT_LAST_MAP_POSITION, last_map_position);
+  }
   explicit CHARACTER_INFO_DB_ACKBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -479,9 +682,13 @@ inline flatbuffers::Offset<CHARACTER_INFO_DB_ACK> CreateCHARACTER_INFO_DB_ACK(
     common::CHARACTER_TYPE type = common::CHARACTER_TYPE_NONE,
     uint16_t belong = 0,
     flatbuffers::Offset<common::CHARACTER_FACE> face = 0,
-    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>>> equipment = 0) {
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>>> equipment = 0,
+    uint32_t last_map_id = 0,
+    const common::VECTOR3 *last_map_position = 0) {
   CHARACTER_INFO_DB_ACKBuilder builder_(_fbb);
   builder_.add_uid(uid);
+  builder_.add_last_map_position(last_map_position);
+  builder_.add_last_map_id(last_map_id);
   builder_.add_equipment(equipment);
   builder_.add_face(face);
   builder_.add_nick_name(nick_name);
@@ -499,7 +706,9 @@ inline flatbuffers::Offset<CHARACTER_INFO_DB_ACK> CreateCHARACTER_INFO_DB_ACKDir
     common::CHARACTER_TYPE type = common::CHARACTER_TYPE_NONE,
     uint16_t belong = 0,
     flatbuffers::Offset<common::CHARACTER_FACE> face = 0,
-    const std::vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>> *equipment = nullptr) {
+    const std::vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>> *equipment = nullptr,
+    uint32_t last_map_id = 0,
+    const common::VECTOR3 *last_map_position = 0) {
   auto nick_name__ = nick_name ? _fbb.CreateString(nick_name) : 0;
   auto equipment__ = equipment ? _fbb.CreateVector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>>(*equipment) : 0;
   return protocol_svr::CreateCHARACTER_INFO_DB_ACK(
@@ -510,7 +719,9 @@ inline flatbuffers::Offset<CHARACTER_INFO_DB_ACK> CreateCHARACTER_INFO_DB_ACKDir
       type,
       belong,
       face,
-      equipment__);
+      equipment__,
+      last_map_id,
+      last_map_position);
 }
 
 struct CHARACTER_NAME_DUPLICATION_DB_REQ FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
@@ -775,7 +986,9 @@ struct CHARACTER_CREATE_DB_ACK FLATBUFFERS_FINAL_CLASS : private flatbuffers::Ta
     VT_TYPE = 10,
     VT_BELONG = 12,
     VT_FACE = 14,
-    VT_EQUIPMENT = 16
+    VT_EQUIPMENT = 16,
+    VT_LAST_MAP_ID = 18,
+    VT_LAST_MAP_POSITION = 20
   };
   uint64_t uid() const {
     return GetField<uint64_t>(VT_UID, 0);
@@ -798,6 +1011,12 @@ struct CHARACTER_CREATE_DB_ACK FLATBUFFERS_FINAL_CLASS : private flatbuffers::Ta
   const flatbuffers::Vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>> *equipment() const {
     return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>> *>(VT_EQUIPMENT);
   }
+  uint32_t last_map_id() const {
+    return GetField<uint32_t>(VT_LAST_MAP_ID, 0);
+  }
+  const common::VECTOR3 *last_map_position() const {
+    return GetStruct<const common::VECTOR3 *>(VT_LAST_MAP_POSITION);
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint64_t>(verifier, VT_UID) &&
@@ -811,6 +1030,8 @@ struct CHARACTER_CREATE_DB_ACK FLATBUFFERS_FINAL_CLASS : private flatbuffers::Ta
            VerifyOffset(verifier, VT_EQUIPMENT) &&
            verifier.VerifyVector(equipment()) &&
            verifier.VerifyVectorOfTables(equipment()) &&
+           VerifyField<uint32_t>(verifier, VT_LAST_MAP_ID) &&
+           VerifyField<common::VECTOR3>(verifier, VT_LAST_MAP_POSITION) &&
            verifier.EndTable();
   }
 };
@@ -840,6 +1061,12 @@ struct CHARACTER_CREATE_DB_ACKBuilder {
   void add_equipment(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>>> equipment) {
     fbb_.AddOffset(CHARACTER_CREATE_DB_ACK::VT_EQUIPMENT, equipment);
   }
+  void add_last_map_id(uint32_t last_map_id) {
+    fbb_.AddElement<uint32_t>(CHARACTER_CREATE_DB_ACK::VT_LAST_MAP_ID, last_map_id, 0);
+  }
+  void add_last_map_position(const common::VECTOR3 *last_map_position) {
+    fbb_.AddStruct(CHARACTER_CREATE_DB_ACK::VT_LAST_MAP_POSITION, last_map_position);
+  }
   explicit CHARACTER_CREATE_DB_ACKBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -859,9 +1086,13 @@ inline flatbuffers::Offset<CHARACTER_CREATE_DB_ACK> CreateCHARACTER_CREATE_DB_AC
     common::CHARACTER_TYPE type = common::CHARACTER_TYPE_NONE,
     uint16_t belong = 0,
     flatbuffers::Offset<common::CHARACTER_FACE> face = 0,
-    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>>> equipment = 0) {
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>>> equipment = 0,
+    uint32_t last_map_id = 0,
+    const common::VECTOR3 *last_map_position = 0) {
   CHARACTER_CREATE_DB_ACKBuilder builder_(_fbb);
   builder_.add_uid(uid);
+  builder_.add_last_map_position(last_map_position);
+  builder_.add_last_map_id(last_map_id);
   builder_.add_equipment(equipment);
   builder_.add_face(face);
   builder_.add_nick_name(nick_name);
@@ -879,7 +1110,9 @@ inline flatbuffers::Offset<CHARACTER_CREATE_DB_ACK> CreateCHARACTER_CREATE_DB_AC
     common::CHARACTER_TYPE type = common::CHARACTER_TYPE_NONE,
     uint16_t belong = 0,
     flatbuffers::Offset<common::CHARACTER_FACE> face = 0,
-    const std::vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>> *equipment = nullptr) {
+    const std::vector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>> *equipment = nullptr,
+    uint32_t last_map_id = 0,
+    const common::VECTOR3 *last_map_position = 0) {
   auto nick_name__ = nick_name ? _fbb.CreateString(nick_name) : 0;
   auto equipment__ = equipment ? _fbb.CreateVector<flatbuffers::Offset<common::CHARACTER_EQUIPMENT>>(*equipment) : 0;
   return protocol_svr::CreateCHARACTER_CREATE_DB_ACK(
@@ -890,7 +1123,565 @@ inline flatbuffers::Offset<CHARACTER_CREATE_DB_ACK> CreateCHARACTER_CREATE_DB_AC
       type,
       belong,
       face,
-      equipment__);
+      equipment__,
+      last_map_id,
+      last_map_position);
+}
+
+struct ENTER_MAP_REQ FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef ENTER_MAP_REQBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_UID = 4,
+    VT_MAP_ID = 6,
+    VT_ENTITY_INFO = 8
+  };
+  uint64_t uid() const {
+    return GetField<uint64_t>(VT_UID, 0);
+  }
+  uint32_t map_id() const {
+    return GetField<uint32_t>(VT_MAP_ID, 0);
+  }
+  const common::ENTITY_INFO *entity_info() const {
+    return GetPointer<const common::ENTITY_INFO *>(VT_ENTITY_INFO);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint64_t>(verifier, VT_UID) &&
+           VerifyField<uint32_t>(verifier, VT_MAP_ID) &&
+           VerifyOffset(verifier, VT_ENTITY_INFO) &&
+           verifier.VerifyTable(entity_info()) &&
+           verifier.EndTable();
+  }
+};
+
+struct ENTER_MAP_REQBuilder {
+  typedef ENTER_MAP_REQ Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_uid(uint64_t uid) {
+    fbb_.AddElement<uint64_t>(ENTER_MAP_REQ::VT_UID, uid, 0);
+  }
+  void add_map_id(uint32_t map_id) {
+    fbb_.AddElement<uint32_t>(ENTER_MAP_REQ::VT_MAP_ID, map_id, 0);
+  }
+  void add_entity_info(flatbuffers::Offset<common::ENTITY_INFO> entity_info) {
+    fbb_.AddOffset(ENTER_MAP_REQ::VT_ENTITY_INFO, entity_info);
+  }
+  explicit ENTER_MAP_REQBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  flatbuffers::Offset<ENTER_MAP_REQ> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<ENTER_MAP_REQ>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<ENTER_MAP_REQ> CreateENTER_MAP_REQ(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    uint64_t uid = 0,
+    uint32_t map_id = 0,
+    flatbuffers::Offset<common::ENTITY_INFO> entity_info = 0) {
+  ENTER_MAP_REQBuilder builder_(_fbb);
+  builder_.add_uid(uid);
+  builder_.add_entity_info(entity_info);
+  builder_.add_map_id(map_id);
+  return builder_.Finish();
+}
+
+struct ENTER_MAP_ACK FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef ENTER_MAP_ACKBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_UID = 4,
+    VT_RESULT = 6,
+    VT_MAP_ID = 8
+  };
+  uint64_t uid() const {
+    return GetField<uint64_t>(VT_UID, 0);
+  }
+  common::RESULT_CODE result() const {
+    return static_cast<common::RESULT_CODE>(GetField<uint32_t>(VT_RESULT, 0));
+  }
+  uint32_t map_id() const {
+    return GetField<uint32_t>(VT_MAP_ID, 0);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint64_t>(verifier, VT_UID) &&
+           VerifyField<uint32_t>(verifier, VT_RESULT) &&
+           VerifyField<uint32_t>(verifier, VT_MAP_ID) &&
+           verifier.EndTable();
+  }
+};
+
+struct ENTER_MAP_ACKBuilder {
+  typedef ENTER_MAP_ACK Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_uid(uint64_t uid) {
+    fbb_.AddElement<uint64_t>(ENTER_MAP_ACK::VT_UID, uid, 0);
+  }
+  void add_result(common::RESULT_CODE result) {
+    fbb_.AddElement<uint32_t>(ENTER_MAP_ACK::VT_RESULT, static_cast<uint32_t>(result), 0);
+  }
+  void add_map_id(uint32_t map_id) {
+    fbb_.AddElement<uint32_t>(ENTER_MAP_ACK::VT_MAP_ID, map_id, 0);
+  }
+  explicit ENTER_MAP_ACKBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  flatbuffers::Offset<ENTER_MAP_ACK> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<ENTER_MAP_ACK>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<ENTER_MAP_ACK> CreateENTER_MAP_ACK(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    uint64_t uid = 0,
+    common::RESULT_CODE result = common::RESULT_CODE_ERROR_FAIL,
+    uint32_t map_id = 0) {
+  ENTER_MAP_ACKBuilder builder_(_fbb);
+  builder_.add_uid(uid);
+  builder_.add_map_id(map_id);
+  builder_.add_result(result);
+  return builder_.Finish();
+}
+
+struct ENTITY_SPAWN_ACK FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef ENTITY_SPAWN_ACKBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_UID_LIST = 4,
+    VT_SPAWN_LIST = 6
+  };
+  const flatbuffers::Vector<uint64_t> *uid_list() const {
+    return GetPointer<const flatbuffers::Vector<uint64_t> *>(VT_UID_LIST);
+  }
+  const flatbuffers::Vector<flatbuffers::Offset<common::ENTITY_SPAWN_INFO>> *spawn_list() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<common::ENTITY_SPAWN_INFO>> *>(VT_SPAWN_LIST);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_UID_LIST) &&
+           verifier.VerifyVector(uid_list()) &&
+           VerifyOffset(verifier, VT_SPAWN_LIST) &&
+           verifier.VerifyVector(spawn_list()) &&
+           verifier.VerifyVectorOfTables(spawn_list()) &&
+           verifier.EndTable();
+  }
+};
+
+struct ENTITY_SPAWN_ACKBuilder {
+  typedef ENTITY_SPAWN_ACK Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_uid_list(flatbuffers::Offset<flatbuffers::Vector<uint64_t>> uid_list) {
+    fbb_.AddOffset(ENTITY_SPAWN_ACK::VT_UID_LIST, uid_list);
+  }
+  void add_spawn_list(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<common::ENTITY_SPAWN_INFO>>> spawn_list) {
+    fbb_.AddOffset(ENTITY_SPAWN_ACK::VT_SPAWN_LIST, spawn_list);
+  }
+  explicit ENTITY_SPAWN_ACKBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  flatbuffers::Offset<ENTITY_SPAWN_ACK> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<ENTITY_SPAWN_ACK>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<ENTITY_SPAWN_ACK> CreateENTITY_SPAWN_ACK(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<flatbuffers::Vector<uint64_t>> uid_list = 0,
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<common::ENTITY_SPAWN_INFO>>> spawn_list = 0) {
+  ENTITY_SPAWN_ACKBuilder builder_(_fbb);
+  builder_.add_spawn_list(spawn_list);
+  builder_.add_uid_list(uid_list);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<ENTITY_SPAWN_ACK> CreateENTITY_SPAWN_ACKDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const std::vector<uint64_t> *uid_list = nullptr,
+    const std::vector<flatbuffers::Offset<common::ENTITY_SPAWN_INFO>> *spawn_list = nullptr) {
+  auto uid_list__ = uid_list ? _fbb.CreateVector<uint64_t>(*uid_list) : 0;
+  auto spawn_list__ = spawn_list ? _fbb.CreateVector<flatbuffers::Offset<common::ENTITY_SPAWN_INFO>>(*spawn_list) : 0;
+  return protocol_svr::CreateENTITY_SPAWN_ACK(
+      _fbb,
+      uid_list__,
+      spawn_list__);
+}
+
+struct ENTITY_DESTROY_ACK FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef ENTITY_DESTROY_ACKBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_UID_LIST = 4,
+    VT_UID = 6
+  };
+  const flatbuffers::Vector<uint64_t> *uid_list() const {
+    return GetPointer<const flatbuffers::Vector<uint64_t> *>(VT_UID_LIST);
+  }
+  uint64_t uid() const {
+    return GetField<uint64_t>(VT_UID, 0);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_UID_LIST) &&
+           verifier.VerifyVector(uid_list()) &&
+           VerifyField<uint64_t>(verifier, VT_UID) &&
+           verifier.EndTable();
+  }
+};
+
+struct ENTITY_DESTROY_ACKBuilder {
+  typedef ENTITY_DESTROY_ACK Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_uid_list(flatbuffers::Offset<flatbuffers::Vector<uint64_t>> uid_list) {
+    fbb_.AddOffset(ENTITY_DESTROY_ACK::VT_UID_LIST, uid_list);
+  }
+  void add_uid(uint64_t uid) {
+    fbb_.AddElement<uint64_t>(ENTITY_DESTROY_ACK::VT_UID, uid, 0);
+  }
+  explicit ENTITY_DESTROY_ACKBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  flatbuffers::Offset<ENTITY_DESTROY_ACK> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<ENTITY_DESTROY_ACK>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<ENTITY_DESTROY_ACK> CreateENTITY_DESTROY_ACK(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<flatbuffers::Vector<uint64_t>> uid_list = 0,
+    uint64_t uid = 0) {
+  ENTITY_DESTROY_ACKBuilder builder_(_fbb);
+  builder_.add_uid(uid);
+  builder_.add_uid_list(uid_list);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<ENTITY_DESTROY_ACK> CreateENTITY_DESTROY_ACKDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const std::vector<uint64_t> *uid_list = nullptr,
+    uint64_t uid = 0) {
+  auto uid_list__ = uid_list ? _fbb.CreateVector<uint64_t>(*uid_list) : 0;
+  return protocol_svr::CreateENTITY_DESTROY_ACK(
+      _fbb,
+      uid_list__,
+      uid);
+}
+
+struct ENTITY_MOVE_VELOCITY_REQ FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef ENTITY_MOVE_VELOCITY_REQBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_UID = 4,
+    VT_EXCUTE_TIME = 6,
+    VT_POSITION = 8,
+    VT_FORWARD = 10,
+    VT_SPEED = 12
+  };
+  uint64_t uid() const {
+    return GetField<uint64_t>(VT_UID, 0);
+  }
+  uint64_t excute_time() const {
+    return GetField<uint64_t>(VT_EXCUTE_TIME, 0);
+  }
+  const common::VECTOR3 *position() const {
+    return GetStruct<const common::VECTOR3 *>(VT_POSITION);
+  }
+  const common::VECTOR3 *forward() const {
+    return GetStruct<const common::VECTOR3 *>(VT_FORWARD);
+  }
+  float speed() const {
+    return GetField<float>(VT_SPEED, 0.0f);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint64_t>(verifier, VT_UID) &&
+           VerifyField<uint64_t>(verifier, VT_EXCUTE_TIME) &&
+           VerifyField<common::VECTOR3>(verifier, VT_POSITION) &&
+           VerifyField<common::VECTOR3>(verifier, VT_FORWARD) &&
+           VerifyField<float>(verifier, VT_SPEED) &&
+           verifier.EndTable();
+  }
+};
+
+struct ENTITY_MOVE_VELOCITY_REQBuilder {
+  typedef ENTITY_MOVE_VELOCITY_REQ Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_uid(uint64_t uid) {
+    fbb_.AddElement<uint64_t>(ENTITY_MOVE_VELOCITY_REQ::VT_UID, uid, 0);
+  }
+  void add_excute_time(uint64_t excute_time) {
+    fbb_.AddElement<uint64_t>(ENTITY_MOVE_VELOCITY_REQ::VT_EXCUTE_TIME, excute_time, 0);
+  }
+  void add_position(const common::VECTOR3 *position) {
+    fbb_.AddStruct(ENTITY_MOVE_VELOCITY_REQ::VT_POSITION, position);
+  }
+  void add_forward(const common::VECTOR3 *forward) {
+    fbb_.AddStruct(ENTITY_MOVE_VELOCITY_REQ::VT_FORWARD, forward);
+  }
+  void add_speed(float speed) {
+    fbb_.AddElement<float>(ENTITY_MOVE_VELOCITY_REQ::VT_SPEED, speed, 0.0f);
+  }
+  explicit ENTITY_MOVE_VELOCITY_REQBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  flatbuffers::Offset<ENTITY_MOVE_VELOCITY_REQ> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<ENTITY_MOVE_VELOCITY_REQ>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<ENTITY_MOVE_VELOCITY_REQ> CreateENTITY_MOVE_VELOCITY_REQ(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    uint64_t uid = 0,
+    uint64_t excute_time = 0,
+    const common::VECTOR3 *position = 0,
+    const common::VECTOR3 *forward = 0,
+    float speed = 0.0f) {
+  ENTITY_MOVE_VELOCITY_REQBuilder builder_(_fbb);
+  builder_.add_excute_time(excute_time);
+  builder_.add_uid(uid);
+  builder_.add_speed(speed);
+  builder_.add_forward(forward);
+  builder_.add_position(position);
+  return builder_.Finish();
+}
+
+struct ENTITY_MOVE_VELOCITY_ACK FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef ENTITY_MOVE_VELOCITY_ACKBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_RESULT = 4,
+    VT_UID = 6,
+    VT_EXCUTE_TIME = 8,
+    VT_POSITION = 10,
+    VT_FORWARD = 12,
+    VT_SPEED = 14
+  };
+  common::RESULT_CODE result() const {
+    return static_cast<common::RESULT_CODE>(GetField<uint32_t>(VT_RESULT, 0));
+  }
+  uint64_t uid() const {
+    return GetField<uint64_t>(VT_UID, 0);
+  }
+  uint64_t excute_time() const {
+    return GetField<uint64_t>(VT_EXCUTE_TIME, 0);
+  }
+  const common::VECTOR3 *position() const {
+    return GetStruct<const common::VECTOR3 *>(VT_POSITION);
+  }
+  const common::VECTOR3 *forward() const {
+    return GetStruct<const common::VECTOR3 *>(VT_FORWARD);
+  }
+  float speed() const {
+    return GetField<float>(VT_SPEED, 0.0f);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint32_t>(verifier, VT_RESULT) &&
+           VerifyField<uint64_t>(verifier, VT_UID) &&
+           VerifyField<uint64_t>(verifier, VT_EXCUTE_TIME) &&
+           VerifyField<common::VECTOR3>(verifier, VT_POSITION) &&
+           VerifyField<common::VECTOR3>(verifier, VT_FORWARD) &&
+           VerifyField<float>(verifier, VT_SPEED) &&
+           verifier.EndTable();
+  }
+};
+
+struct ENTITY_MOVE_VELOCITY_ACKBuilder {
+  typedef ENTITY_MOVE_VELOCITY_ACK Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_result(common::RESULT_CODE result) {
+    fbb_.AddElement<uint32_t>(ENTITY_MOVE_VELOCITY_ACK::VT_RESULT, static_cast<uint32_t>(result), 0);
+  }
+  void add_uid(uint64_t uid) {
+    fbb_.AddElement<uint64_t>(ENTITY_MOVE_VELOCITY_ACK::VT_UID, uid, 0);
+  }
+  void add_excute_time(uint64_t excute_time) {
+    fbb_.AddElement<uint64_t>(ENTITY_MOVE_VELOCITY_ACK::VT_EXCUTE_TIME, excute_time, 0);
+  }
+  void add_position(const common::VECTOR3 *position) {
+    fbb_.AddStruct(ENTITY_MOVE_VELOCITY_ACK::VT_POSITION, position);
+  }
+  void add_forward(const common::VECTOR3 *forward) {
+    fbb_.AddStruct(ENTITY_MOVE_VELOCITY_ACK::VT_FORWARD, forward);
+  }
+  void add_speed(float speed) {
+    fbb_.AddElement<float>(ENTITY_MOVE_VELOCITY_ACK::VT_SPEED, speed, 0.0f);
+  }
+  explicit ENTITY_MOVE_VELOCITY_ACKBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  flatbuffers::Offset<ENTITY_MOVE_VELOCITY_ACK> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<ENTITY_MOVE_VELOCITY_ACK>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<ENTITY_MOVE_VELOCITY_ACK> CreateENTITY_MOVE_VELOCITY_ACK(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    common::RESULT_CODE result = common::RESULT_CODE_ERROR_FAIL,
+    uint64_t uid = 0,
+    uint64_t excute_time = 0,
+    const common::VECTOR3 *position = 0,
+    const common::VECTOR3 *forward = 0,
+    float speed = 0.0f) {
+  ENTITY_MOVE_VELOCITY_ACKBuilder builder_(_fbb);
+  builder_.add_excute_time(excute_time);
+  builder_.add_uid(uid);
+  builder_.add_speed(speed);
+  builder_.add_forward(forward);
+  builder_.add_position(position);
+  builder_.add_result(result);
+  return builder_.Finish();
+}
+
+struct ENTITY_MOVE_STOP_REQ FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef ENTITY_MOVE_STOP_REQBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_UID = 4,
+    VT_EXCUTE_TIME = 6,
+    VT_POSITION = 8
+  };
+  uint64_t uid() const {
+    return GetField<uint64_t>(VT_UID, 0);
+  }
+  uint64_t excute_time() const {
+    return GetField<uint64_t>(VT_EXCUTE_TIME, 0);
+  }
+  const common::VECTOR3 *position() const {
+    return GetStruct<const common::VECTOR3 *>(VT_POSITION);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint64_t>(verifier, VT_UID) &&
+           VerifyField<uint64_t>(verifier, VT_EXCUTE_TIME) &&
+           VerifyField<common::VECTOR3>(verifier, VT_POSITION) &&
+           verifier.EndTable();
+  }
+};
+
+struct ENTITY_MOVE_STOP_REQBuilder {
+  typedef ENTITY_MOVE_STOP_REQ Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_uid(uint64_t uid) {
+    fbb_.AddElement<uint64_t>(ENTITY_MOVE_STOP_REQ::VT_UID, uid, 0);
+  }
+  void add_excute_time(uint64_t excute_time) {
+    fbb_.AddElement<uint64_t>(ENTITY_MOVE_STOP_REQ::VT_EXCUTE_TIME, excute_time, 0);
+  }
+  void add_position(const common::VECTOR3 *position) {
+    fbb_.AddStruct(ENTITY_MOVE_STOP_REQ::VT_POSITION, position);
+  }
+  explicit ENTITY_MOVE_STOP_REQBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  flatbuffers::Offset<ENTITY_MOVE_STOP_REQ> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<ENTITY_MOVE_STOP_REQ>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<ENTITY_MOVE_STOP_REQ> CreateENTITY_MOVE_STOP_REQ(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    uint64_t uid = 0,
+    uint64_t excute_time = 0,
+    const common::VECTOR3 *position = 0) {
+  ENTITY_MOVE_STOP_REQBuilder builder_(_fbb);
+  builder_.add_excute_time(excute_time);
+  builder_.add_uid(uid);
+  builder_.add_position(position);
+  return builder_.Finish();
+}
+
+struct ENTITY_MOVE_STOP_ACK FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef ENTITY_MOVE_STOP_ACKBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_RESULT = 4,
+    VT_UID = 6,
+    VT_EXCUTE_TIME = 8,
+    VT_POSITION = 10
+  };
+  common::RESULT_CODE result() const {
+    return static_cast<common::RESULT_CODE>(GetField<uint32_t>(VT_RESULT, 0));
+  }
+  uint64_t uid() const {
+    return GetField<uint64_t>(VT_UID, 0);
+  }
+  uint64_t excute_time() const {
+    return GetField<uint64_t>(VT_EXCUTE_TIME, 0);
+  }
+  const common::VECTOR3 *position() const {
+    return GetStruct<const common::VECTOR3 *>(VT_POSITION);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint32_t>(verifier, VT_RESULT) &&
+           VerifyField<uint64_t>(verifier, VT_UID) &&
+           VerifyField<uint64_t>(verifier, VT_EXCUTE_TIME) &&
+           VerifyField<common::VECTOR3>(verifier, VT_POSITION) &&
+           verifier.EndTable();
+  }
+};
+
+struct ENTITY_MOVE_STOP_ACKBuilder {
+  typedef ENTITY_MOVE_STOP_ACK Table;
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_result(common::RESULT_CODE result) {
+    fbb_.AddElement<uint32_t>(ENTITY_MOVE_STOP_ACK::VT_RESULT, static_cast<uint32_t>(result), 0);
+  }
+  void add_uid(uint64_t uid) {
+    fbb_.AddElement<uint64_t>(ENTITY_MOVE_STOP_ACK::VT_UID, uid, 0);
+  }
+  void add_excute_time(uint64_t excute_time) {
+    fbb_.AddElement<uint64_t>(ENTITY_MOVE_STOP_ACK::VT_EXCUTE_TIME, excute_time, 0);
+  }
+  void add_position(const common::VECTOR3 *position) {
+    fbb_.AddStruct(ENTITY_MOVE_STOP_ACK::VT_POSITION, position);
+  }
+  explicit ENTITY_MOVE_STOP_ACKBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  flatbuffers::Offset<ENTITY_MOVE_STOP_ACK> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<ENTITY_MOVE_STOP_ACK>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<ENTITY_MOVE_STOP_ACK> CreateENTITY_MOVE_STOP_ACK(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    common::RESULT_CODE result = common::RESULT_CODE_ERROR_FAIL,
+    uint64_t uid = 0,
+    uint64_t excute_time = 0,
+    const common::VECTOR3 *position = 0) {
+  ENTITY_MOVE_STOP_ACKBuilder builder_(_fbb);
+  builder_.add_excute_time(excute_time);
+  builder_.add_uid(uid);
+  builder_.add_position(position);
+  builder_.add_result(result);
+  return builder_.Finish();
 }
 
 }  // namespace protocol_svr

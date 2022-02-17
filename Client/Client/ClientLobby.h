@@ -32,7 +32,10 @@ public:
 	virtual void			OnInitialUpdate();
 	virtual void			OnEnter();
 
-	void					SetCharacterInfo(const protocol::CHARACTER_INFO_S2C* msg);
+	void					ENTER_LOBBY_S2C(const protocol::ENTER_LOBBY_S2C* msg);
+	void					CHARACTER_INFO_S2C(const protocol::CHARACTER_INFO_S2C* msg);
+
+	afx_msg void			OnBnClickedLobbyEnter();
 };
 
 

@@ -126,6 +126,9 @@
     <ClInclude Include="ClientSelector.h">
       <Filter>ClientView</Filter>
     </ClInclude>
+    <ClInclude Include="ClientMap.h">
+      <Filter>ClientView</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ClassView.cpp">
@@ -201,6 +204,9 @@
       <Filter>ClientView</Filter>
     </ClCompile>
     <ClCompile Include="ClientSelector.cpp">
+      <Filter>ClientView</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientMap.cpp">
       <Filter>ClientView</Filter>
     </ClCompile>
   </ItemGroup>
