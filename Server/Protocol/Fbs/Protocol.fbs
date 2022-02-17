@@ -1,0 +1,131 @@
+include "Common.fbs";
+
+namespace protocol;
+
+enum MESSAGE : uint16
+{
+	CONNECT_RESULT_C2S	= 4,
+	CONNECT_RESULT_S2C	= 5,
+
+	LOGIN_C2S			= 6,
+	LOGIN_S2C			= 7,
+
+	SERVER_CONNECT_C2S	= 8,	// 서버 이동 및 접속
+	SERVER_CONNECT_S2C	= 9,
+
+	CHARACTER_INFO_C2S,
+	CHARACTER_INFO_S2C,
+
+	CHARACTER_NAME_DUPLICATION_C2S,
+	CHARACTER_NAME_DUPLICATION_S2C,
+
+	CHARACTER_CREATE_C2S,
+	CHARACTER_CREATE_S2C,
+	
+	ENTER_LOBBY_C2S,
+	ENTER_LOBBY_S2C,
+
+	ENTER_MAP_C2S,
+	ENTER_MAP_S2C,
+}
+
+table CONNECT_RESULT_C2S
+{
+}
+
+table CONNECT_RESULT_S2C
+{
+	result: common.RESULT_CODE;
+}
+
+table LOGIN_C2S
+{
+	id: string;
+	pw: string;
+}
+
+table LOGIN_S2C
+{
+	result: common.RESULT_CODE;
+	uid: uint64;
+}
+
+table SERVER_CONNECT_C2S
+{
+	uid: uint64;
+	id: string;
+}
+
+table SERVER_CONNECT_S2C
+{
+	result: common.RESULT_CODE;
+	uid: uint64;
+	authority: common.ACCOUNT_AUTHORITY;
+	block_type: common.ACCOUNT_BLOCK_TYPE;
+	block_date: uint64;
+}
+
+table CHARACTER_INFO_C2S
+{
+}
+
+table CHARACTER_INFO_S2C
+{
+	result: common.RESULT_CODE;
+
+	nick_name: string;
+	type: common.CHARACTER_TYPE;
+	belong: uint16;
+	face: common.CHARACTER_FACE;
+	equipment: [common.CHARACTER_EQUIPMENT];
+}
+
+table CHARACTER_NAME_DUPLICATION_C2S
+{
+	nick_name: string;
+}
+
+table CHARACTER_NAME_DUPLICATION_S2C
+{
+	result: common.RESULT_CODE;
+
+	nick_name: string;
+}
+
+table CHARACTER_CREATE_C2S
+{
+	nick_name: string;
+	type: common.CHARACTER_TYPE;
+	belong: uint16;
+	face: common.CHARACTER_FACE;
+	equipment: [common.CHARACTER_EQUIPMENT];
+}
+
+table CHARACTER_CREATE_S2C
+{
+	result: common.RESULT_CODE;
+
+	nick_name: string;
+	type: common.CHARACTER_TYPE;
+	belong: uint16;
+	face: common.CHARACTER_FACE;
+	equipment: [common.CHARACTER_EQUIPMENT];
+}
+
+table ENTER_LOBBY_C2S
+{
+}
+
+table ENTER_LOBBY_S2C
+{
+	result: common.RESULT_CODE;
+}
+
+table ENTER_MAP_C2S
+{
+}
+
+table ENTER_MAP_S2C
+{
+	result: common.RESULT_CODE;
+}

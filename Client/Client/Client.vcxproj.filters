@@ -1,0 +1,294 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="ClientView">
+      <UniqueIdentifier>{87b5fba4-d600-4603-83a1-3228bc236d1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{113dbad1-134b-42f4-91d6-81ef85262791}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainFrm">
+      <UniqueIdentifier>{4c853b47-1459-480c-825e-09667ab2e677}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{407e3140-4aac-4aae-9aeb-7203bf4eb5ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controller">
+      <UniqueIdentifier>{b26e1c1a-930d-4401-9b9d-f4575fb1d9bf}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ClassView.h">
+      <Filter>MainFrm</Filter>
+    </ClInclude>
+    <ClInclude Include="Client.h">
+      <Filter>MainFrm</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientDoc.h">
+      <Filter>MainFrm</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientView.h">
+      <Filter>MainFrm</Filter>
+    </ClInclude>
+    <ClInclude Include="FileView.h">
+      <Filter>MainFrm</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>MainFrm</Filter>
+    </ClInclude>
+    <ClInclude Include="MainFrm.h">
+      <Filter>MainFrm</Filter>
+    </ClInclude>
+    <ClInclude Include="OutputWnd.h">
+      <Filter>MainFrm</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>MainFrm</Filter>
+    </ClInclude>
+    <ClInclude Include="PropertiesWnd.h">
+      <Filter>MainFrm</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>MainFrm</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>MainFrm</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewTree.h">
+      <Filter>MainFrm</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientBase.h">
+      <Filter>ClientView</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientConnect.h">
+      <Filter>ClientView</Filter>
+    </ClInclude>
+    <ClInclude Include="Define.h">
+      <Filter>MainFrm</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkTCP.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Cpp\Protocol_generated.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Cpp\Common_generated.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientLogin.h">
+      <Filter>ClientView</Filter>
+    </ClInclude>
+    <ClInclude Include="ControllerBase.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="ControllerSingle.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientLobby.h">
+      <Filter>ClientView</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientServerMove.h">
+      <Filter>ClientView</Filter>
+    </ClInclude>
+    <ClInclude Include="ControllerMulti.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="User.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientInclude.h">
+      <Filter>ClientView</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientCreateCharacter.h">
+      <Filter>ClientView</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientBotSetting.h">
+      <Filter>ClientView</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageProcessor.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientBotRun.h">
+      <Filter>ClientView</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientSelector.h">
+      <Filter>ClientView</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ClassView.cpp">
+      <Filter>MainFrm</Filter>
+    </ClCompile>
+    <ClCompile Include="Client.cpp">
+      <Filter>MainFrm</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientDoc.cpp">
+      <Filter>MainFrm</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientView.cpp">
+      <Filter>MainFrm</Filter>
+    </ClCompile>
+    <ClCompile Include="FileView.cpp">
+      <Filter>MainFrm</Filter>
+    </ClCompile>
+    <ClCompile Include="MainFrm.cpp">
+      <Filter>MainFrm</Filter>
+    </ClCompile>
+    <ClCompile Include="OutputWnd.cpp">
+      <Filter>MainFrm</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>MainFrm</Filter>
+    </ClCompile>
+    <ClCompile Include="PropertiesWnd.cpp">
+      <Filter>MainFrm</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewTree.cpp">
+      <Filter>MainFrm</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientBase.cpp">
+      <Filter>ClientView</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientConnect.cpp">
+      <Filter>ClientView</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkTCP.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientLogin.cpp">
+      <Filter>ClientView</Filter>
+    </ClCompile>
+    <ClCompile Include="ControllerSingle.cpp">
+      <Filter>Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="ControllerBase.cpp">
+      <Filter>Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientLobby.cpp">
+      <Filter>ClientView</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientServerMove.cpp">
+      <Filter>ClientView</Filter>
+    </ClCompile>
+    <ClCompile Include="ControllerMulti.cpp">
+      <Filter>Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="User.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientCreateCharacter.cpp">
+      <Filter>ClientView</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientBotSetting.cpp">
+      <Filter>ClientView</Filter>
+    </ClCompile>
+    <ClCompile Include="MessageProcessor.cpp">
+      <Filter>Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientBotRun.cpp">
+      <Filter>ClientView</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientSelector.cpp">
+      <Filter>ClientView</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Client.rc">
+      <Filter>리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\file_view.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\file_view_hc.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\class_view.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\class_view_hc.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\fileview.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\fileview_hc.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\classview.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\classview_hc.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\explorer.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\explorer_hc.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\sort.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\sort_hc.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\menuimages.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\menuimages_hc.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\output_wnd.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\output_wnd_hc.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\properties_wnd.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\properties_wnd_hc.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\properties.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\properties_hc.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\userimages.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\ClientDoc.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\Client.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\Toolbar.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\Toolbar256.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\Client.rc2">
+      <Filter>리소스 파일</Filter>
+    </None>
+  </ItemGroup>
+</Project>

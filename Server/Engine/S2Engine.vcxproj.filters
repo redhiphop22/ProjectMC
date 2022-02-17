@@ -1,0 +1,203 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="S2Engine.cpp" />
+    <ClCompile Include="DataType\S2Date32.cpp">
+      <Filter>DataType</Filter>
+    </ClCompile>
+    <ClCompile Include="DataType\S2Vector3.cpp">
+      <Filter>DataType</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\S2Server.cpp">
+      <Filter>Service</Filter>
+    </ClCompile>
+    <ClCompile Include="Service\S2Service.cpp">
+      <Filter>Service</Filter>
+    </ClCompile>
+    <ClCompile Include="System\S2ElementBase.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="System\S2Memory.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="System\S2MiniDump.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="System\S2Mutex.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="System\S2Net.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="System\S2Singleton.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="System\S2SpinLock.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="System\S2String.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="System\S2Time.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="System\S2ADO.cpp">
+      <Filter>System\Database</Filter>
+    </ClCompile>
+    <ClCompile Include="System\S2MySql.cpp">
+      <Filter>System\Database</Filter>
+    </ClCompile>
+    <ClCompile Include="System\S2LogFileA.cpp">
+      <Filter>System\Log</Filter>
+    </ClCompile>
+    <ClCompile Include="System\S2LogFileMgr.cpp">
+      <Filter>System\Log</Filter>
+    </ClCompile>
+    <ClCompile Include="System\S2LogFileW.cpp">
+      <Filter>System\Log</Filter>
+    </ClCompile>
+    <ClCompile Include="System\S2IocpSession.cpp">
+      <Filter>System\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="System\S2IocpSessionMgr.cpp">
+      <Filter>System\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="System\S2IocpWorker.cpp">
+      <Filter>System\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="System\S2IocpWorkerMgr.cpp">
+      <Filter>System\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="System\S2Thread.cpp">
+      <Filter>System\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="System\S2ThreadMgr.cpp">
+      <Filter>System\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="System\S2ThreadPool.cpp">
+      <Filter>System\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="System\S2SocketConnector.cpp">
+      <Filter>System\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="System\S2Iocp.cpp">
+      <Filter>System\Network</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="S2Engine.h" />
+    <ClInclude Include="DataType\S2Date32.h">
+      <Filter>DataType</Filter>
+    </ClInclude>
+    <ClInclude Include="DataType\S2Vector3.h">
+      <Filter>DataType</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\S2Server.h">
+      <Filter>Service</Filter>
+    </ClInclude>
+    <ClInclude Include="Service\S2Service.h">
+      <Filter>Service</Filter>
+    </ClInclude>
+    <ClInclude Include="System\S2ElementBase.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\S2Memory.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\S2MessageProcessor.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\S2MessageReceiver.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\S2MiniDump.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\S2Mutex.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\S2Net.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\S2RingBuffer.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\S2Singleton.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\S2SpinLock.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\S2String.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\S2Time.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\S2ADO.h">
+      <Filter>System\Database</Filter>
+    </ClInclude>
+    <ClInclude Include="System\S2MySql.h">
+      <Filter>System\Database</Filter>
+    </ClInclude>
+    <ClInclude Include="System\S2LogFileA.h">
+      <Filter>System\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="System\S2LogFileMgr.h">
+      <Filter>System\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="System\S2LogFileW.h">
+      <Filter>System\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="System\S2IocpSession.h">
+      <Filter>System\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="System\S2IocpSessionMgr.h">
+      <Filter>System\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="System\S2IocpWorker.h">
+      <Filter>System\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="System\S2IocpWorkerMgr.h">
+      <Filter>System\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="System\S2Thread.h">
+      <Filter>System\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="System\S2ThreadMgr.h">
+      <Filter>System\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="System\S2ThreadPool.h">
+      <Filter>System\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="System\S2SocketConnector.h">
+      <Filter>System\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="System\S2Iocp.h">
+      <Filter>System\Network</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="DataType">
+      <UniqueIdentifier>{43f10523-7a9a-4a3e-94d2-ace081b2b4dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service">
+      <UniqueIdentifier>{226c90f1-0943-4271-986e-412fa58269f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{914bf1e3-fcc2-4caf-9aaf-df95fa7fbf6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Database">
+      <UniqueIdentifier>{3b4e0cd9-bab5-49ee-a872-841f0d48b245}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Log">
+      <UniqueIdentifier>{143c8d6c-0fd0-4f1a-9320-72a20310fa47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Network">
+      <UniqueIdentifier>{73ec415e-c97d-42a2-98c5-1dbf5ce69187}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Thread">
+      <UniqueIdentifier>{96d108b2-d607-432a-a566-3563520e1327}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

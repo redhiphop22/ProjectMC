@@ -1,0 +1,101 @@
+include "Common.fbs";
+
+namespace protocol_svr;
+
+enum MESSAGE : ushort
+{
+	LOGIN_DB_REQ,
+	LOGIN_DB_ACK,
+
+	SERVER_CONNECT_DB_REQ,
+	SERVER_CONNECT_DB_ACK,
+
+	CHARACTER_INFO_DB_REQ,
+	CHARACTER_INFO_DB_ACK,
+
+	CHARACTER_NAME_DUPLICATION_DB_REQ,
+	CHARACTER_NAME_DUPLICATION_DB_ACK,
+
+	CHARACTER_CREATE_DB_REQ,
+	CHARACTER_CREATE_DB_ACK,
+}
+
+table LOGIN_DB_REQ
+{
+	id: string;
+	pw: string;
+}
+
+table LOGIN_DB_ACK
+{
+	result: common.RESULT_CODE;
+}
+
+table SERVER_CONNECT_DB_REQ
+{
+	uid: uint64;
+	id: string;
+}
+
+table SERVER_CONNECT_DB_ACK
+{
+	uid: uint64;
+	result: common.RESULT_CODE;
+	
+	authority: common.ACCOUNT_AUTHORITY;
+	block_type: common.ACCOUNT_BLOCK_TYPE;
+	block_date: uint64;
+}
+
+table CHARACTER_INFO_DB_REQ
+{
+	uid: uint64;
+}
+
+table CHARACTER_INFO_DB_ACK
+{
+	uid: uint64;
+	result: common.RESULT_CODE;
+	
+	nick_name: string;
+	type: common.CHARACTER_TYPE;
+	belong: uint16;
+	face: common.CHARACTER_FACE;
+	equipment: [common.CHARACTER_EQUIPMENT];
+}
+
+table CHARACTER_NAME_DUPLICATION_DB_REQ
+{
+	uid: uint64;
+	nick_name: string;
+}
+
+table CHARACTER_NAME_DUPLICATION_DB_ACK
+{
+	uid: uint64;
+	result: common.RESULT_CODE;
+
+	nick_name: string;
+}
+
+table CHARACTER_CREATE_DB_REQ
+{
+	uid: uint64;
+	nick_name: string;
+	type: common.CHARACTER_TYPE;
+	belong: uint16;
+	face: common.CHARACTER_FACE;
+	equipment: [common.CHARACTER_EQUIPMENT];
+}
+
+table CHARACTER_CREATE_DB_ACK
+{
+	uid: uint64;
+	result: common.RESULT_CODE;
+
+	nick_name: string;
+	type: common.CHARACTER_TYPE;
+	belong: uint16;
+	face: common.CHARACTER_FACE;
+	equipment: [common.CHARACTER_EQUIPMENT];
+}

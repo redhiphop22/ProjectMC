@@ -1,0 +1,76 @@
+include "Result.fbs";
+
+namespace common;
+
+enum ACCOUNT_AUTHORITY : uint8
+{
+	GUEST				= 0,		// 게스트
+	STUDENT				= 1,		// 학생
+	PROFESSOR			= 2,		// 교수
+	ADMINISTRATOR		= 99,		// 관리자
+}
+
+enum ACCOUNT_BLOCK_TYPE : uint8
+{
+	NONE				= 0,
+}
+
+enum CHARACTER_TYPE : uint8
+{
+	NONE				= 0,
+	MAN					= 1,
+	WOMAN				= 2,
+}
+
+enum CHARACTER_EQUIPMENT_TYPE : uint8
+{
+	TOP					= 0,	// 상의
+	BOTTOM				= 1,	// 하의
+	ONEPIECE			= 2,	// 원피스
+	SHOES				= 3,	// 신발
+
+	EYELASH				= 4,	// 속눈썹
+	EYESHADOW			= 5,	// 아이쉐도우
+	FACIAL_HAIR			= 6,	// 수염
+	PIERCING			= 7,	// 피어싱
+	TATTOO				= 8,	// 문신
+	HAT					= 9,	// 모자
+	GLASSES				= 10,	// 안경
+	EARRING				= 11,	// 귀걸이
+	NECKLACE			= 12,	// 목걸이
+	WATCH				= 13,	// 시계
+	BAG					= 14,	// 가방
+	SMARTPHONE			= 15,	// 스마트폰
+}
+
+table CHARACTER_INFO
+{
+	name: string;
+	hair_idx: uint16;
+	hair_color: uint8;
+	face_idx: uint16;
+	face_color: uint8;
+}
+// Color 표
+// http://www.n2n.pe.kr/lev-1/color.htm
+table CHARACTER_FACE
+{
+	hair_idx: uint16;			// 헤어
+	hair_color: uint8;
+	face_idx: uint16;			// 얼굴
+	face_color: uint8;
+	eye_idx: uint16;			// 눈동자
+	eye_color: uint8;
+	eyebrow_idx: uint16;		// 눈썹
+	eyebrow_color: uint8;
+	nose_idx: uint16;			// 코
+	nose_color: uint8;
+	mouth_idx: uint16;			// 입술
+	mouth_color: uint8;
+}
+
+table CHARACTER_EQUIPMENT
+{
+	type: CHARACTER_EQUIPMENT_TYPE;
+	id: uint32;
+}

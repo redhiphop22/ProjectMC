@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="World.h" />
+    <ClInclude Include="System\Define.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\UserInfo.h">
+      <Filter>System\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="System\UserMgr.h">
+      <Filter>System\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="System\DllMain.h">
+      <Filter>System\MainFrm</Filter>
+    </ClInclude>
+    <ClInclude Include="System\MainFrm.h">
+      <Filter>System\MainFrm</Filter>
+    </ClInclude>
+    <ClInclude Include="System\DataBaseMgr.h">
+      <Filter>System\MessageProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="System\DataBaseWorker.h">
+      <Filter>System\MessageProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="System\MessageProcessor.h">
+      <Filter>System\MessageProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="System\UserProcessor.h">
+      <Filter>System\MessageProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="System\IocpSession.h">
+      <Filter>System\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="System\IocpSessionMgr.h">
+      <Filter>System\Network</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{e019a225-fdc2-4449-a3a1-0ba041b07cf0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{adb269c4-386e-4385-bfd2-abcaedb83d25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Data">
+      <UniqueIdentifier>{100dc55e-088a-46e1-bc47-3bf96d308165}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\MainFrm">
+      <UniqueIdentifier>{b0b3cf0e-7461-4008-a63a-851382c7419b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\MessageProcessor">
+      <UniqueIdentifier>{1dc0fbe2-2511-4923-ba9e-abb479fed9bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Network">
+      <UniqueIdentifier>{a9e041db-9dfd-41c9-be0c-3bd872b6b634}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="System\UserInfo.cpp">
+      <Filter>System\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="System\UserMgr.cpp">
+      <Filter>System\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="System\DllMain.cpp">
+      <Filter>System\MainFrm</Filter>
+    </ClCompile>
+    <ClCompile Include="System\MainFrm.cpp">
+      <Filter>System\MainFrm</Filter>
+    </ClCompile>
+    <ClCompile Include="System\DataBaseMgr.cpp">
+      <Filter>System\MessageProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="System\DataBaseWorker.cpp">
+      <Filter>System\MessageProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="System\MessageProcessor.cpp">
+      <Filter>System\MessageProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="System\UserProcessor.cpp">
+      <Filter>System\MessageProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="System\UserProcessor_Database.cpp">
+      <Filter>System\MessageProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="System\UserProcessor_Packet.cpp">
+      <Filter>System\MessageProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="System\IocpSession.cpp">
+      <Filter>System\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="System\IocpSessionMgr.cpp">
+      <Filter>System\Network</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

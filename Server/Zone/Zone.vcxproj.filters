@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="Zone.h" />
+    <ClInclude Include="System\Define.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\IocpSessionMgr.h">
+      <Filter>System\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="System\IocpSession.h">
+      <Filter>System\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="System\MessageProcessor.h">
+      <Filter>System\MessageProcessor</Filter>
+    </ClInclude>
+    <ClInclude Include="System\DllMain.h">
+      <Filter>System\MainFrm</Filter>
+    </ClInclude>
+    <ClInclude Include="System\MainFrm.h">
+      <Filter>System\MainFrm</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="System">
+      <UniqueIdentifier>{986f333d-6480-4823-95e6-98a4756d8d57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\Network">
+      <UniqueIdentifier>{3ba1aada-6e10-446d-bf23-cd9029ddb3b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\MessageProcessor">
+      <UniqueIdentifier>{16ce628d-0d70-4ed8-976c-53f375ff3671}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\MainFrm">
+      <UniqueIdentifier>{35d1db1a-84f1-41eb-ac90-faa029df83cd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="System\IocpSession.cpp">
+      <Filter>System\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="System\IocpSessionMgr.cpp">
+      <Filter>System\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="System\MessageProcessor.cpp">
+      <Filter>System\MessageProcessor</Filter>
+    </ClCompile>
+    <ClCompile Include="System\DllMain.cpp">
+      <Filter>System\MainFrm</Filter>
+    </ClCompile>
+    <ClCompile Include="System\MainFrm.cpp">
+      <Filter>System\MainFrm</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
