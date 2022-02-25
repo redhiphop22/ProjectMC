@@ -114,7 +114,8 @@ bool UserInfo::ENTER_MAP_ACK(const protocol_svr::ENTER_MAP_ACK* msg)
 	flatbuffers::FlatBufferBuilder fbb(FBB_BASIC_SIZE);
 	auto body = protocol::CreateENTER_MAP_S2C(fbb,
 		msg->result(),
-		msg->map_id()
+		msg->map_id(),
+		s2::S2Time::Now()
 	);
 	fbb.Finish(body);
 

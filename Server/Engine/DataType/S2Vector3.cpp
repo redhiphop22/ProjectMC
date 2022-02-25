@@ -29,6 +29,13 @@ S2Vector3::S2Vector3(S2Vector3& vector)
 	m_pos[2] = vector.m_pos[2];
 }
 
+S2Vector3::S2Vector3(const S2Vector3& vector)
+{
+	m_pos[0] = vector.m_pos[0];
+	m_pos[1] = vector.m_pos[1];
+	m_pos[2] = vector.m_pos[2];
+}
+
 void S2Vector3::Reset()
 {
 	m_pos[0] = 0.f;

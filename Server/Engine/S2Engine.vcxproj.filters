@@ -77,6 +77,15 @@
     <ClCompile Include="System\S2Iocp.cpp">
       <Filter>System\Network</Filter>
     </ClCompile>
+    <ClCompile Include="System\S2Json.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="System\S2FileSystem.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="System\S2Thread.cpp">
+      <Filter>System\Thread</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="S2Engine.h" />
@@ -166,6 +175,15 @@
     </ClInclude>
     <ClInclude Include="System\S2Iocp.h">
       <Filter>System\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="System\S2Json.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\S2FileSystem.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\S2LogAccessor.h">
+      <Filter>System\Log</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

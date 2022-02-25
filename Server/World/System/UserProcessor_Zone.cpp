@@ -8,6 +8,9 @@ bool UserProcessor::RegisterPacket_Zone()
 	REGIST_PACKET(m_zoneFunc.emplace(std::make_pair(protocol_svr::MESSAGE_ENTER_MAP_ACK, &UserProcessor::ENTER_MAP_ACK)));
 	REGIST_PACKET(m_zoneFunc.emplace(std::make_pair(protocol_svr::MESSAGE_ENTITY_SPAWN_ACK, &UserProcessor::ENTITY_SPAWN_ACK)));
 	REGIST_PACKET(m_zoneFunc.emplace(std::make_pair(protocol_svr::MESSAGE_ENTITY_DESTROY_ACK, &UserProcessor::ENTITY_DESTROY_ACK)));
+	REGIST_PACKET(m_zoneFunc.emplace(std::make_pair(protocol_svr::MESSAGE_ENTITY_MOVE_VELOCITY_ACK, &UserProcessor::ENTITY_MOVE_VELOCITY_ACK)));
+	REGIST_PACKET(m_zoneFunc.emplace(std::make_pair(protocol_svr::MESSAGE_ENTITY_MOVE_STOP_ACK, &UserProcessor::ENTITY_MOVE_STOP_ACK)));
+	
 
 	return true;
 }
@@ -74,8 +77,7 @@ bool UserProcessor::ENTITY_SPAWN_ACK(const char* buffer, int32_t size)
 
 	for(auto iterUid = msg->uid_list()->begin() ; iterUid != msg->uid_list()->end() ; ++iterUid)
 	{
-		uid_t uid = *iterUid;
-		auto user = m_userMgr->GetUserInfo(uid);
+		auto user = m_userMgr->GetUserInfo(*iterUid);
 		if(nullptr == user)
 			continue;
 
@@ -97,12 +99,65 @@ bool UserProcessor::ENTITY_DESTROY_ACK(const char* buffer, int32_t size)
 
 	for(auto iterUid = msg->uid_list()->begin() ; iterUid != msg->uid_list()->end() ; ++iterUid)
 	{
-		uid_t uid = *iterUid;
-		auto user = m_userMgr->GetUserInfo(uid);
+		auto user = m_userMgr->GetUserInfo(*iterUid);
 		if(nullptr == user)
 			continue;
 
 		user->SendPacket(protocol::MESSAGE_ENTITY_DESTROY_S2C, fbb);
+	}
+
+	return true;
+}
+
+bool UserProcessor::ENTITY_MOVE_VELOCITY_ACK(const char* buffer, int32_t size)
+{
+	PACKET_CONVERT_S2S(ENTITY_MOVE_VELOCITY_ACK, buffer, size);
+	
+	flatbuffers::FlatBufferBuilder fbb(FBB_BASIC_SIZE);
+	auto body = protocol::CreateENTITY_MOVE_VELOCITY_S2C(fbb,
+		msg->result(),
+		msg->uid(),
+		msg->excute_time(),
+		msg->position(),
+		msg->forward(),
+		msg->speed(),
+		s2::S2Time::Now()
+	);
+	fbb.Finish(body);
+
+	for(auto iterUid = msg->uid_list()->begin() ; iterUid != msg->uid_list()->end() ; ++iterUid)
+	{
+		auto user = m_userMgr->GetUserInfo(*iterUid);
+		if(nullptr == user)
+			continue;
+
+		user->SendPacket(protocol::MESSAGE_ENTITY_MOVE_VELOCITY_S2C, fbb);
+	}
+
+	return true;
+}
+
+bool UserProcessor::ENTITY_MOVE_STOP_ACK(const char* buffer, int32_t size)
+{
+	PACKET_CONVERT_S2S(ENTITY_MOVE_STOP_ACK, buffer, size);
+	
+	flatbuffers::FlatBufferBuilder fbb(FBB_BASIC_SIZE);
+	auto body = protocol::CreateENTITY_MOVE_STOP_S2C(fbb,
+		msg->result(),
+		msg->uid(),
+		msg->excute_time(),
+		msg->position(),
+		s2::S2Time::Now()
+	);
+	fbb.Finish(body);
+
+	for(auto iterUid = msg->uid_list()->begin() ; iterUid != msg->uid_list()->end() ; ++iterUid)
+	{
+		auto user = m_userMgr->GetUserInfo(*iterUid);
+		if(nullptr == user)
+			continue;
+
+		user->SendPacket(protocol::MESSAGE_ENTITY_MOVE_STOP_S2C, fbb);
 	}
 
 	return true;

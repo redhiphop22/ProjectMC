@@ -168,6 +168,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>World.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>..\..\3thParty\flatbuffers\include;..\..\Common\Cpp;..\Common;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard_C>Default</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -176,7 +177,8 @@
       <AdditionalLibraryDirectories>..\Output\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>copy ..\..\3thParty\mysql\lib\libmysql.dll ..\Output\$(Platform)\$(Configuration)\</Command>
+      <Command>copy ..\..\3thParty\mysql\lib\libmysql.dll ..\..\Out\Bin
+copy $(SolutionDir)Output\$(Platform)\$(Configuration)\$(TargetFileName) ..\..\Out\Bin</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

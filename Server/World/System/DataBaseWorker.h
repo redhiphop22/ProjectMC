@@ -43,4 +43,5 @@ private:
 	char					m_pushData[MESSAGE_BUFFER_SIZE];
 	WORKER_STATE			m_state = WORKER_STATE::INIT;
 	db_func_list_t			m_dbFunc;
+	time_t					m_lastQueryTime = 0;
 };

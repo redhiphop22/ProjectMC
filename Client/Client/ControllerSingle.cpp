@@ -32,6 +32,7 @@ void ControllerSingle::SERVER_CONNECT_S2C(User* user, const char* buffer, int32_
 
 	if(common::RESULT_CODE_SUCCESS == msg->result())
 	{
+		((ClientServerMove*)m_app->GetActivePage())->SERVER_CONNECT_S2C(msg);
 		m_app->SwitchView(VIEW_PAGE::LOBBY);
 	}
 }
@@ -50,7 +51,6 @@ void ControllerSingle::CHARACTER_INFO_S2C(User* user, const char* buffer, int32_
 	if(common::RESULT_CODE_SUCCESS == msg->result())
 	{
 		((ClientLobby*)m_app->GetActivePage())->CHARACTER_INFO_S2C(msg);
-		//m_app->SwitchView(VIEW_PAGE::LOBBY);
 	}
 	else if(common::RESULT_CODE_SUCCESS_CHARACTER_NONE == msg->result())
 	{
@@ -98,4 +98,18 @@ void ControllerSingle::ENTITY_DESTROY_S2C(User* user, const char* buffer, int32_
 	PACKET_CONVERT(ENTITY_DESTROY_S2C, buffer, size);
 
 	((ClientMap*)m_app->GetActivePage())->ENTITY_DESTROY_S2C(msg);
+}
+
+void ControllerSingle::ENTITY_MOVE_VELOCITY_S2C(User* user, const char* buffer, int32_t size)
+{
+	PACKET_CONVERT(ENTITY_MOVE_VELOCITY_S2C, buffer, size);
+
+	((ClientMap*)m_app->GetActivePage())->ENTITY_MOVE_VELOCITY_S2C(msg);
+}
+
+void ControllerSingle::ENTITY_MOVE_STOP_S2C(User* user, const char* buffer, int32_t size)
+{
+	PACKET_CONVERT(ENTITY_MOVE_STOP_S2C, buffer, size);
+
+	((ClientMap*)m_app->GetActivePage())->ENTITY_MOVE_STOP_S2C(msg);
 }

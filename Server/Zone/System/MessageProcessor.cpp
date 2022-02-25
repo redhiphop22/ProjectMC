@@ -56,7 +56,7 @@ bool MessageProcessor::AddSender(MESSAGE_TYPE type, int32_t groupIdx, int32_t pr
 		}
 		message = result.first;
 	}	
-	return message->second.AddSender(groupIdx, processCount, bufferCount);
+	return message->second.AddSenderGroup(groupIdx, processCount, bufferCount);
 }
 
 bool MessageProcessor::SnedPacket_User(int32_t groupIdx, int32_t senderIdx, IocpSession* session, const char* packet, int32_t size)

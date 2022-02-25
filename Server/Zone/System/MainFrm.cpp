@@ -5,10 +5,11 @@ MainFrm* mainFrm = nullptr;
 
 bool MainFrm::OnInit()
 {
-	//if(false == S2LOG_INSTANCE().Create("D:\\ProjectMC\\Server\\Out\\Log\\Log"))
-	//{
-	//	return false;
-	//}
+	if(false == CONFIG.Create("..\\Config\\zone.conf"))
+	{
+		printf("[Eror] Config\n");
+		return false;
+	}
 
 	if(false == s2::S2Net::Create())
 	{
@@ -43,9 +44,8 @@ bool MainFrm::OnInit()
 		return false;
 	}
 		
-	uint32_t ip = s2::S2Net::GetIPToLong("127.0.0.1");
-	//uint32_t ip = s2::S2Net::GetIPToLong("192.168.0.199");
-	uint16_t port = 36102;
+	uint32_t ip = s2::S2Net::GetIPToLong(CONFIG.GetJson()["serverIP"].GetString());
+	uint16_t port = CONFIG.GetJson()["serverPort"].GetUint();
 	if(false == m_IOCP.Create(ip, port, &m_workerMgr, &m_sessionMgr))
 	{
 		printf("[Eror] IOCP\n");

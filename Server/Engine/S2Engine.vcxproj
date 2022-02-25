@@ -28,11 +28,13 @@
     <ClCompile Include="Service\S2Service.cpp" />
     <ClCompile Include="System\S2ADO.cpp" />
     <ClCompile Include="System\S2ElementBase.cpp" />
+    <ClCompile Include="System\S2FileSystem.cpp" />
     <ClCompile Include="System\S2Iocp.cpp" />
     <ClCompile Include="System\S2IocpSession.cpp" />
     <ClCompile Include="System\S2IocpSessionMgr.cpp" />
     <ClCompile Include="System\S2IocpWorker.cpp" />
     <ClCompile Include="System\S2IocpWorkerMgr.cpp" />
+    <ClCompile Include="System\S2Json.cpp" />
     <ClCompile Include="System\S2LogFileA.cpp" />
     <ClCompile Include="System\S2LogFileMgr.cpp" />
     <ClCompile Include="System\S2LogFileW.cpp" />
@@ -45,6 +47,7 @@
     <ClCompile Include="System\S2SocketConnector.cpp" />
     <ClCompile Include="System\S2SpinLock.cpp" />
     <ClCompile Include="System\S2String.cpp" />
+    <ClCompile Include="System\S2Thread.cpp" />
     <ClCompile Include="System\S2ThreadMgr.cpp" />
     <ClCompile Include="System\S2Time.cpp" />
   </ItemGroup>
@@ -56,11 +59,14 @@
     <ClInclude Include="Service\S2Service.h" />
     <ClInclude Include="System\S2ADO.h" />
     <ClInclude Include="System\S2ElementBase.h" />
+    <ClInclude Include="System\S2FileSystem.h" />
     <ClInclude Include="System\S2Iocp.h" />
     <ClInclude Include="System\S2IocpSession.h" />
     <ClInclude Include="System\S2IocpSessionMgr.h" />
     <ClInclude Include="System\S2IocpWorker.h" />
     <ClInclude Include="System\S2IocpWorkerMgr.h" />
+    <ClInclude Include="System\S2Json.h" />
+    <ClInclude Include="System\S2LogAccessor.h" />
     <ClInclude Include="System\S2LogFileA.h" />
     <ClInclude Include="System\S2LogFileMgr.h" />
     <ClInclude Include="System\S2LogFileW.h" />
@@ -192,12 +198,18 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>S2Engine.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
+      <LanguageStandard_C>Default</LanguageStandard_C>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
       </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>copy $(SolutionDir)Output\$(Platform)\$(Configuration)\$(TargetFileName) ..\..\Out\Bin
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>

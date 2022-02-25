@@ -21,19 +21,23 @@ public struct ENTER_MAP_S2C : IFlatbufferObject
 
   public common.RESULT_CODE Result { get { int o = __p.__offset(4); return o != 0 ? (common.RESULT_CODE)__p.bb.GetUint(o + __p.bb_pos) : common.RESULT_CODE.ERROR_FAIL; } }
   public uint MapId { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  public ulong ServerTime { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
 
   public static Offset<protocol.ENTER_MAP_S2C> CreateENTER_MAP_S2C(FlatBufferBuilder builder,
       common.RESULT_CODE result = common.RESULT_CODE.ERROR_FAIL,
-      uint map_id = 0) {
-    builder.StartTable(2);
+      uint map_id = 0,
+      ulong server_time = 0) {
+    builder.StartTable(3);
+    ENTER_MAP_S2C.AddServerTime(builder, server_time);
     ENTER_MAP_S2C.AddMapId(builder, map_id);
     ENTER_MAP_S2C.AddResult(builder, result);
     return ENTER_MAP_S2C.EndENTER_MAP_S2C(builder);
   }
 
-  public static void StartENTER_MAP_S2C(FlatBufferBuilder builder) { builder.StartTable(2); }
+  public static void StartENTER_MAP_S2C(FlatBufferBuilder builder) { builder.StartTable(3); }
   public static void AddResult(FlatBufferBuilder builder, common.RESULT_CODE result) { builder.AddUint(0, (uint)result, 0); }
   public static void AddMapId(FlatBufferBuilder builder, uint mapId) { builder.AddUint(1, mapId, 0); }
+  public static void AddServerTime(FlatBufferBuilder builder, ulong serverTime) { builder.AddUlong(2, serverTime, 0); }
   public static Offset<protocol.ENTER_MAP_S2C> EndENTER_MAP_S2C(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<protocol.ENTER_MAP_S2C>(o);

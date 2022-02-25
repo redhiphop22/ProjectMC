@@ -156,6 +156,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>Zone.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>..\..\3thParty\flatbuffers\include;..\..\Common\Cpp;..\Common;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard_C>Default</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -163,6 +164,9 @@
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>..\Output\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>copy $(SolutionDir)Output\$(Platform)\$(Configuration)\$(TargetFileName) ..\..\Out\Bin</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>

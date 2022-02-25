@@ -171,6 +171,7 @@ table ENTITY_DESTROY_ACK
 table ENTITY_MOVE_VELOCITY_REQ
 {
 	uid: uint64;
+	map_id: uint32;
 	excute_time: uint64;
 	position: common.VECTOR3;
 	forward: common.VECTOR3;
@@ -179,6 +180,8 @@ table ENTITY_MOVE_VELOCITY_REQ
 
 table ENTITY_MOVE_VELOCITY_ACK
 {
+	uid_list: [uint64];
+
 	result: common.RESULT_CODE;
 
 	uid: uint64;
@@ -191,12 +194,15 @@ table ENTITY_MOVE_VELOCITY_ACK
 table ENTITY_MOVE_STOP_REQ
 {
 	uid: uint64;
+	map_id: uint32;
 	excute_time: uint64;
 	position: common.VECTOR3;
 }
 
 table ENTITY_MOVE_STOP_ACK
 {
+	uid_list: [uint64];
+
 	result: common.RESULT_CODE;
 
 	uid: uint64;	

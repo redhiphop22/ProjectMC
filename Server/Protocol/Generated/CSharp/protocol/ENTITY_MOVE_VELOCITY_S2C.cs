@@ -25,14 +25,16 @@ public struct ENTITY_MOVE_VELOCITY_S2C : IFlatbufferObject
   public common.VECTOR3? Position { get { int o = __p.__offset(10); return o != 0 ? (common.VECTOR3?)(new common.VECTOR3()).__assign(o + __p.bb_pos, __p.bb) : null; } }
   public common.VECTOR3? Forward { get { int o = __p.__offset(12); return o != 0 ? (common.VECTOR3?)(new common.VECTOR3()).__assign(o + __p.bb_pos, __p.bb) : null; } }
   public float Speed { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public ulong ServerTime { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
 
-  public static void StartENTITY_MOVE_VELOCITY_S2C(FlatBufferBuilder builder) { builder.StartTable(6); }
+  public static void StartENTITY_MOVE_VELOCITY_S2C(FlatBufferBuilder builder) { builder.StartTable(7); }
   public static void AddResult(FlatBufferBuilder builder, common.RESULT_CODE result) { builder.AddUint(0, (uint)result, 0); }
   public static void AddUid(FlatBufferBuilder builder, ulong uid) { builder.AddUlong(1, uid, 0); }
   public static void AddExcuteTime(FlatBufferBuilder builder, ulong excuteTime) { builder.AddUlong(2, excuteTime, 0); }
   public static void AddPosition(FlatBufferBuilder builder, Offset<common.VECTOR3> positionOffset) { builder.AddStruct(3, positionOffset.Value, 0); }
   public static void AddForward(FlatBufferBuilder builder, Offset<common.VECTOR3> forwardOffset) { builder.AddStruct(4, forwardOffset.Value, 0); }
   public static void AddSpeed(FlatBufferBuilder builder, float speed) { builder.AddFloat(5, speed, 0.0f); }
+  public static void AddServerTime(FlatBufferBuilder builder, ulong serverTime) { builder.AddUlong(6, serverTime, 0); }
   public static Offset<protocol.ENTITY_MOVE_VELOCITY_S2C> EndENTITY_MOVE_VELOCITY_S2C(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<protocol.ENTITY_MOVE_VELOCITY_S2C>(o);

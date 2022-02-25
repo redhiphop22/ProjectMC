@@ -2,6 +2,8 @@
 
 //#include "S2CriticalSection.h"
 
+class S2Thread;
+
 #ifdef USE_FILE_UNICODE
 #define S2LogFile S2LogFileW
 #define _s2log_char_t wchar_t
@@ -18,15 +20,9 @@
 
 namespace s2 {
 
-class S2LogFileMgr
+class S2LogFileMgr : public S2MessageReceiver
 {
 public:
-	enum class FILE_SAVE_INTERVAL
-	{
-		DAY = 1,
-		HOUR,
-	};
-
 	enum class S2_LOG_TYPE : int32_t
 	{
 		TYPE_ERROR,
@@ -55,29 +51,17 @@ public:
 	S2LogFileMgr();
 	virtual ~S2LogFileMgr();
 
-	virtual bool			Create(const _s2log_char_t* wstrFileName, FILE_SAVE_INTERVAL fileSaveType = FILE_SAVE_INTERVAL::HOUR);
+	virtual bool			Create(const _s2log_char_t* wstrFileName);
 	virtual void			Destroy();	
 	void					OnUpdate();
 
 	virtual void			WriteLog(S2_LOG_TYPE logType, const _s2log_char_t* funcName, int32_t line, const _s2log_char_t* logString, ...);
 
-	bool					PushThread(const S2Thread::thread_id_t& id);
-	void					SetVersion(uint16_t ui16Ver01, uint16_t ui16Ver02, uint32_t ui32Ver03, uint32_t ui32Ver04);
+	bool					PushThread(const std::thread::id& id);
+	void					SetVersion(uint16_t ver01, uint16_t ver02, uint32_t ver03, uint32_t ver04);
+	void					GetNowTime(tm& now);
 
 protected:
-
-	bool					_Create(FILE_SAVE_INTERVAL iSaveType);
-	void					_UpdateTime()
-	{
-		::GetLocalTime(&m_SystemTime);
-		m_iYear = m_SystemTime.wYear;
-		m_iMonth = m_SystemTime.wMonth;
-		m_iDay = m_SystemTime.wDay;
-		m_iHour = m_SystemTime.wHour;
-		m_iMinute = m_SystemTime.wMinute;
-		m_iSecond = m_SystemTime.wSecond;
-		return;
-	}
 
 	virtual bool			_Working();
 
@@ -87,43 +71,26 @@ protected:
 
 	ring_buffer_t*			_GetThreadList();
 
+	virtual bool			OnMessageUpdate(int32_t groupIdx, void* data);
+
 protected:
+	const uint32_t			m_fileMaxSize = 2097152;	// 2MB
+
 	S2Thread				m_thread;
 
-	HANDLE m_hFile = NULL;
+	HANDLE					m_file = NULL;
 
+	int32_t					m_fileSize = 0;
 	//For File
-	FILE_SAVE_INTERVAL m_fileSaveType;
-	uint32_t m_ui32FileHour;
-	uint32_t m_ui32FileDay;
-
-	//For Add Log Buffer 
-	//S2CriticalSection		m_CS;
-
-	//For Save Time
-	SYSTEMTIME m_SystemTime;
-	uint32_t m_iYear;
-	uint32_t m_iMonth;
-	uint32_t m_iDay;
-	uint32_t m_iHour;
-	uint32_t m_iMinute;
-	uint32_t m_iSecond;
+	uint32_t				m_recordDay;	
 
 	// Server Version
-	uint16_t m_ui16Ver01 = 0;
-	uint16_t m_ui16Ver02 = 0;
-	uint32_t m_ui32Ver03 = 0;
-	uint32_t m_ui32Ver04 = 0;
+	uint16_t				m_ver01 = 0;
+	uint16_t				m_ver02 = 0;
+	uint32_t				m_ver03 = 0;
+	uint32_t				m_ver04 = 0;
 
-	std::mutex m_mutex;
-	std::unordered_map<s2::S2Thread::thread_id_t, ring_buffer_t*> m_threadList;
-	std::deque<ThreadLogList> m_logList;
+	std::mutex				m_mutex;
+	S2MessageProcessor<ThreadLogList>	m_message;
 };
 }
-#define __FUNCTIONNAME__ (strrchr(__FUNCTION__, '::') ? strrchr(__FUNCTION__, '::') + 1 : __FUNCTION__)
-
-#define S2LOG_INSTANCE()		s2::S2LogFile::GetInstance()
-#define S2LOG_ERROR(fmt, ...)	s2::S2LogFile::GetInstance().WriteLog(s2::S2LogFileMgr::S2_LOG_TYPE::TYPE_ERROR, __FUNCTION__, __LINE__, fmt, ##__VA_ARGS__);
-#define S2LOG_WARNING(fmt, ...)	s2::S2LogFile::GetInstance().WriteLog(s2::S2LogFileMgr::S2_LOG_TYPE::TYPE_WARNING, __FUNCTION__, __LINE__, fmt, ##__VA_ARGS__);
-#define S2LOG_INFO(fmt, ...)	s2::S2LogFile::GetInstance().WriteLog(s2::S2LogFileMgr::S2_LOG_TYPE::TYPE_INFO, __FUNCTION__, __LINE__, fmt, ##__VA_ARGS__);
-#define S2LOG(fmt, ...)			s2::S2LogFile::GetInstance().WriteLog(s2::S2LogFileMgr::S2_LOG_TYPE::TYPE_INFO, __FUNCTION__, __LINE__, fmt, ##__VA_ARGS__);

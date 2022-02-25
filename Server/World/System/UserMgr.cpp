@@ -122,7 +122,11 @@ bool UserMgr::InsertUser(const protocol_svr::SERVER_CONNECT_DB_ACK* msg)
 		flatbuffers::FlatBufferBuilder fbb(FBB_BASIC_SIZE);
 		auto body = protocol::CreateSERVER_CONNECT_S2C(fbb, 
 			common::RESULT_CODE::RESULT_CODE_SUCCESS,
-			uid
+			uid,
+			msg->authority(),
+			msg->block_type(),
+			msg->block_date(),
+			s2::S2Time::Now()
 		);
 		fbb.Finish(body);
 

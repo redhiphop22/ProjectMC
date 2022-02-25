@@ -13,6 +13,7 @@ public:
 	IocpSession*			GetSession()				{	return m_session;	}
 	bool					SendPacket(protocol::MESSAGE messageID, flatbuffers::FlatBufferBuilder& fbb);
 
+	map_t					GetMapId()					{	return m_mapId;		}
 public:
 	flatbuffers::Offset<common::ENTITY_INFO> MakePacket_Entity(flatbuffers::FlatBufferBuilder& fbb);
 

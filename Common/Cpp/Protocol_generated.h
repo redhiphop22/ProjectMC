@@ -6,8 +6,8 @@
 
 #include "flatbuffers/flatbuffers.h"
 
-#include "Result_generated.h"
 #include "Common_generated.h"
+#include "Result_generated.h"
 
 namespace protocol {
 
@@ -492,7 +492,8 @@ struct SERVER_CONNECT_S2C FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     VT_UID = 6,
     VT_AUTHORITY = 8,
     VT_BLOCK_TYPE = 10,
-    VT_BLOCK_DATE = 12
+    VT_BLOCK_DATE = 12,
+    VT_SERVER_TIME = 14
   };
   common::RESULT_CODE result() const {
     return static_cast<common::RESULT_CODE>(GetField<uint32_t>(VT_RESULT, 0));
@@ -509,6 +510,9 @@ struct SERVER_CONNECT_S2C FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   uint64_t block_date() const {
     return GetField<uint64_t>(VT_BLOCK_DATE, 0);
   }
+  uint64_t server_time() const {
+    return GetField<uint64_t>(VT_SERVER_TIME, 0);
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint32_t>(verifier, VT_RESULT) &&
@@ -516,6 +520,7 @@ struct SERVER_CONNECT_S2C FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            VerifyField<uint8_t>(verifier, VT_AUTHORITY) &&
            VerifyField<uint8_t>(verifier, VT_BLOCK_TYPE) &&
            VerifyField<uint64_t>(verifier, VT_BLOCK_DATE) &&
+           VerifyField<uint64_t>(verifier, VT_SERVER_TIME) &&
            verifier.EndTable();
   }
 };
@@ -539,6 +544,9 @@ struct SERVER_CONNECT_S2CBuilder {
   void add_block_date(uint64_t block_date) {
     fbb_.AddElement<uint64_t>(SERVER_CONNECT_S2C::VT_BLOCK_DATE, block_date, 0);
   }
+  void add_server_time(uint64_t server_time) {
+    fbb_.AddElement<uint64_t>(SERVER_CONNECT_S2C::VT_SERVER_TIME, server_time, 0);
+  }
   explicit SERVER_CONNECT_S2CBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -556,8 +564,10 @@ inline flatbuffers::Offset<SERVER_CONNECT_S2C> CreateSERVER_CONNECT_S2C(
     uint64_t uid = 0,
     common::ACCOUNT_AUTHORITY authority = common::ACCOUNT_AUTHORITY_GUEST,
     common::ACCOUNT_BLOCK_TYPE block_type = common::ACCOUNT_BLOCK_TYPE_NONE,
-    uint64_t block_date = 0) {
+    uint64_t block_date = 0,
+    uint64_t server_time = 0) {
   SERVER_CONNECT_S2CBuilder builder_(_fbb);
+  builder_.add_server_time(server_time);
   builder_.add_block_date(block_date);
   builder_.add_uid(uid);
   builder_.add_result(result);
@@ -1263,7 +1273,8 @@ struct ENTER_MAP_S2C FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   typedef ENTER_MAP_S2CBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_RESULT = 4,
-    VT_MAP_ID = 6
+    VT_MAP_ID = 6,
+    VT_SERVER_TIME = 8
   };
   common::RESULT_CODE result() const {
     return static_cast<common::RESULT_CODE>(GetField<uint32_t>(VT_RESULT, 0));
@@ -1271,10 +1282,14 @@ struct ENTER_MAP_S2C FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   uint32_t map_id() const {
     return GetField<uint32_t>(VT_MAP_ID, 0);
   }
+  uint64_t server_time() const {
+    return GetField<uint64_t>(VT_SERVER_TIME, 0);
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint32_t>(verifier, VT_RESULT) &&
            VerifyField<uint32_t>(verifier, VT_MAP_ID) &&
+           VerifyField<uint64_t>(verifier, VT_SERVER_TIME) &&
            verifier.EndTable();
   }
 };
@@ -1288,6 +1303,9 @@ struct ENTER_MAP_S2CBuilder {
   }
   void add_map_id(uint32_t map_id) {
     fbb_.AddElement<uint32_t>(ENTER_MAP_S2C::VT_MAP_ID, map_id, 0);
+  }
+  void add_server_time(uint64_t server_time) {
+    fbb_.AddElement<uint64_t>(ENTER_MAP_S2C::VT_SERVER_TIME, server_time, 0);
   }
   explicit ENTER_MAP_S2CBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -1303,8 +1321,10 @@ struct ENTER_MAP_S2CBuilder {
 inline flatbuffers::Offset<ENTER_MAP_S2C> CreateENTER_MAP_S2C(
     flatbuffers::FlatBufferBuilder &_fbb,
     common::RESULT_CODE result = common::RESULT_CODE_ERROR_FAIL,
-    uint32_t map_id = 0) {
+    uint32_t map_id = 0,
+    uint64_t server_time = 0) {
   ENTER_MAP_S2CBuilder builder_(_fbb);
+  builder_.add_server_time(server_time);
   builder_.add_map_id(map_id);
   builder_.add_result(result);
   return builder_.Finish();
@@ -1482,7 +1502,8 @@ struct ENTITY_MOVE_VELOCITY_S2C FLATBUFFERS_FINAL_CLASS : private flatbuffers::T
     VT_EXCUTE_TIME = 8,
     VT_POSITION = 10,
     VT_FORWARD = 12,
-    VT_SPEED = 14
+    VT_SPEED = 14,
+    VT_SERVER_TIME = 16
   };
   common::RESULT_CODE result() const {
     return static_cast<common::RESULT_CODE>(GetField<uint32_t>(VT_RESULT, 0));
@@ -1502,6 +1523,9 @@ struct ENTITY_MOVE_VELOCITY_S2C FLATBUFFERS_FINAL_CLASS : private flatbuffers::T
   float speed() const {
     return GetField<float>(VT_SPEED, 0.0f);
   }
+  uint64_t server_time() const {
+    return GetField<uint64_t>(VT_SERVER_TIME, 0);
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint32_t>(verifier, VT_RESULT) &&
@@ -1510,6 +1534,7 @@ struct ENTITY_MOVE_VELOCITY_S2C FLATBUFFERS_FINAL_CLASS : private flatbuffers::T
            VerifyField<common::VECTOR3>(verifier, VT_POSITION) &&
            VerifyField<common::VECTOR3>(verifier, VT_FORWARD) &&
            VerifyField<float>(verifier, VT_SPEED) &&
+           VerifyField<uint64_t>(verifier, VT_SERVER_TIME) &&
            verifier.EndTable();
   }
 };
@@ -1536,6 +1561,9 @@ struct ENTITY_MOVE_VELOCITY_S2CBuilder {
   void add_speed(float speed) {
     fbb_.AddElement<float>(ENTITY_MOVE_VELOCITY_S2C::VT_SPEED, speed, 0.0f);
   }
+  void add_server_time(uint64_t server_time) {
+    fbb_.AddElement<uint64_t>(ENTITY_MOVE_VELOCITY_S2C::VT_SERVER_TIME, server_time, 0);
+  }
   explicit ENTITY_MOVE_VELOCITY_S2CBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1554,8 +1582,10 @@ inline flatbuffers::Offset<ENTITY_MOVE_VELOCITY_S2C> CreateENTITY_MOVE_VELOCITY_
     uint64_t excute_time = 0,
     const common::VECTOR3 *position = 0,
     const common::VECTOR3 *forward = 0,
-    float speed = 0.0f) {
+    float speed = 0.0f,
+    uint64_t server_time = 0) {
   ENTITY_MOVE_VELOCITY_S2CBuilder builder_(_fbb);
+  builder_.add_server_time(server_time);
   builder_.add_excute_time(excute_time);
   builder_.add_uid(uid);
   builder_.add_speed(speed);
@@ -1622,7 +1652,8 @@ struct ENTITY_MOVE_STOP_S2C FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table
     VT_RESULT = 4,
     VT_UID = 6,
     VT_EXCUTE_TIME = 8,
-    VT_POSITION = 10
+    VT_POSITION = 10,
+    VT_SERVER_TIME = 12
   };
   common::RESULT_CODE result() const {
     return static_cast<common::RESULT_CODE>(GetField<uint32_t>(VT_RESULT, 0));
@@ -1636,12 +1667,16 @@ struct ENTITY_MOVE_STOP_S2C FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table
   const common::VECTOR3 *position() const {
     return GetStruct<const common::VECTOR3 *>(VT_POSITION);
   }
+  uint64_t server_time() const {
+    return GetField<uint64_t>(VT_SERVER_TIME, 0);
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint32_t>(verifier, VT_RESULT) &&
            VerifyField<uint64_t>(verifier, VT_UID) &&
            VerifyField<uint64_t>(verifier, VT_EXCUTE_TIME) &&
            VerifyField<common::VECTOR3>(verifier, VT_POSITION) &&
+           VerifyField<uint64_t>(verifier, VT_SERVER_TIME) &&
            verifier.EndTable();
   }
 };
@@ -1662,6 +1697,9 @@ struct ENTITY_MOVE_STOP_S2CBuilder {
   void add_position(const common::VECTOR3 *position) {
     fbb_.AddStruct(ENTITY_MOVE_STOP_S2C::VT_POSITION, position);
   }
+  void add_server_time(uint64_t server_time) {
+    fbb_.AddElement<uint64_t>(ENTITY_MOVE_STOP_S2C::VT_SERVER_TIME, server_time, 0);
+  }
   explicit ENTITY_MOVE_STOP_S2CBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1678,8 +1716,10 @@ inline flatbuffers::Offset<ENTITY_MOVE_STOP_S2C> CreateENTITY_MOVE_STOP_S2C(
     common::RESULT_CODE result = common::RESULT_CODE_ERROR_FAIL,
     uint64_t uid = 0,
     uint64_t excute_time = 0,
-    const common::VECTOR3 *position = 0) {
+    const common::VECTOR3 *position = 0,
+    uint64_t server_time = 0) {
   ENTITY_MOVE_STOP_S2CBuilder builder_(_fbb);
+  builder_.add_server_time(server_time);
   builder_.add_excute_time(excute_time);
   builder_.add_uid(uid);
   builder_.add_position(position);

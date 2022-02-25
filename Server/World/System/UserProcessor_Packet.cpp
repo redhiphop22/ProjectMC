@@ -165,9 +165,17 @@ bool UserProcessor::ENTITY_MOVE_VELOCITY_C2S(IocpSession* session, const char* b
 		return false; 
 	}
 
+	auto userInfo = m_userMgr->GetUserInfo(uid);
+	if(nullptr == userInfo)
+	{
+		SendError(common::RESULT_CODE_ERROR_PACKET_USER);
+		return false; 
+	}
+
 	flatbuffers::FlatBufferBuilder fbb(FBB_BASIC_SIZE);
 	auto body = protocol_svr::CreateENTITY_MOVE_VELOCITY_REQ(fbb, 
 		uid,
+		userInfo->GetMapId(),
 		msg->excute_time(),
 		msg->position(),
 		msg->forward(),
@@ -194,9 +202,17 @@ bool UserProcessor::ENTITY_MOVE_STOP_C2S(IocpSession* session, const char* buffe
 		return false; 
 	}
 
+	auto userInfo = m_userMgr->GetUserInfo(uid);
+	if(nullptr == userInfo)
+	{
+		SendError(common::RESULT_CODE_ERROR_PACKET_USER);
+		return false; 
+	}
+
 	flatbuffers::FlatBufferBuilder fbb(FBB_BASIC_SIZE);
 	auto body = protocol_svr::CreateENTITY_MOVE_STOP_REQ(fbb, 
 		uid,
+		userInfo->GetMapId(),
 		msg->excute_time(),
 		msg->position()
 	);

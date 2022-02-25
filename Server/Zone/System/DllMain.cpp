@@ -3,8 +3,10 @@
 
 namespace main {
 
-bool Start()
+bool Start(s2::S2LogFile* log)
 {
+	S2LOG_INIT(log);
+
 	mainFrm = new MainFrm();
 	if(nullptr == mainFrm)
 		return false;

@@ -22,9 +22,6 @@ S2_RESULT_CODE S2Server::StartServer(const char* dumpFile, INT32 i32InitDelayTim
 
 	//S2MiniDump::SetExceptionHandler(dumpFile);
 
-	if (false == S2Time::Init())
-		return S2_RESULT_ERROR_ST_TIMER;
-
 	//g_pLog = new S2LogFile;
 	//if (NULL == g_pLog)
 	//	return S2_RESULT_ERROR_ST_LOG;

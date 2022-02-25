@@ -110,3 +110,13 @@ void ControllerMulti::ENTITY_DESTROY_S2C(User* user, const char* buffer, int32_t
 {
 	PACKET_CONVERT(ENTITY_DESTROY_S2C, buffer, size);
 }
+
+void ControllerMulti::ENTITY_MOVE_VELOCITY_S2C(User* user, const char* buffer, int32_t size)
+{
+	PACKET_CONVERT(ENTITY_MOVE_VELOCITY_S2C, buffer, size);
+}
+
+void ControllerMulti::ENTITY_MOVE_STOP_S2C(User* user, const char* buffer, int32_t size)
+{
+	PACKET_CONVERT(ENTITY_MOVE_STOP_S2C, buffer, size);
+}

@@ -33,10 +33,12 @@ public:
 	bool					Create(const char* host, const uint16_t port, const char* user, const char* pass, const char* database);
 	void					Destroy();
 	
+	time_t					GetLastRestTime()	{	return m_lastRestTime;	}
+
 	bool					Connection();
 	bool					Execute(const char* query);
 	bool					ExecuteSelect(const char* query);
-
+		
 	bool					MoveNext();
 
 	bool					TransBegin();
@@ -63,6 +65,8 @@ private:
 	MYSQL*					m_connection = nullptr;
 	MYSQL_RES*				m_result = nullptr;
 	MYSQL_ROW				m_row;
+
+	time_t					m_lastRestTime;
 };
 
 }

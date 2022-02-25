@@ -22,6 +22,8 @@ bool ControllerBase::RegistPacket()
 	REGIST_PACKET(m_packetFunc.emplace(std::make_pair(protocol::MESSAGE_ENTER_MAP_S2C, &ControllerBase::ENTER_MAP_S2C)));
 	REGIST_PACKET(m_packetFunc.emplace(std::make_pair(protocol::MESSAGE_ENTITY_SPAWN_S2C, &ControllerBase::ENTITY_SPAWN_S2C)));
 	REGIST_PACKET(m_packetFunc.emplace(std::make_pair(protocol::MESSAGE_ENTITY_DESTROY_S2C, &ControllerBase::ENTITY_DESTROY_S2C)));	
+	REGIST_PACKET(m_packetFunc.emplace(std::make_pair(protocol::MESSAGE_ENTITY_MOVE_VELOCITY_S2C, &ControllerBase::ENTITY_MOVE_VELOCITY_S2C)));	
+	REGIST_PACKET(m_packetFunc.emplace(std::make_pair(protocol::MESSAGE_ENTITY_MOVE_STOP_S2C, &ControllerBase::ENTITY_MOVE_STOP_S2C)));	
 
 	return true;
 }
@@ -86,4 +88,14 @@ void ControllerBase::CHARACTER_CREATE_C2S(User* user, flatbuffers::FlatBufferBui
 void ControllerBase::ENTER_MAP_C2S(User* user, flatbuffers::FlatBufferBuilder& fbb)
 {
 	user->SendPacket(protocol::MESSAGE_ENTER_MAP_C2S, fbb);
+}
+
+void ControllerBase::ENTITY_MOVE_VELOCITY_C2S(User* user, flatbuffers::FlatBufferBuilder& fbb)
+{
+	user->SendPacket(protocol::MESSAGE_ENTITY_MOVE_VELOCITY_C2S, fbb);
+}
+
+void ControllerBase::ENTITY_MOVE_STOP_C2S(User* user, flatbuffers::FlatBufferBuilder& fbb)
+{
+	user->SendPacket(protocol::MESSAGE_ENTITY_MOVE_STOP_C2S, fbb);
 }

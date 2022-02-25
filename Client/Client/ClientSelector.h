@@ -30,8 +30,8 @@ protected:
 
 public:
 	virtual void			OnInitialUpdate();
-	afx_msg void OnBnClickedSelectorSingle();
-	afx_msg void OnBnClickedSelectorMulti();
+	afx_msg void			OnBnClickedSelectorSingle();
+	afx_msg void			OnBnClickedSelectorMulti();
 };
 
 

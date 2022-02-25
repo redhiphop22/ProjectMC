@@ -9,30 +9,22 @@ class S2Thread
 public:
 	using thread_id_t = std::thread::id;
 
-	S2Thread() = default;
-	virtual ~S2Thread() = default;
+	S2Thread() {};
+	virtual ~S2Thread() {};
 	
 	// 가급적 ThreadCreate() 함수를 사용바랍니다.
 	template<typename Func>
-	bool CreateThread(Func func, int32_t priority, const char* file)
+	bool CreateThread(Func func, int32_t priority, const char* file, bool useLog)
 	{
 	#ifdef _DEBUG
 		m_callFunc = file;
 	#endif
 		m_thread = std::thread(func);
 	
-		//if(false == S2LOG_INSTANCE().PushThread(m_threadID))
-		//{
-		//	S2LOG("Log Mgr Error");
-		//	return false;
-		//}
-
-		if(false == S2THREAD_INSTANCE().PushThread(GetThreadId(), this))
+		if(false == SubCreateThread(useLog))
 		{
-			// 에러 로그만
-			//S2LOG("Thread Mgr Error");
+			return false;
 		}
-
 		return true;
 	};
 	void DestroyThread()
@@ -59,6 +51,7 @@ public:
 	{
 		return m_thread.get_id();
 	}
+	bool SubCreateThread(bool useLog);
 
 protected:	
 	std::thread				m_thread;
@@ -74,4 +67,4 @@ public:
 #define THREAD_UPDATE_START		auto thread_update = [this]() -> bool {	bool isWorking = false;
 #define THREAD_UPDATE_END		return isWorking;};	m_thread.UpdateThread(thread_update);
 
-#define ThreadCreateFunc(f)		CreateThread(f, THREAD_PRIORITY_NORMAL, __FILE__)
+#define ThreadCreateFunc(f)		CreateThread(f, THREAD_PRIORITY_NORMAL, __FILE__, true)

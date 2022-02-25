@@ -5,8 +5,8 @@ namespace s2 {
 template<typename T>
 class S2MessageProcessor
 {
-	using sender_list_t = std::unordered_map<int32_t, S2RingBuffer<T>>;
-	using group_list_t = std::unordered_map<int32_t, sender_list_t>;
+	using sender_list_t = std::unordered_map<uint32_t, S2RingBuffer<T>>;
+	using group_list_t = std::unordered_map<uint32_t, sender_list_t>;
 
 public:
 	S2MessageProcessor() = default;
@@ -42,7 +42,7 @@ public:
 		m_receiver = receiver;
 	}
 
-	bool AddSender(int32_t groupIdx, int32_t processCount, int32_t bufferCount)
+	bool AddSenderGroup(int32_t groupIdx, uint32_t processCount, int32_t bufferCount)
 	{
 		auto groupIter = m_groupList.find(groupIdx);
 		if(groupIter == m_groupList.end())
@@ -57,7 +57,7 @@ public:
 
 		auto& sender = groupIter->second;
 
-		for(int32_t i = 0 ; i < processCount ; ++i)
+		for(uint32_t i = 0 ; i < processCount ; ++i)
 		{
 			auto result = sender.emplace(i, S2RingBuffer<T>());
 			if(false == result.second)
@@ -68,6 +68,33 @@ public:
 			{
 				return false;
 			}
+		}
+
+		return true;
+	}
+
+	bool AddSender(int32_t groupIdx, uint32_t processId, int32_t bufferCount)
+	{
+		auto groupIter = m_groupList.find(groupIdx);
+		if(groupIter == m_groupList.end())
+		{
+			auto result = m_groupList.emplace(groupIdx, sender_list_t());
+			if(false == result.second)
+			{
+				return false;
+			}
+			groupIter = result.first;
+		}
+		auto& sender = groupIter->second;
+
+		auto result = sender.emplace(processId, S2RingBuffer<T>());
+		if(false == result.second)
+		{
+			return false;
+		}
+		if(false == result.first->second.Create(bufferCount))
+		{
+			return false;
 		}
 
 		return true;

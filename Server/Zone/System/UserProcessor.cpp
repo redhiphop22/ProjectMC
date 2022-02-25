@@ -16,17 +16,9 @@ bool UserProcessor::RegisterPacket()
 {
 	REGIST_PACKET(m_packetFunc.emplace(std::make_pair(protocol_svr::MESSAGE_LOGOUT_REQ, &UserProcessor::LOGOUT_REQ)));
 	REGIST_PACKET(m_packetFunc.emplace(std::make_pair(protocol_svr::MESSAGE_ENTER_MAP_REQ, &UserProcessor::ENTER_MAP_REQ)));
+	REGIST_PACKET(m_packetFunc.emplace(std::make_pair(protocol_svr::MESSAGE_ENTITY_MOVE_VELOCITY_REQ, &UserProcessor::ENTITY_MOVE_VELOCITY_REQ)));
+	REGIST_PACKET(m_packetFunc.emplace(std::make_pair(protocol_svr::MESSAGE_ENTITY_MOVE_STOP_REQ, &UserProcessor::ENTITY_MOVE_STOP_REQ)));
 	
-	//REGIST_PACKET(m_packetFunc.emplace(std::make_pair(protocol::MESSAGE_ENTER_LOBBY_C2S, &UserProcessor::ENTER_LOBBY_C2S)));
-	//REGIST_PACKET(m_packetFunc.emplace(std::make_pair(protocol::MESSAGE_CHARACTER_INFO_C2S, &UserProcessor::CHARACTER_INFO_C2S)));
-	//REGIST_PACKET(m_packetFunc.emplace(std::make_pair(protocol::MESSAGE_CHARACTER_NAME_DUPLICATION_C2S, &UserProcessor::CHARACTER_NAME_DUPLICATION_C2S)));
-	//REGIST_PACKET(m_packetFunc.emplace(std::make_pair(protocol::MESSAGE_CHARACTER_CREATE_C2S, &UserProcessor::CHARACTER_CREATE_C2S)));
-
-	//REGIST_PACKET(m_dbFunc.emplace(std::make_pair(protocol_svr::MESSAGE_SERVER_CONNECT_DB_ACK, &UserProcessor::SERVER_CONNECT_DB_ACK)));
-	//REGIST_PACKET(m_dbFunc.emplace(std::make_pair(protocol_svr::MESSAGE_CHARACTER_INFO_DB_ACK, &UserProcessor::CHARACTER_INFO_DB_ACK)));
-	//REGIST_PACKET(m_dbFunc.emplace(std::make_pair(protocol_svr::MESSAGE_CHARACTER_NAME_DUPLICATION_DB_ACK, &UserProcessor::CHARACTER_NAME_DUPLICATION_DB_ACK)));
-	//REGIST_PACKET(m_dbFunc.emplace(std::make_pair(protocol_svr::MESSAGE_CHARACTER_CREATE_DB_ACK, &UserProcessor::CHARACTER_CREATE_DB_ACK)));
-
 	return true;
 }
 

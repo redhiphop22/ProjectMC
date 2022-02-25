@@ -28,6 +28,8 @@ public:
 	virtual void			ENTER_MAP_S2C(User* user, const char* buffer, int32_t size) override;
 	virtual void			ENTITY_SPAWN_S2C(User* user, const char* buffer, int32_t size) override;
 	virtual void			ENTITY_DESTROY_S2C(User* user, const char* buffer, int32_t size) override;
+	virtual void			ENTITY_MOVE_VELOCITY_S2C(User* user, const char* buffer, int32_t size) override;
+	virtual void			ENTITY_MOVE_STOP_S2C(User* user, const char* buffer, int32_t size) override;
 
 private:
 	CClientApp*				m_app = nullptr;

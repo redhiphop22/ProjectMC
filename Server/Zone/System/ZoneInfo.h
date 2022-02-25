@@ -13,15 +13,16 @@ public:
 	bool					Create();
 	void					Destroy();
 
-	void					Update();
+	void					OnUpdate();
 
 	bool					EnterZone(IocpSession* session, const common::ENTITY_INFO* entityInfo);
 	bool					LeaveZone(uid_t uid);
 
-	void					OnUpdate();
-
 	void					SpawnEntity(uid_t uid);
 	void					DestroyEntity(uid_t uid);
+
+	bool					ENTITY_MOVE_VELOCITY_REQ(const protocol_svr::ENTITY_MOVE_VELOCITY_REQ* msg);
+	bool					ENTITY_MOVE_STOP_REQ(const protocol_svr::ENTITY_MOVE_STOP_REQ* msg);
 
 private:
 	map_t					m_mapId;

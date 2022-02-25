@@ -24,14 +24,17 @@ public struct SERVER_CONNECT_S2C : IFlatbufferObject
   public common.ACCOUNT_AUTHORITY Authority { get { int o = __p.__offset(8); return o != 0 ? (common.ACCOUNT_AUTHORITY)__p.bb.Get(o + __p.bb_pos) : common.ACCOUNT_AUTHORITY.GUEST; } }
   public common.ACCOUNT_BLOCK_TYPE BlockType { get { int o = __p.__offset(10); return o != 0 ? (common.ACCOUNT_BLOCK_TYPE)__p.bb.Get(o + __p.bb_pos) : common.ACCOUNT_BLOCK_TYPE.NONE; } }
   public ulong BlockDate { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  public ulong ServerTime { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
 
   public static Offset<protocol.SERVER_CONNECT_S2C> CreateSERVER_CONNECT_S2C(FlatBufferBuilder builder,
       common.RESULT_CODE result = common.RESULT_CODE.ERROR_FAIL,
       ulong uid = 0,
       common.ACCOUNT_AUTHORITY authority = common.ACCOUNT_AUTHORITY.GUEST,
       common.ACCOUNT_BLOCK_TYPE block_type = common.ACCOUNT_BLOCK_TYPE.NONE,
-      ulong block_date = 0) {
-    builder.StartTable(5);
+      ulong block_date = 0,
+      ulong server_time = 0) {
+    builder.StartTable(6);
+    SERVER_CONNECT_S2C.AddServerTime(builder, server_time);
     SERVER_CONNECT_S2C.AddBlockDate(builder, block_date);
     SERVER_CONNECT_S2C.AddUid(builder, uid);
     SERVER_CONNECT_S2C.AddResult(builder, result);
@@ -40,12 +43,13 @@ public struct SERVER_CONNECT_S2C : IFlatbufferObject
     return SERVER_CONNECT_S2C.EndSERVER_CONNECT_S2C(builder);
   }
 
-  public static void StartSERVER_CONNECT_S2C(FlatBufferBuilder builder) { builder.StartTable(5); }
+  public static void StartSERVER_CONNECT_S2C(FlatBufferBuilder builder) { builder.StartTable(6); }
   public static void AddResult(FlatBufferBuilder builder, common.RESULT_CODE result) { builder.AddUint(0, (uint)result, 0); }
   public static void AddUid(FlatBufferBuilder builder, ulong uid) { builder.AddUlong(1, uid, 0); }
   public static void AddAuthority(FlatBufferBuilder builder, common.ACCOUNT_AUTHORITY authority) { builder.AddByte(2, (byte)authority, 0); }
   public static void AddBlockType(FlatBufferBuilder builder, common.ACCOUNT_BLOCK_TYPE blockType) { builder.AddByte(3, (byte)blockType, 0); }
   public static void AddBlockDate(FlatBufferBuilder builder, ulong blockDate) { builder.AddUlong(4, blockDate, 0); }
+  public static void AddServerTime(FlatBufferBuilder builder, ulong serverTime) { builder.AddUlong(5, serverTime, 0); }
   public static Offset<protocol.SERVER_CONNECT_S2C> EndSERVER_CONNECT_S2C(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<protocol.SERVER_CONNECT_S2C>(o);

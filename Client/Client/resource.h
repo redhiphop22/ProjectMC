@@ -13,7 +13,6 @@
 #define IDD_BOT_SETTING                 107
 #define IDD_BOT_RUN                     108
 #define IDD_SELECTOR                    109
-#define IDD_CLIENT_LOBBY1               110
 #define IDD_CLIENT_MAP                  110
 #define IDR_POPUP_EDIT                  119
 #define ID_STATUSBAR_PANE1              120

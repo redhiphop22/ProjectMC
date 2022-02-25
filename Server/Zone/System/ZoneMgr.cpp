@@ -53,3 +53,27 @@ bool ZoneMgr::LeaveZone(int32_t mapId, uid_t uid)
 
 	return true;
 }
+
+bool ZoneMgr::ENTITY_MOVE_VELOCITY_REQ(const protocol_svr::ENTITY_MOVE_VELOCITY_REQ* msg)
+{
+	auto zoneInfo = m_zoneList.find(msg->map_id());
+	if(zoneInfo == m_zoneList.end())
+	{
+		return false;
+	}
+	zoneInfo->second->ENTITY_MOVE_VELOCITY_REQ(msg);
+
+	return true;
+}
+
+bool ZoneMgr::ENTITY_MOVE_STOP_REQ(const protocol_svr::ENTITY_MOVE_STOP_REQ* msg)
+{
+	auto zoneInfo = m_zoneList.find(msg->map_id());
+	if(zoneInfo == m_zoneList.end())
+	{
+		return false;
+	}
+	zoneInfo->second->ENTITY_MOVE_STOP_REQ(msg);
+
+	return true;
+}

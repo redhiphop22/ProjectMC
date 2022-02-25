@@ -17,6 +17,13 @@ StarterServer::~StarterServer()
 bool StarterServer::OnStart()
 {
 	S2ExceptionHandler::GetInstance().Create("dumpFile");
+	if(false == m_log.Create("..\\Log\\MCLog"))
+	{
+		printf("[Eror] Log Create");
+		return false;
+	}
+	m_log.SetVersion(1, 1, 1, 1);
+	printf("[Succ] Log Create");
 
 	for(auto& iter : m_moduleName)
 	{
@@ -31,13 +38,17 @@ bool StarterServer::OnStart()
 		m_moduleList.push_back(std::make_tuple(hMod, iter.c_str()));
 	}
 
-	typedef bool(*pDLLFunction)();
+	typedef bool(*pDLLFunction)(s2::S2LogFile* log);
 	pDLLFunction pFunc = NULL;
 	for(auto& module : m_moduleList)
 	{
-		printf("[Info] Module Start (Module:%s)\n", std::get<1>(module).c_str());
 		pFunc = (pDLLFunction)GetProcAddress(std::get<0>(module), "Start");
-		pFunc();
+		if(false == pFunc(&m_log))
+		{
+			printf("[Eror] Module Start (Module:%s)\n", std::get<1>(module).c_str());
+			return false;
+		}
+		printf("[Succ] Module Start (Module:%s)\n", std::get<1>(module).c_str());
 	}
 
 	return true;
@@ -45,13 +56,15 @@ bool StarterServer::OnStart()
 
 void StarterServer::OnDestroy()
 {
+	//printf("[Info] Module Destroy (Module:%s)\n", std::get<1>(module).c_str());
 	typedef void(*pDLLFunction)();
 	pDLLFunction pFunc = NULL;
 	for(auto& module : m_moduleList)
 	{
-		printf("[Info] Module Destroy (Module:%s)\n", std::get<1>(module).c_str());
 		pFunc = (pDLLFunction)GetProcAddress(std::get<0>(module), "Destroy");
 		pFunc();
+		printf("[Succ] Module Destroy (Module:%s)\n", std::get<1>(module).c_str());
 	}
 	m_moduleList.clear();
+	m_log.Destroy();
 }

@@ -372,6 +372,8 @@ protected:
 // 구현입니다.
 protected:
 	DECLARE_MESSAGE_MAP()
+public:
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };
 
 CAboutDlg::CAboutDlg() noexcept : CDialogEx(IDD_ABOUTBOX)
@@ -416,3 +418,11 @@ void CClientApp::SaveCustomState()
 }
 
 // CClientApp 메시지 처리기
+
+
+BOOL CAboutDlg::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+
+	return CDialogEx::PreTranslateMessage(pMsg);
+}

@@ -68,7 +68,16 @@ void DataBaseWorker::OnUpdate()
 	THREAD_UPDATE_START;
 
 	if(WORKER_STATE::RUN != m_state)
-		return false;	
+	{
+		if(m_db.GetLastRestTime() < s2::S2Time::Now())
+		{
+			char query[QUERY_SIZE];
+			s2::string::Format(query, QUERY_SIZE, 
+				"SELECT `uid` FROM `account` limit 0,1");
+			m_db.Execute(query);
+		}
+		return false;
+	}
 
 	MessageProcessor::MessageBase* data = (MessageProcessor::MessageBase*)m_pushData;
 

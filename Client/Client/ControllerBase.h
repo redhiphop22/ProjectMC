@@ -33,6 +33,8 @@ public:
 	virtual void			CHARACTER_NAME_DUPLICATION_C2S(User* user, flatbuffers::FlatBufferBuilder& fbb);
 	virtual void			CHARACTER_CREATE_C2S(User* user, flatbuffers::FlatBufferBuilder& fbb);
 	virtual void			ENTER_MAP_C2S(User* user, flatbuffers::FlatBufferBuilder& fbb);
+	virtual void			ENTITY_MOVE_VELOCITY_C2S(User* user, flatbuffers::FlatBufferBuilder& fbb);
+	virtual void			ENTITY_MOVE_STOP_C2S(User* user, flatbuffers::FlatBufferBuilder& fbb);
 
 protected:	
 	virtual void			CONNECT_RESULT_S2C(User* user, const char* buffer, int32_t size) {};
@@ -43,7 +45,9 @@ protected:
 	virtual void			CHARACTER_CREATE_S2C(User* user, const char* buffer, int32_t size) {};
 	virtual void			ENTER_MAP_S2C(User* user, const char* buffer, int32_t size) {};
 	virtual void			ENTITY_SPAWN_S2C(User* user, const char* buffer, int32_t size) {};
-	virtual void			ENTITY_DESTROY_S2C(User* user, const char* buffer, int32_t size) {};	
+	virtual void			ENTITY_DESTROY_S2C(User* user, const char* buffer, int32_t size) {};
+	virtual void			ENTITY_MOVE_VELOCITY_S2C(User* user, const char* buffer, int32_t size) {};
+	virtual void			ENTITY_MOVE_STOP_S2C(User* user, const char* buffer, int32_t size) {};
 
 protected:
 	packet_list_t			m_packetFunc;

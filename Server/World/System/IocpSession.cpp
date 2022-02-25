@@ -24,6 +24,8 @@ bool IocpSession::OnAccept()
 	fbb.Finish(body);
 	SendPacket(protocol::MESSAGE_CONNECT_RESULT_S2C, fbb);
 
+	S2LOG_INFO("Accept");
+
 	return true;
 }
 

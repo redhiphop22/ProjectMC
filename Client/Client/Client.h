@@ -55,6 +55,8 @@ public:
 
 	ClientBase*				GetActivePage()	{	return m_ActivePage;	}
 
+
+
 protected:
 	bool					CreatePage();
 	ClientBase*				GetPage(VIEW_PAGE viewPage);

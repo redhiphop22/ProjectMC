@@ -35,6 +35,8 @@ protected:
 public:
 	virtual void			OnInitialUpdate();
 	afx_msg void			OnBnClickedServermoveMove();
+
+	void					SERVER_CONNECT_S2C(const protocol::SERVER_CONNECT_S2C* msg);
 };
 
 

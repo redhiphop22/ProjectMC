@@ -6,8 +6,8 @@
 
 #include "flatbuffers/flatbuffers.h"
 
-#include "Result_generated.h"
 #include "Common_generated.h"
+#include "Result_generated.h"
 
 namespace protocol_svr {
 
@@ -1384,13 +1384,17 @@ struct ENTITY_MOVE_VELOCITY_REQ FLATBUFFERS_FINAL_CLASS : private flatbuffers::T
   typedef ENTITY_MOVE_VELOCITY_REQBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_UID = 4,
-    VT_EXCUTE_TIME = 6,
-    VT_POSITION = 8,
-    VT_FORWARD = 10,
-    VT_SPEED = 12
+    VT_MAP_ID = 6,
+    VT_EXCUTE_TIME = 8,
+    VT_POSITION = 10,
+    VT_FORWARD = 12,
+    VT_SPEED = 14
   };
   uint64_t uid() const {
     return GetField<uint64_t>(VT_UID, 0);
+  }
+  uint32_t map_id() const {
+    return GetField<uint32_t>(VT_MAP_ID, 0);
   }
   uint64_t excute_time() const {
     return GetField<uint64_t>(VT_EXCUTE_TIME, 0);
@@ -1407,6 +1411,7 @@ struct ENTITY_MOVE_VELOCITY_REQ FLATBUFFERS_FINAL_CLASS : private flatbuffers::T
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint64_t>(verifier, VT_UID) &&
+           VerifyField<uint32_t>(verifier, VT_MAP_ID) &&
            VerifyField<uint64_t>(verifier, VT_EXCUTE_TIME) &&
            VerifyField<common::VECTOR3>(verifier, VT_POSITION) &&
            VerifyField<common::VECTOR3>(verifier, VT_FORWARD) &&
@@ -1421,6 +1426,9 @@ struct ENTITY_MOVE_VELOCITY_REQBuilder {
   flatbuffers::uoffset_t start_;
   void add_uid(uint64_t uid) {
     fbb_.AddElement<uint64_t>(ENTITY_MOVE_VELOCITY_REQ::VT_UID, uid, 0);
+  }
+  void add_map_id(uint32_t map_id) {
+    fbb_.AddElement<uint32_t>(ENTITY_MOVE_VELOCITY_REQ::VT_MAP_ID, map_id, 0);
   }
   void add_excute_time(uint64_t excute_time) {
     fbb_.AddElement<uint64_t>(ENTITY_MOVE_VELOCITY_REQ::VT_EXCUTE_TIME, excute_time, 0);
@@ -1448,6 +1456,7 @@ struct ENTITY_MOVE_VELOCITY_REQBuilder {
 inline flatbuffers::Offset<ENTITY_MOVE_VELOCITY_REQ> CreateENTITY_MOVE_VELOCITY_REQ(
     flatbuffers::FlatBufferBuilder &_fbb,
     uint64_t uid = 0,
+    uint32_t map_id = 0,
     uint64_t excute_time = 0,
     const common::VECTOR3 *position = 0,
     const common::VECTOR3 *forward = 0,
@@ -1458,19 +1467,24 @@ inline flatbuffers::Offset<ENTITY_MOVE_VELOCITY_REQ> CreateENTITY_MOVE_VELOCITY_
   builder_.add_speed(speed);
   builder_.add_forward(forward);
   builder_.add_position(position);
+  builder_.add_map_id(map_id);
   return builder_.Finish();
 }
 
 struct ENTITY_MOVE_VELOCITY_ACK FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   typedef ENTITY_MOVE_VELOCITY_ACKBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_RESULT = 4,
-    VT_UID = 6,
-    VT_EXCUTE_TIME = 8,
-    VT_POSITION = 10,
-    VT_FORWARD = 12,
-    VT_SPEED = 14
+    VT_UID_LIST = 4,
+    VT_RESULT = 6,
+    VT_UID = 8,
+    VT_EXCUTE_TIME = 10,
+    VT_POSITION = 12,
+    VT_FORWARD = 14,
+    VT_SPEED = 16
   };
+  const flatbuffers::Vector<uint64_t> *uid_list() const {
+    return GetPointer<const flatbuffers::Vector<uint64_t> *>(VT_UID_LIST);
+  }
   common::RESULT_CODE result() const {
     return static_cast<common::RESULT_CODE>(GetField<uint32_t>(VT_RESULT, 0));
   }
@@ -1491,6 +1505,8 @@ struct ENTITY_MOVE_VELOCITY_ACK FLATBUFFERS_FINAL_CLASS : private flatbuffers::T
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_UID_LIST) &&
+           verifier.VerifyVector(uid_list()) &&
            VerifyField<uint32_t>(verifier, VT_RESULT) &&
            VerifyField<uint64_t>(verifier, VT_UID) &&
            VerifyField<uint64_t>(verifier, VT_EXCUTE_TIME) &&
@@ -1505,6 +1521,9 @@ struct ENTITY_MOVE_VELOCITY_ACKBuilder {
   typedef ENTITY_MOVE_VELOCITY_ACK Table;
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
+  void add_uid_list(flatbuffers::Offset<flatbuffers::Vector<uint64_t>> uid_list) {
+    fbb_.AddOffset(ENTITY_MOVE_VELOCITY_ACK::VT_UID_LIST, uid_list);
+  }
   void add_result(common::RESULT_CODE result) {
     fbb_.AddElement<uint32_t>(ENTITY_MOVE_VELOCITY_ACK::VT_RESULT, static_cast<uint32_t>(result), 0);
   }
@@ -1536,6 +1555,7 @@ struct ENTITY_MOVE_VELOCITY_ACKBuilder {
 
 inline flatbuffers::Offset<ENTITY_MOVE_VELOCITY_ACK> CreateENTITY_MOVE_VELOCITY_ACK(
     flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<flatbuffers::Vector<uint64_t>> uid_list = 0,
     common::RESULT_CODE result = common::RESULT_CODE_ERROR_FAIL,
     uint64_t uid = 0,
     uint64_t excute_time = 0,
@@ -1549,18 +1569,44 @@ inline flatbuffers::Offset<ENTITY_MOVE_VELOCITY_ACK> CreateENTITY_MOVE_VELOCITY_
   builder_.add_forward(forward);
   builder_.add_position(position);
   builder_.add_result(result);
+  builder_.add_uid_list(uid_list);
   return builder_.Finish();
+}
+
+inline flatbuffers::Offset<ENTITY_MOVE_VELOCITY_ACK> CreateENTITY_MOVE_VELOCITY_ACKDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const std::vector<uint64_t> *uid_list = nullptr,
+    common::RESULT_CODE result = common::RESULT_CODE_ERROR_FAIL,
+    uint64_t uid = 0,
+    uint64_t excute_time = 0,
+    const common::VECTOR3 *position = 0,
+    const common::VECTOR3 *forward = 0,
+    float speed = 0.0f) {
+  auto uid_list__ = uid_list ? _fbb.CreateVector<uint64_t>(*uid_list) : 0;
+  return protocol_svr::CreateENTITY_MOVE_VELOCITY_ACK(
+      _fbb,
+      uid_list__,
+      result,
+      uid,
+      excute_time,
+      position,
+      forward,
+      speed);
 }
 
 struct ENTITY_MOVE_STOP_REQ FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   typedef ENTITY_MOVE_STOP_REQBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_UID = 4,
-    VT_EXCUTE_TIME = 6,
-    VT_POSITION = 8
+    VT_MAP_ID = 6,
+    VT_EXCUTE_TIME = 8,
+    VT_POSITION = 10
   };
   uint64_t uid() const {
     return GetField<uint64_t>(VT_UID, 0);
+  }
+  uint32_t map_id() const {
+    return GetField<uint32_t>(VT_MAP_ID, 0);
   }
   uint64_t excute_time() const {
     return GetField<uint64_t>(VT_EXCUTE_TIME, 0);
@@ -1571,6 +1617,7 @@ struct ENTITY_MOVE_STOP_REQ FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint64_t>(verifier, VT_UID) &&
+           VerifyField<uint32_t>(verifier, VT_MAP_ID) &&
            VerifyField<uint64_t>(verifier, VT_EXCUTE_TIME) &&
            VerifyField<common::VECTOR3>(verifier, VT_POSITION) &&
            verifier.EndTable();
@@ -1583,6 +1630,9 @@ struct ENTITY_MOVE_STOP_REQBuilder {
   flatbuffers::uoffset_t start_;
   void add_uid(uint64_t uid) {
     fbb_.AddElement<uint64_t>(ENTITY_MOVE_STOP_REQ::VT_UID, uid, 0);
+  }
+  void add_map_id(uint32_t map_id) {
+    fbb_.AddElement<uint32_t>(ENTITY_MOVE_STOP_REQ::VT_MAP_ID, map_id, 0);
   }
   void add_excute_time(uint64_t excute_time) {
     fbb_.AddElement<uint64_t>(ENTITY_MOVE_STOP_REQ::VT_EXCUTE_TIME, excute_time, 0);
@@ -1604,23 +1654,29 @@ struct ENTITY_MOVE_STOP_REQBuilder {
 inline flatbuffers::Offset<ENTITY_MOVE_STOP_REQ> CreateENTITY_MOVE_STOP_REQ(
     flatbuffers::FlatBufferBuilder &_fbb,
     uint64_t uid = 0,
+    uint32_t map_id = 0,
     uint64_t excute_time = 0,
     const common::VECTOR3 *position = 0) {
   ENTITY_MOVE_STOP_REQBuilder builder_(_fbb);
   builder_.add_excute_time(excute_time);
   builder_.add_uid(uid);
   builder_.add_position(position);
+  builder_.add_map_id(map_id);
   return builder_.Finish();
 }
 
 struct ENTITY_MOVE_STOP_ACK FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   typedef ENTITY_MOVE_STOP_ACKBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_RESULT = 4,
-    VT_UID = 6,
-    VT_EXCUTE_TIME = 8,
-    VT_POSITION = 10
+    VT_UID_LIST = 4,
+    VT_RESULT = 6,
+    VT_UID = 8,
+    VT_EXCUTE_TIME = 10,
+    VT_POSITION = 12
   };
+  const flatbuffers::Vector<uint64_t> *uid_list() const {
+    return GetPointer<const flatbuffers::Vector<uint64_t> *>(VT_UID_LIST);
+  }
   common::RESULT_CODE result() const {
     return static_cast<common::RESULT_CODE>(GetField<uint32_t>(VT_RESULT, 0));
   }
@@ -1635,6 +1691,8 @@ struct ENTITY_MOVE_STOP_ACK FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_UID_LIST) &&
+           verifier.VerifyVector(uid_list()) &&
            VerifyField<uint32_t>(verifier, VT_RESULT) &&
            VerifyField<uint64_t>(verifier, VT_UID) &&
            VerifyField<uint64_t>(verifier, VT_EXCUTE_TIME) &&
@@ -1647,6 +1705,9 @@ struct ENTITY_MOVE_STOP_ACKBuilder {
   typedef ENTITY_MOVE_STOP_ACK Table;
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
+  void add_uid_list(flatbuffers::Offset<flatbuffers::Vector<uint64_t>> uid_list) {
+    fbb_.AddOffset(ENTITY_MOVE_STOP_ACK::VT_UID_LIST, uid_list);
+  }
   void add_result(common::RESULT_CODE result) {
     fbb_.AddElement<uint32_t>(ENTITY_MOVE_STOP_ACK::VT_RESULT, static_cast<uint32_t>(result), 0);
   }
@@ -1672,6 +1733,7 @@ struct ENTITY_MOVE_STOP_ACKBuilder {
 
 inline flatbuffers::Offset<ENTITY_MOVE_STOP_ACK> CreateENTITY_MOVE_STOP_ACK(
     flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<flatbuffers::Vector<uint64_t>> uid_list = 0,
     common::RESULT_CODE result = common::RESULT_CODE_ERROR_FAIL,
     uint64_t uid = 0,
     uint64_t excute_time = 0,
@@ -1681,7 +1743,25 @@ inline flatbuffers::Offset<ENTITY_MOVE_STOP_ACK> CreateENTITY_MOVE_STOP_ACK(
   builder_.add_uid(uid);
   builder_.add_position(position);
   builder_.add_result(result);
+  builder_.add_uid_list(uid_list);
   return builder_.Finish();
+}
+
+inline flatbuffers::Offset<ENTITY_MOVE_STOP_ACK> CreateENTITY_MOVE_STOP_ACKDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const std::vector<uint64_t> *uid_list = nullptr,
+    common::RESULT_CODE result = common::RESULT_CODE_ERROR_FAIL,
+    uint64_t uid = 0,
+    uint64_t excute_time = 0,
+    const common::VECTOR3 *position = 0) {
+  auto uid_list__ = uid_list ? _fbb.CreateVector<uint64_t>(*uid_list) : 0;
+  return protocol_svr::CreateENTITY_MOVE_STOP_ACK(
+      _fbb,
+      uid_list__,
+      result,
+      uid,
+      excute_time,
+      position);
 }
 
 }  // namespace protocol_svr

@@ -70,3 +70,9 @@ void ClientServerMove::OnBnClickedServermoveMove()
 
 	SEND_PACKET(SERVER_CONNECT_C2S, fbb);
 }
+
+void ClientServerMove::SERVER_CONNECT_S2C(const protocol::SERVER_CONNECT_S2C* msg)
+{
+	auto user = GetUser();
+	user->m_uid = msg->uid();
+}

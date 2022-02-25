@@ -22,7 +22,7 @@ void ZoneInfo::Destroy()
 {
 }
 
-void ZoneInfo::Update()
+void ZoneInfo::OnUpdate()
 {
 }
 
@@ -64,10 +64,6 @@ bool ZoneInfo::LeaveZone(uid_t uid)
 	m_entityList.erase(uid);
 
 	return true;
-}
-
-void ZoneInfo::OnUpdate()
-{
 }
 
 void ZoneInfo::SpawnEntity(uid_t uid)
@@ -138,4 +134,72 @@ void ZoneInfo::DestroyEntity(uid_t uid)
 		fbb.Finish(body);
 		m_session->SendPacket(protocol_svr::MESSAGE_ENTITY_DESTROY_ACK, fbb);
 	}
+}
+
+bool ZoneInfo::ENTITY_MOVE_VELOCITY_REQ(const protocol_svr::ENTITY_MOVE_VELOCITY_REQ* msg)
+{
+	flatbuffers::FlatBufferBuilder fbb(FBB_BASIC_SIZE);
+
+	uid_t uid = msg->uid();
+
+	auto entity = m_entityList.find(uid);
+	if(entity == m_entityList.end())
+	{
+		return false;
+	}
+
+	std::vector<uint64_t> uidFbb;
+	for(auto& iter : m_entityList)
+	{
+		auto& entity = iter.second;
+		uidFbb.push_back(entity->GetUID());
+	}
+
+	auto body = protocol_svr::CreateENTITY_MOVE_VELOCITY_ACK(fbb, 
+		fbb.CreateVector(uidFbb),
+		common::RESULT_CODE_SUCCESS,
+		msg->uid(),
+		msg->excute_time(),
+		msg->position(),
+		msg->forward(),
+		msg->speed()
+	);
+	fbb.Finish(body);
+
+	m_session->SendPacket(protocol_svr::MESSAGE_ENTITY_MOVE_VELOCITY_ACK, fbb);
+
+	return true;
+}
+
+bool ZoneInfo::ENTITY_MOVE_STOP_REQ(const protocol_svr::ENTITY_MOVE_STOP_REQ* msg)
+{
+	flatbuffers::FlatBufferBuilder fbb(FBB_BASIC_SIZE);
+
+	uid_t uid = msg->uid();
+
+	auto entity = m_entityList.find(uid);
+	if(entity == m_entityList.end())
+	{
+		return false;
+	}
+
+	std::vector<uint64_t> uidFbb;
+	for(auto& iter : m_entityList)
+	{
+		auto& entity = iter.second;
+		uidFbb.push_back(entity->GetUID());
+	}
+
+	auto body = protocol_svr::CreateENTITY_MOVE_STOP_ACK(fbb, 
+		fbb.CreateVector(uidFbb),
+		common::RESULT_CODE_SUCCESS,
+		msg->uid(),
+		msg->excute_time(),
+		msg->position()
+	);
+	fbb.Finish(body);
+
+	m_session->SendPacket(protocol_svr::MESSAGE_ENTITY_MOVE_STOP_ACK, fbb);
+
+	return true;
 }

@@ -34,18 +34,9 @@ protected:
 protected:
 	bool					LOGOUT_REQ(IocpSession* session, const char* buffer, int32_t size);
 	bool					ENTER_MAP_REQ(IocpSession* session, const char* buffer, int32_t size);
-	//bool					ENTER_LOBBY_C2S(IocpSession* session, const char* buffer, int32_t size);
-	//bool					CHARACTER_INFO_C2S(IocpSession* session, const char* buffer, int32_t size);
-	//bool					CHARACTER_NAME_DUPLICATION_C2S(IocpSession* session, const char* buffer, int32_t size);
-	//bool					CHARACTER_CREATE_C2S(IocpSession* session, const char* buffer, int32_t size);
-	//bool					MAP_ENTER_C2S(IocpSession* session, const char* buffer, int32_t size);
-
-//protected:
-//	bool					SERVER_CONNECT_DB_ACK(const char* buffer, int32_t size);
-//	bool					CHARACTER_INFO_DB_ACK(const char* buffer, int32_t size);
-//	bool					CHARACTER_NAME_DUPLICATION_DB_ACK(const char* buffer, int32_t size);
-//	bool					CHARACTER_CREATE_DB_ACK(const char* buffer, int32_t size);
-
+	bool					ENTITY_MOVE_VELOCITY_REQ(IocpSession* session, const char* buffer, int32_t size);
+	bool					ENTITY_MOVE_STOP_REQ(IocpSession* session, const char* buffer, int32_t size);
+	
 private:
 	s2::S2Thread			m_thread;
 

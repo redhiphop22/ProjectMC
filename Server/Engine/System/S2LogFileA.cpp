@@ -1,5 +1,6 @@
 #include "S2Engine.h"
 #include "S2LogFileA.h"
+#include <time.h>
 
 namespace s2 {
 
@@ -12,22 +13,18 @@ S2LogFileA::~S2LogFileA()
 	Destroy();
 }
 
-bool S2LogFileA::Create(const char* wstrFileName, FILE_SAVE_INTERVAL fileSaveType)
+bool S2LogFileA::Create(const char* strFileName)
 {
-	m_strFileName = wstrFileName;
+	m_fileName = strFileName;
 
-	_UpdateTime();
+	time_t now = S2Time::Now();
+	tm tmNow;
+	localtime_s(&tmNow, &now);
 
-	s2::string::Format(m_strStartText, "-- COMPILE DATE : Ver:%d.%d.%d.%d, BuildDate:%s %s, StartDate:%04d-%02d-%02d %02d:%02d --\r\n",
-		m_ui16Ver01, m_ui16Ver02, m_ui32Ver03, m_ui32Ver04, __DATE__, __TIME__, m_iYear, m_iMonth, m_iDay, m_iHour, m_iMinute);
+	s2::string::Format(m_startText, "-- COMPILE DATE : Ver:%d.%d.%d.%d, BuildDate:%s %s, StartDate:%04d-%02d %02d:%02d:%02d --\r\n",
+		m_ver01, m_ver02, m_ver03, m_ver04, __DATE__, __TIME__, tmNow.tm_mon+1, tmNow.tm_mday, tmNow.tm_hour, tmNow.tm_min, tmNow.tm_sec);
 
-	//Create File 
-	if (false == _CreateFile())
-	{
-		return false;
-	}
-
-	if(false == S2LogFileMgr::Create(wstrFileName, fileSaveType))
+	if(false == S2LogFileMgr::Create(strFileName))
 	{
 		return false;
 	}
@@ -46,11 +43,11 @@ void S2LogFileA::WriteLog(S2_LOG_TYPE logType, const char* funcName, int32_t lin
 		switch(logType)
 		{
 		case S2_LOG_TYPE::TYPE_ERROR:
-			return "ERROR";
+			return "EROR";
 		case S2_LOG_TYPE::TYPE_WARNING:
-			return "WARNG";
+			return "WARN";
 		case S2_LOG_TYPE::TYPE_INFO:
-			return "INFO_";
+			return "INFO";
 		}
 		return "";
 	};
@@ -61,42 +58,48 @@ void S2LogFileA::WriteLog(S2_LOG_TYPE logType, const char* funcName, int32_t lin
 	_vsnprintf_s(strTemp, LOG_STRING_MAX, logString, marker);
 	va_end(marker);
 
-	char strLog[LOG_STRING_MAX];
-	int32_t insertSize = _snprintf_s(strLog, _countof(strLog), LOG_STRING_MAX, "[%s][%s(%d)] %s\r\n", getErrorType(logType), funcName, line, strTemp);
+	tm tmNow;
+	GetNowTime(tmNow);
 
-	_WriteLog(strLog, insertSize);
+	char log[LOG_STRING_MAX];
+	int32_t insertSize = _snprintf_s(log, _countof(log), LOG_STRING_MAX, "[%02d.%02d %02d:%02d:%02d][%s][%s(%d)] %s", 
+		tmNow.tm_mon+1, tmNow.tm_mday, tmNow.tm_hour, tmNow.tm_min, tmNow.tm_sec,
+		getErrorType(logType), funcName, line, strTemp);
+
+	_WriteLog(log, insertSize);
 }
 
 bool S2LogFileA::_CreateFile(void)
 {
-	std::string strFileName;
-	s2::string::Format(strFileName, "%s_%02d_%02d_%02d_%02d.txt", m_strFileName.c_str(), m_iYear, m_iMonth, m_iDay, m_iHour);
+	tm tmNow;
+	GetNowTime(tmNow);
+
+	std::string fileName;
+	s2::string::Format(fileName, "%s_%04d%02d%02d_%02d%02d%02d.txt", m_fileName.c_str(), tmNow.tm_year + 1900, tmNow.tm_mon+1, tmNow.tm_mday, tmNow.tm_hour, tmNow.tm_min, tmNow.tm_sec);
 
 	//Close Old File 
-	if(INVALID_HANDLE_VALUE != m_hFile)
+	if(INVALID_HANDLE_VALUE != m_file)
 	{
-		::CloseHandle(m_hFile);
-		m_hFile = INVALID_HANDLE_VALUE;
+		::CloseHandle(m_file);
+		m_file = INVALID_HANDLE_VALUE;
 	}
 
 	// Create New File
-	m_hFile = ::CreateFileA(strFileName.c_str(), GENERIC_WRITE, FILE_SHARE_WRITE | FILE_SHARE_READ, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-
-	if(INVALID_HANDLE_VALUE == m_hFile)
+	m_file = ::CreateFileA(fileName.c_str(), FILE_SHARE_WRITE, FILE_SHARE_WRITE | FILE_SHARE_READ, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	if(INVALID_HANDLE_VALUE == m_file)
 	{
-		::CloseHandle(m_hFile);
-		m_hFile = INVALID_HANDLE_VALUE;
+		::CloseHandle(m_file);
+		m_file = INVALID_HANDLE_VALUE;
 		return false;
 	}
-	else
-	{
-		SetFilePointer(m_hFile, 0, NULL, FILE_END);
 
-		m_ui32FileHour = m_iHour;
-		m_ui32FileDay = m_iDay;
+	m_fileSize = ::GetFileSize(m_file, nullptr);
 
-		_WriteFile(m_strStartText.c_str(), m_strStartText.size());
-	}
+	::SetFilePointer(m_file, 0, NULL, FILE_END);
+
+	m_recordDay = tmNow.tm_mday;
+
+	_WriteFile(m_startText.c_str(), m_startText.size());
 
 	return true;
 }
@@ -104,8 +107,9 @@ bool S2LogFileA::_CreateFile(void)
 void S2LogFileA::_WriteFile(const char* strLog, int32_t size)
 {
 	int32_t length;
-	::WriteFile(m_hFile, strLog, size, (LPDWORD)&length, NULL);
+	::WriteFile(m_file, strLog, size-1, (LPDWORD)&length, NULL);
 	S2TRACE(strLog);
+	m_fileSize += length;
 }
 
 }

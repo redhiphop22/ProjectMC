@@ -53,11 +53,15 @@ public:
 
 	T* GetPushData()
 	{
-		while(IsFull())
+		if(IsFull())
 		{
-			std::this_thread::sleep_for(std::chrono::milliseconds(1));
-			//S2LOG("PushData Full");
+			return nullptr;
 		}
+		//while(IsFull())
+		//{
+		//	std::this_thread::sleep_for(std::chrono::milliseconds(1));
+		//	//S2LOG("PushData Full");
+		//}
 		int32_t rearPos = m_rearPos + 1;
 		rearPos = (rearPos < m_maxCount) ? rearPos : 0;
 		return &m_data[rearPos];

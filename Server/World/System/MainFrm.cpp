@@ -5,10 +5,11 @@ MainFrm* mainFrm = nullptr;
 
 bool MainFrm::OnInit()
 {
-	//if(false == S2LOG_INSTANCE().Create("D:\\ProjectMC\\Server\\Out\\Log\\Log"))
-	//{
-	//	return false;
-	//}
+	if(false == CONFIG.Create("..\\Config\\World.conf"))
+	{
+		printf("[Eror] Config\n");
+		return false;
+	}
 
 	if(false == s2::S2Net::Create())
 	{
@@ -35,10 +36,10 @@ bool MainFrm::OnInit()
 		printf("[Eror] DB\n");
 		return false;
 	}
-
-	uint32_t ip2 = s2::S2Net::GetIPToLong("127.0.0.1");
-	//uint32_t ip2 = s2::S2Net::GetIPToLong("192.168.0.199");
-	if(false == m_zoneConnector.Create(ip2, 36102))
+	
+	uint32_t ip = s2::S2Net::GetIPToLong(CONFIG.GetJson()["zoneIP"].GetString());
+	uint16_t port = CONFIG.GetJson()["zonePort"].GetUint();
+	if(false == m_zoneConnector.Create(ip, port))
 	{
 		printf("[Eror] ZoneConnector\n");
 		return false;
@@ -50,9 +51,8 @@ bool MainFrm::OnInit()
 		return false;
 	}
 		
-	uint32_t ip = s2::S2Net::GetIPToLong("127.0.0.1");
-	//uint32_t ip = s2::S2Net::GetIPToLong("192.168.0.199");
-	uint16_t port = 36101;
+	ip = s2::S2Net::GetIPToLong(CONFIG.GetJson()["serverIP"].GetString());
+	port = CONFIG.GetJson()["serverPort"].GetUint();
 	if(false == m_IOCP.Create(ip, port, &m_workerMgr, &m_sessionMgr))
 	{
 		printf("[Eror] IOCP\n");

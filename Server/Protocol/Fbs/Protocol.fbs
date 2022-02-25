@@ -87,6 +87,7 @@ table SERVER_CONNECT_S2C
 	authority: common.ACCOUNT_AUTHORITY;
 	block_type: common.ACCOUNT_BLOCK_TYPE;
 	block_date: uint64;
+	server_time: uint64;
 }
 
 table HEART_BEAT_C2S
@@ -167,6 +168,7 @@ table ENTER_MAP_S2C
 	result: common.RESULT_CODE;
 
 	map_id: uint32;
+	server_time: uint64;
 }
 
 table ENTITY_SPAWN_S2C
@@ -196,6 +198,7 @@ table ENTITY_MOVE_VELOCITY_S2C
 	position: common.VECTOR3;
 	forward: common.VECTOR3;
 	speed: float;
+	server_time: uint64;
 }
 
 table ENTITY_MOVE_STOP_C2S
@@ -211,4 +214,5 @@ table ENTITY_MOVE_STOP_S2C
 	uid: uint64;
 	excute_time: uint64;
 	position: common.VECTOR3;
+	server_time: uint64;
 }

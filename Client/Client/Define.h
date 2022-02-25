@@ -52,6 +52,16 @@ enum class VIEW_PAGE
 };
 #define view_page_max_t static_cast<int32_t>(VIEW_PAGE::MAX)
 
+namespace s2 {
+namespace S2Time
+{
+	inline time_t Now()
+	{
+		return std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+	}
+};
+}
+#include "Vector3.h"
 #include "Common_generated.h"
 #include "Protocol_generated.h"
 

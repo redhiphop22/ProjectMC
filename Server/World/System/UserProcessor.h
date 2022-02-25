@@ -55,6 +55,8 @@ protected:
 	bool					ENTER_MAP_ACK(const char* buffer, int32_t size);
 	bool					ENTITY_SPAWN_ACK(const char* buffer, int32_t size);
 	bool					ENTITY_DESTROY_ACK(const char* buffer, int32_t size);
+	bool					ENTITY_MOVE_VELOCITY_ACK(const char* buffer, int32_t size);
+	bool					ENTITY_MOVE_STOP_ACK(const char* buffer, int32_t size);
 
 private:
 	s2::S2Thread			m_thread;

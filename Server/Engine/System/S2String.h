@@ -51,6 +51,5 @@ namespace string {
 	char* tolower(char* str);
 	// 소문자 -> 대문자 변환
 	char* toupper(char* str);
-
 }
 }

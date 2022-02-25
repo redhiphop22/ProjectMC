@@ -1,13 +1,14 @@
 #pragma once
 
+#define NOMINMAX
 #define _WINSOCK_DEPRECATED_NO_WARNINGS		
 
 #define USE_MYSQL
 //#define USE_MSSQL
 
-#define SAFE_RELEASE(p)			if( p ) { p->Release();		p = NULL; }
-#define SAFE_DELETE(p)			if( p ) { delete p;			p = NULL; }
-#define SAFE_DELETE_ARRAY(p)	if( p ) { delete[] p;		p = NULL; }
+#define SAFE_RELEASE(p)			if(p) { p->Release();	p = nullptr; }
+#define SAFE_DELETE(p)			if(p) { delete p;		p = nullptr; }
+#define SAFE_DELETE_ARRAY(p)	if(p) { delete[] p;		p = nullptr; }
 #define S2TRACE(p)
 
 // typedef
@@ -37,23 +38,27 @@ typedef unsigned __int64		uint64_t;
 #include ".\DataType\S2Date32.h"
 #include ".\DataType\S2Vector3.h"
 
-#include ".\System\S2Singleton.h"
-#include ".\System\S2Mutex.h"
-#include ".\System\S2SpinLock.h"
-#include ".\System\S2ElementBase.h"
-#include ".\System\S2Net.h"
 #include ".\System\S2String.h"
+#include ".\System\S2FileSystem.h"
+#include ".\System\S2Singleton.h"
+#include ".\System\S2RingBuffer.h"
 #include ".\System\S2Thread.h"
 #include ".\System\S2ThreadMgr.h"
-#include ".\System\S2Time.h"
-#include ".\System\S2MiniDump.h"
-#include ".\System\S2RingBuffer.h"
+#include ".\System\S2MessageReceiver.h"
+#include ".\System\S2MessageProcessor.h"
 #include ".\System\S2LogFileMgr.h"
 #include ".\System\S2LogFileA.h"
 #include ".\System\S2LogFileW.h"
+#include ".\System\S2LogAccessor.h"
 
-#include ".\System\S2MessageReceiver.h"
-#include ".\System\S2MessageProcessor.h"
+#include ".\System\S2Mutex.h"
+#include ".\System\S2SpinLock.h"
+#include ".\System\S2ElementBase.h"
+#include ".\System\S2Json.h"
+
+#include ".\System\S2Net.h"
+#include ".\System\S2Time.h"
+#include ".\System\S2MiniDump.h"
 
 #include ".\System\S2IocpSession.h"
 #include ".\System\S2IocpSessionMgr.h"

@@ -71,6 +71,8 @@ void ClientLobby::ENTER_LOBBY_S2C(const protocol::ENTER_LOBBY_S2C* msg)
 
 void ClientLobby::CHARACTER_INFO_S2C(const protocol::CHARACTER_INFO_S2C* msg)
 {
+	auto user = GetUser();
+	user->m_nick = msg->nick_name()->data();
 }
 
 void ClientLobby::OnBnClickedLobbyEnter()

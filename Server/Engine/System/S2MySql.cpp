@@ -7,6 +7,9 @@
 
 namespace s2 {
 
+#define S2_DB_REST_TIME	3600000
+//60*60*1000
+
 S2MySql::S2MySql()
 {
 }
@@ -70,6 +73,7 @@ bool S2MySql::Connection()
 	{
 		return false;
 	}
+	m_lastRestTime = s2::S2Time::Now() + S2_DB_REST_TIME;
 	return true;
 }
 
@@ -81,6 +85,8 @@ bool S2MySql::Execute(const char* query)
 		Connection();
 		return false;
 	}
+
+	m_lastRestTime = s2::S2Time::Now() + S2_DB_REST_TIME;
 
     return true;
 }
@@ -101,6 +107,8 @@ bool S2MySql::ExecuteSelect(const char* query)
 	m_result = mysql_store_result(m_connection);
 
 	MoveNext();
+
+	m_lastRestTime = s2::S2Time::Now() + S2_DB_REST_TIME;
 
 	return true;
 }

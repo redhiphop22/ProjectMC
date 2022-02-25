@@ -17,6 +17,9 @@ public:
 	bool					EnterZone(IocpSession* session, const protocol_svr::ENTER_MAP_REQ* msg);
 	bool					LeaveZone(int32_t mapId, uid_t uid);
 
+	bool					ENTITY_MOVE_VELOCITY_REQ(const protocol_svr::ENTITY_MOVE_VELOCITY_REQ* msg);
+	bool					ENTITY_MOVE_STOP_REQ(const protocol_svr::ENTITY_MOVE_STOP_REQ* msg);
+
 private:
 	zone_list_t				m_zoneList;
 };

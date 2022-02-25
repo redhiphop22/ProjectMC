@@ -129,6 +129,9 @@
     <ClInclude Include="ClientMap.h">
       <Filter>ClientView</Filter>
     </ClInclude>
+    <ClInclude Include="Vector3.h">
+      <Filter>MainFrm</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ClassView.cpp">
